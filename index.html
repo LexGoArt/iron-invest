@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1787574099">
+<link rel="stylesheet" href="styles.css?v=1787576637">
 </head>
 <body>
 <svg class="logo-defs" aria-hidden="true" focusable="false">
@@ -34,9 +34,13 @@
     </a>
 
     <nav class="nav" aria-label="Основная навигация" data-i18n-aria="a11y.nav">
-      <a href="#kolekcja" data-i18n="nav.collection">Kolekcja</a>
-      <a href="#plate-sec" data-i18n="nav.map">Карта</a>
+      <button type="button" class="nav__t" data-mode="objects" aria-pressed="true" data-i18n="nav.collection">Объекты</button>
+      <button type="button" class="nav__t" data-mode="map" aria-pressed="false" data-i18n="nav.map">Карта</button>
     </nav>
+    <label class="search">
+      <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
+      <input type="search" id="q" autocomplete="off" placeholder="Поиск" data-i18n-ph="search.ph">
+    </label>
 
     <div class="head__right">
       <div class="lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
@@ -46,7 +50,6 @@
         <span aria-hidden="true">/</span>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <a class="head__cta" href="#kontakt" data-i18n="nav.enquire">Запрос</a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav"
               aria-label="Меню" data-i18n-aria="a11y.menu"><i></i><i></i><i></i></button>
     </div>
@@ -66,26 +69,16 @@
   <h1 class="sr-only" data-i18n="a11y.h1">Недвижимость в районе Ханьи — карта и каталог объектов</h1>
 
 
-<!-- ═══ INTRO — one factual line so a visitor knows what this is ═════════ -->
-<section class="sec sec--tight" id="intro">
-  <div class="wrap">
-    <div class="sec__kick">
-      <span class="rule" aria-hidden="true"></span>
-      <span class="label" data-i18n="intro.kick">Iron Invest Group · частная коллекция</span>
-    </div>
-    <h2 class="intro__h" data-i18n="intro.title">11 объектов на Крите</h2>
-    <p class="intro__lead" data-i18n="intro.lead">Виллы, дома, участки под застройку, таверна, торговое помещение и отель — в районе Ханьи. География на карте ниже, полный список — под ней.</p>
-    <div class="acts">
-      <a class="btn btn--quiet" href="#kolekcja" data-i18n="intro.cta">Смотреть объекты</a>
-      <a class="btn btn--quiet btn--muted" href="#kontakt" data-i18n="intro.cta2">Частный запрос</a>
-    </div>
+<!-- ═══ SUMMARY — the state of the portfolio, not a pitch ═════════════ -->
+<section class="sum" id="sum">
+  <div class="wrap sum__in">
+    <div class="sum__nums" id="sumNums"><!-- filled by app.js --></div>
+    <div class="sum__quick" id="sumQuick" role="group" aria-label="Быстрые фильтры"><!-- filled by app.js --></div>
   </div>
 </section>
 
-
-
 <!-- ═══ FIG. 01 — the cartographic plate, first thing on the page ════════ -->
-<section class="plate" id="plate-sec" aria-label="Карта объектов" data-i18n-aria="a11y.map">
+<section class="plate" id="plate-sec" aria-label="Карта объектов" data-i18n-aria="a11y.map" hidden>
   <div class="plate__in" id="plate"><!-- drawn by figure.js --></div>
   <div class="places" id="places"><!-- narrow screens get a list, not a squeezed drawing --></div>
 </section>
@@ -93,18 +86,6 @@
 <!-- ═══ COLLECTION ═══════════════════════════════════════════════════════ -->
 <section class="sec" id="kolekcja">
   <div class="wrap">
-    <div class="sec__head">
-      <div>
-        <div class="sec__kick">
-          <span class="rule" aria-hidden="true"></span>
-          <span class="label" id="collCount">Объекты</span>
-        </div>
-        <h2 data-i18n="coll.title">Объекты в районе Ханьи</h2>
-        <p data-i18n="coll.lead">Что сейчас в работе: дома и виллы, участки под застройку, доходные объекты. Нажмите на объект, чтобы открыть карточку.</p>
-      </div>
-      <div class="collfigs" id="collFigs"><!-- filled by app.js --></div>
-    </div>
-
     <div class="filters" id="filters" role="group" aria-label="Категории объектов" data-i18n-aria="a11y.cats"><!-- filled by app.js --></div>
 
     <!-- disclosure: collapses with grid-template-rows so it can animate -->
@@ -126,14 +107,11 @@
 
 
 
-<!-- ═══ FOOT — one quiet light line, no dark band ══════════════════════ -->
+<!-- ═══ FOOT — one working line ═══════════════════════════════════════ -->
 <footer class="pagefoot" id="kontakt">
   <div class="wrap pagefoot__in">
-    <span class="pagefoot__brand"><svg class="pagefoot__em" viewBox="0 0 839 1010" aria-hidden="true"><use href="#ilArt"/></svg><span class="pagefoot__mark">Iron Invest Group</span></span>
-    <span class="pagefoot__sep" aria-hidden="true"></span>
-    <span data-i18n="foot.place">Ханья, Крит, Греция</span>
-    <span data-i18n="foot.tbdmail">E-mail уточняется — контакты появятся здесь</span>
-    <span class="pagefoot__note" data-i18n="foot.note">Данные объектов в работе — сведения не являются офертой.</span>
+    <span class="pagefoot__mark">Iron Invest Group</span>
+    <span data-i18n="foot.note2">Внутренний портал · данные предварительные</span>
   </div>
 </footer>
 
@@ -141,11 +119,11 @@
 <div class="scrim" id="scrim"></div>
 <aside class="dossier" id="dossier" role="dialog" aria-modal="true" aria-labelledby="dosName" aria-hidden="true"></aside>
 
-<script src="data.js?v=1787574099"></script>
-<script src="geo.js?v=1787574099"></script>
-<script src="store.js?v=1787574099"></script>
-<script src="i18n.js?v=1787574099"></script>
-<script src="app.js?v=1787574099"></script>
-<script src="figure.js?v=1787574099"></script>
+<script src="data.js?v=1787576637"></script>
+<script src="geo.js?v=1787576637"></script>
+<script src="store.js?v=1787576637"></script>
+<script src="i18n.js?v=1787576637"></script>
+<script src="app.js?v=1787576637"></script>
+<script src="figure.js?v=1787576637"></script>
 </body>
 </html>

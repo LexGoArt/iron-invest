@@ -165,11 +165,10 @@ img{ max-width:100%; display:block; }
 .mark__word{ height:30px; width:auto; flex:none; display:block; }
 @media (max-width:560px){ .mark__word{ display:none; } }
 
-.nav{ display:none; gap:var(--sp-6); margin-left:var(--sp-6); }
+.nav{ display:flex; gap:var(--sp-6); margin-left:var(--sp-6); }
 .nav a{ font-size:12px; font-weight:500; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-700);
   padding-block:6px; border-bottom:1px solid transparent; transition:border-color var(--t-1) var(--ease), color var(--t-1) var(--ease); }
 .nav a:hover{ color:var(--ink-900); border-bottom-color:var(--bronze); }
-@media (min-width:940px){ .nav{ display:flex; } }
 
 .head__right{ margin-left:auto; display:flex; align-items:center; gap:var(--sp-5); }
 /* language: a quiet text toggle, never a flag dropdown */
@@ -677,6 +676,110 @@ img{ max-width:100%; display:block; }
 }
 @media (min-width:721px){ .mnav{ display:none !important; } }
 
+
+/* ══ WORKING PORTAL ════════════════════════════════════════════════════════
+   Density over presentation: eleven properties belong on one screen, with
+   state and next action visible without opening anything.
+   ═════════════════════════════════════════════════════════════════════════ */
+.head__in{ height:58px; gap:var(--sp-5); }
+.mark__em{ height:32px; } .mark__word{ height:22px; }
+
+.nav{ gap:var(--sp-2); margin-left:var(--sp-4); }
+.nav__t{ background:none; border:none; padding:7px 12px; border-radius:var(--r-sm);
+  font-size:13px; font-weight:500; color:var(--ink-500);
+  transition:background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.nav__t:hover{ color:var(--ink-900); background:var(--bg-sunken); }
+.nav__t[aria-pressed="true"]{ color:var(--bg-page); background:var(--brand); }
+
+.search{ margin-left:auto; display:flex; align-items:center; min-width:0; }
+.search input{ width:clamp(140px, 22vw, 260px); height:34px; padding:0 12px;
+  border:1px solid var(--hairline); border-radius:var(--r-sm); background:var(--bg-surface);
+  font-family:var(--sans); font-size:13.5px; color:var(--ink-900);
+  transition:border-color var(--t-1) var(--ease); }
+.search input::placeholder{ color:var(--ink-500); }
+.search input:focus{ outline:none; border-color:var(--brand); }
+.search input:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+@media (max-width:860px){ .search input{ width:clamp(110px,26vw,200px); } }
+@media (max-width:600px){ .nav{ display:none; } }
+
+/* summary — the state of the portfolio, clickable */
+.sum{ border-bottom:1px solid var(--hairline); background:var(--bg-surface); }
+.sum__in{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-4) var(--sp-6);
+  padding-top:var(--sp-4); padding-bottom:var(--sp-4); }
+.sum__nums{ display:flex; flex-wrap:wrap; gap:var(--sp-5); }
+.sum__n{ display:flex; align-items:baseline; gap:7px; background:none; border:none; padding:4px 2px;
+  border-bottom:1px solid transparent; transition:border-color var(--t-1) var(--ease); }
+.sum__n b{ font-family:var(--mono); font-size:19px; font-weight:500; color:var(--ink-900); font-variant-numeric:tabular-nums; }
+.sum__n span{ font-size:13px; color:var(--ink-500); }
+button.sum__n:hover{ border-bottom-color:var(--hairline); }
+button.sum__n[aria-pressed="true"]{ border-bottom-color:var(--brand); }
+button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ color:var(--brand); }
+.sum__quick{ display:flex; flex-wrap:wrap; gap:8px; margin-left:auto; }
+.qf{ background:none; border:1px solid var(--hairline); border-radius:999px; padding:6px 12px;
+  font-size:12.5px; color:var(--ink-700);
+  transition:border-color var(--t-1) var(--ease), background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.qf sup{ font-family:var(--mono); font-size:10px; margin-left:5px; color:var(--ink-500); }
+.qf:hover{ border-color:var(--ink-500); }
+.qf[aria-pressed="true"]{ background:var(--brand); border-color:var(--brand); color:var(--bg-page); }
+.qf[aria-pressed="true"] sup{ color:var(--bronze-pale); }
+.qf--clear{ border-style:dashed; }
+
+/* the register table */
+.coll--table{ display:block; }
+.coll--table .row{ display:grid;
+  grid-template-columns:34px minmax(120px,1.1fr) minmax(90px,.9fr) minmax(80px,.7fr) minmax(96px,.8fr)
+                        minmax(88px,.7fr) 74px minmax(80px,.7fr) minmax(110px,1fr);
+  align-items:center; gap:var(--sp-4); width:100%; text-align:left;
+  padding:11px var(--sp-2); background:none; border:none;
+  border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-700);
+  transition:background var(--t-1) var(--ease); }
+.coll--table .row[data-id]:hover{ background:var(--bg-surface); }
+.row--head span{ font:inherit !important; color:inherit !important; }
+.row--head{ position:sticky; top:58px; z-index:2; background:var(--bg-page);
+  border-bottom:1px solid var(--ink-900); font-size:10.5px; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500); padding-block:9px; }
+.row > span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.row__i{ font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.row__nm{ font-family:var(--serif); font-size:16px; color:var(--ink-900); }
+.row[data-id]:hover .row__nm{ text-decoration:underline; text-decoration-color:var(--bronze); text-underline-offset:3px; }
+.row__st{ display:flex; align-items:center; gap:7px; }
+.row__st i{ width:6px; height:6px; border-radius:50%; background:currentColor; flex:none; }
+.row__p, .row__d{ font-family:var(--mono); font-size:12.5px; font-variant-numeric:tabular-nums; }
+.row__nx, .row__r, .row__d{ color:var(--ink-500); }
+/* Column count must match the cells that remain visible, or the grid wraps. */
+@media (max-width:1200px){
+  .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
+                                            minmax(96px,.8fr) minmax(88px,.8fr) minmax(100px,1fr); }
+  .row__d, .row__r{ display:none; }
+}
+@media (max-width:1000px){
+  .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
+                                            minmax(96px,.8fr) minmax(88px,.8fr); }
+  .row__d, .row__r, .row__nx{ display:none; }
+}
+@media (max-width:820px){
+  /* five cells remain: №, name, location, status, price */
+  .coll--table .row{ grid-template-columns:28px minmax(100px,1.4fr) minmax(78px,.8fr)
+                                            minmax(92px,.9fr) minmax(86px,.8fr); }
+  .row__k, .row__d, .row__r, .row__nx{ display:none; }
+}
+@media (max-width:560px){
+  .coll--table .row{ grid-template-columns:1fr auto; gap:4px var(--sp-3); padding:10px var(--sp-2); }
+  .coll--table .row--head{ display:none; }
+  .row__i, .row__k, .row__loc{ display:none; }
+  .row__nm{ font-size:15px; }
+  .row__st{ justify-self:end; font-size:12px; }
+  .row__p{ grid-column:1; }
+}
+
+/* density: the page was paced like a brochure */
+.sec{ padding-block:clamp(var(--sp-5), 3vw, var(--sp-7)); }
+.plate__in{ padding-top:var(--sp-4); }
+.plate__cap{ padding-bottom:var(--sp-4); }
+.filters{ padding-bottom:var(--sp-3); margin-bottom:var(--sp-4); }
+.pagefoot{ margin-top:var(--sp-6); }
+.pagefoot__in{ padding-top:var(--sp-4); padding-bottom:var(--sp-5); }
+
 /* ============================================================================
    PAGE FOOT — a single hairline row. The site carries no dark bands: it is a
    working portal, and the ivory ground runs from the map to the last line.
@@ -726,9 +829,13 @@ img{ max-width:100%; display:block; }
     </a>
 
     <nav class="nav" aria-label="Основная навигация" data-i18n-aria="a11y.nav">
-      <a href="#kolekcja" data-i18n="nav.collection">Kolekcja</a>
-      <a href="#plate-sec" data-i18n="nav.map">Карта</a>
+      <button type="button" class="nav__t" data-mode="objects" aria-pressed="true" data-i18n="nav.collection">Объекты</button>
+      <button type="button" class="nav__t" data-mode="map" aria-pressed="false" data-i18n="nav.map">Карта</button>
     </nav>
+    <label class="search">
+      <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
+      <input type="search" id="q" autocomplete="off" placeholder="Поиск" data-i18n-ph="search.ph">
+    </label>
 
     <div class="head__right">
       <div class="lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
@@ -738,7 +845,6 @@ img{ max-width:100%; display:block; }
         <span aria-hidden="true">/</span>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <a class="head__cta" href="#kontakt" data-i18n="nav.enquire">Запрос</a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav"
               aria-label="Меню" data-i18n-aria="a11y.menu"><i></i><i></i><i></i></button>
     </div>
@@ -758,26 +864,16 @@ img{ max-width:100%; display:block; }
   <h1 class="sr-only" data-i18n="a11y.h1">Недвижимость в районе Ханьи — карта и каталог объектов</h1>
 
 
-<!-- ═══ INTRO — one factual line so a visitor knows what this is ═════════ -->
-<section class="sec sec--tight" id="intro">
-  <div class="wrap">
-    <div class="sec__kick">
-      <span class="rule" aria-hidden="true"></span>
-      <span class="label" data-i18n="intro.kick">Iron Invest Group · частная коллекция</span>
-    </div>
-    <h2 class="intro__h" data-i18n="intro.title">11 объектов на Крите</h2>
-    <p class="intro__lead" data-i18n="intro.lead">Виллы, дома, участки под застройку, таверна, торговое помещение и отель — в районе Ханьи. География на карте ниже, полный список — под ней.</p>
-    <div class="acts">
-      <a class="btn btn--quiet" href="#kolekcja" data-i18n="intro.cta">Смотреть объекты</a>
-      <a class="btn btn--quiet btn--muted" href="#kontakt" data-i18n="intro.cta2">Частный запрос</a>
-    </div>
+<!-- ═══ SUMMARY — the state of the portfolio, not a pitch ═════════════ -->
+<section class="sum" id="sum">
+  <div class="wrap sum__in">
+    <div class="sum__nums" id="sumNums"><!-- filled by app.js --></div>
+    <div class="sum__quick" id="sumQuick" role="group" aria-label="Быстрые фильтры"><!-- filled by app.js --></div>
   </div>
 </section>
 
-
-
 <!-- ═══ FIG. 01 — the cartographic plate, first thing on the page ════════ -->
-<section class="plate" id="plate-sec" aria-label="Карта объектов" data-i18n-aria="a11y.map">
+<section class="plate" id="plate-sec" aria-label="Карта объектов" data-i18n-aria="a11y.map" hidden>
   <div class="plate__in" id="plate"><!-- drawn by figure.js --></div>
   <div class="places" id="places"><!-- narrow screens get a list, not a squeezed drawing --></div>
 </section>
@@ -785,18 +881,6 @@ img{ max-width:100%; display:block; }
 <!-- ═══ COLLECTION ═══════════════════════════════════════════════════════ -->
 <section class="sec" id="kolekcja">
   <div class="wrap">
-    <div class="sec__head">
-      <div>
-        <div class="sec__kick">
-          <span class="rule" aria-hidden="true"></span>
-          <span class="label" id="collCount">Объекты</span>
-        </div>
-        <h2 data-i18n="coll.title">Объекты в районе Ханьи</h2>
-        <p data-i18n="coll.lead">Что сейчас в работе: дома и виллы, участки под застройку, доходные объекты. Нажмите на объект, чтобы открыть карточку.</p>
-      </div>
-      <div class="collfigs" id="collFigs"><!-- filled by app.js --></div>
-    </div>
-
     <div class="filters" id="filters" role="group" aria-label="Категории объектов" data-i18n-aria="a11y.cats"><!-- filled by app.js --></div>
 
     <!-- disclosure: collapses with grid-template-rows so it can animate -->
@@ -818,14 +902,11 @@ img{ max-width:100%; display:block; }
 
 
 
-<!-- ═══ FOOT — one quiet light line, no dark band ══════════════════════ -->
+<!-- ═══ FOOT — one working line ═══════════════════════════════════════ -->
 <footer class="pagefoot" id="kontakt">
   <div class="wrap pagefoot__in">
-    <span class="pagefoot__brand"><svg class="pagefoot__em" viewBox="0 0 839 1010" aria-hidden="true"><use href="#ilArt"/></svg><span class="pagefoot__mark">Iron Invest Group</span></span>
-    <span class="pagefoot__sep" aria-hidden="true"></span>
-    <span data-i18n="foot.place">Ханья, Крит, Греция</span>
-    <span data-i18n="foot.tbdmail">E-mail уточняется — контакты появятся здесь</span>
-    <span class="pagefoot__note" data-i18n="foot.note">Данные объектов в работе — сведения не являются офертой.</span>
+    <span class="pagefoot__mark">Iron Invest Group</span>
+    <span data-i18n="foot.note2">Внутренний портал · данные предварительные</span>
   </div>
 </footer>
 
@@ -881,6 +962,16 @@ img{ max-width:100%; display:block; }
       ota: { listed: null, incomeMonthly: null }
     },
     market: null,
+    /* ── working fields (internal portal) ──────────────────────────────────
+       Deliberately empty. This deployment is a PUBLIC GitHub Pages site, so
+       anything written here is readable by anyone. Fill these only once the
+       portal sits behind authentication. */
+    stage: null,            // 'watch'|'talks'|'docs'|'ready'|'deal'|'closed'
+    nextStep: null,         // what has to happen next
+    deadline: null,         // ISO date
+    blocker: null,          // what is holding it up
+    docs: { have: null, total: null },
+    updated: null,          // ISO date of the last change
     responsible: { name: null, date: null },
     media: { cover: null, photos: [], plan: null },
     strategy: { sale: null, rent: null, business: null },
@@ -1151,7 +1242,15 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'f.unknown': 'Не указана', 'use.res': 'Жилое', 'use.nonres': 'Нежилое',
       'empty.title': 'Ничего не найдено', 'empty.sub': 'Ни один объект не подходит под это сочетание фильтров.',
       'shown': 'Показано', 'of': 'из',
-      'view.label': 'Вид', 'view.grid': 'Плитка', 'view.list': 'Список',
+      'view.label': 'Вид', 'view.table': 'Таблица', 'view.grid': 'Плитка', 'view.list': 'Список',
+      'search.label': 'Поиск по объектам', 'search.ph': 'Поиск',
+      'sum.total': 'всего', 'sum.ready': 'готовы', 'sum.nodocs': 'без документов', 'sum.noprice': 'без цены',
+      'sum.nostage': 'Без стадии', 'sum.noowner': 'Без ответственного', 'sum.all': 'Показать все',
+      'th.no': '№', 'th.name': 'Объект', 'th.kind': 'Тип', 'th.loc': 'Локация', 'th.stage': 'Статус',
+      'th.price': 'Цена', 'th.docs': 'Документы', 'th.owner': 'Ответственный', 'th.next': 'Следующий шаг',
+      'stage.watch': 'Наблюдаем', 'stage.talks': 'Переговоры', 'stage.docs': 'Проверка документов',
+      'stage.ready': 'Готов к сделке', 'stage.deal': 'В сделке', 'stage.closed': 'Закрыт',
+      'foot.note2': 'Внутренний портал · данные предварительные',
       'coll.filtered': 'Показано только:', 'coll.showall': 'показать все',
       'cat.villa': 'Виллы и дома', 'cat.land': 'Участки', 'cat.hospitality': 'Гостиничные', 'cat.commercial': 'Коммерция',
 
@@ -1248,7 +1347,15 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'f.unknown': 'Nie podano', 'use.res': 'Mieszkalne', 'use.nonres': 'Niemieszkalne',
       'empty.title': 'Nic nie znaleziono', 'empty.sub': 'Żaden obiekt nie pasuje do tego zestawu filtrów.',
       'shown': 'Pokazano', 'of': 'z',
-      'view.label': 'Widok', 'view.grid': 'Płytki', 'view.list': 'Lista',
+      'view.label': 'Widok', 'view.table': 'Tabela', 'view.grid': 'Płytki', 'view.list': 'Lista',
+      'search.label': 'Szukaj obiektów', 'search.ph': 'Szukaj',
+      'sum.total': 'łącznie', 'sum.ready': 'gotowe', 'sum.nodocs': 'bez dokumentów', 'sum.noprice': 'bez ceny',
+      'sum.nostage': 'Bez etapu', 'sum.noowner': 'Bez odpowiedzialnego', 'sum.all': 'Pokaż wszystkie',
+      'th.no': 'Nr', 'th.name': 'Obiekt', 'th.kind': 'Typ', 'th.loc': 'Lokalizacja', 'th.stage': 'Status',
+      'th.price': 'Cena', 'th.docs': 'Dokumenty', 'th.owner': 'Odpowiedzialny', 'th.next': 'Następny krok',
+      'stage.watch': 'Obserwujemy', 'stage.talks': 'Negocjacje', 'stage.docs': 'Weryfikacja dokumentów',
+      'stage.ready': 'Gotowy do transakcji', 'stage.deal': 'W transakcji', 'stage.closed': 'Zamknięty',
+      'foot.note2': 'Portal wewnętrzny · dane wstępne',
       'coll.filtered': 'Pokazano tylko:', 'coll.showall': 'pokaż wszystkie',
       'cat.villa': 'Wille i domy', 'cat.land': 'Działki', 'cat.hospitality': 'Hospitality', 'cat.commercial': 'Komercyjne',
 
@@ -1345,7 +1452,15 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'f.unknown': 'Not stated', 'use.res': 'Residential', 'use.nonres': 'Non-residential',
       'empty.title': 'Nothing found', 'empty.sub': 'No property matches this combination of filters.',
       'shown': 'Showing', 'of': 'of',
-      'view.label': 'View', 'view.grid': 'Grid', 'view.list': 'List',
+      'view.label': 'View', 'view.table': 'Table', 'view.grid': 'Grid', 'view.list': 'List',
+      'search.label': 'Search properties', 'search.ph': 'Search',
+      'sum.total': 'total', 'sum.ready': 'ready', 'sum.nodocs': 'no documents', 'sum.noprice': 'no price',
+      'sum.nostage': 'No stage', 'sum.noowner': 'No owner', 'sum.all': 'Show all',
+      'th.no': 'No', 'th.name': 'Property', 'th.kind': 'Type', 'th.loc': 'Location', 'th.stage': 'Status',
+      'th.price': 'Price', 'th.docs': 'Documents', 'th.owner': 'Responsible', 'th.next': 'Next step',
+      'stage.watch': 'Watching', 'stage.talks': 'In talks', 'stage.docs': 'Document check',
+      'stage.ready': 'Ready to deal', 'stage.deal': 'In deal', 'stage.closed': 'Closed',
+      'foot.note2': 'Internal portal · provisional data',
       'coll.filtered': 'Showing only:', 'coll.showall': 'show all',
       'cat.villa': 'Villas & houses', 'cat.land': 'Land', 'cat.hospitality': 'Hospitality', 'cat.commercial': 'Commercial',
 
@@ -1458,6 +1573,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = I18N.t(el.getAttribute('data-i18n')); });
       document.querySelectorAll('[data-i18n-html]').forEach((el) => { el.innerHTML = I18N.t(el.getAttribute('data-i18n-html')); });
       document.querySelectorAll('[data-i18n-aria]').forEach((el) => { el.setAttribute('aria-label', I18N.t(el.getAttribute('data-i18n-aria'))); });
+      document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.setAttribute('placeholder', I18N.t(el.getAttribute('data-i18n-ph'))); });
     }
   };
 
@@ -1507,8 +1623,9 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   const kindOf = (o) => (o.kindKey ? t(o.kindKey) : '');
   const no = (i) => String(i + 1).padStart(2, '0');
 
-  const state = { cat: 'all', selected: null, view: 'grid', area: null, open: false,
-    f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false } };
+  const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
+    f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
+    q: '', quick: null, mode: 'objects' };
   const Iron = { state,
     list: () => window.IronStore.list(),
     get: (id) => window.IronStore.get(id),
@@ -1578,7 +1695,22 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     sea:  (o, on) => !on || !!o.location.seaView
   };
 
+  /* quick filters answer "what needs attention", not "what is pretty" */
+  const QUICK = {
+    nodocs:  (o) => !o.docs || o.docs.have == null || (o.docs.total && o.docs.have < o.docs.total),
+    noprice: (o) => o.price.sale == null && o.price.rentMonthly == null,
+    nostage: (o) => !o.stage,
+    noowner: (o) => !o.responsible || !o.responsible.name
+  };
+  function matchesQuery(o) {
+    const q = state.q.trim().toLowerCase();
+    if (!q) return true;
+    return [nameOf(o), areaOf(o), kindOf(o), (o.responsible && o.responsible.name) || '', o.nextStep || '']
+      .join(' ').toLowerCase().indexOf(q) > -1;
+  }
   function passes(o, skip) {
+    if (!matchesQuery(o)) return false;
+    if (state.quick && QUICK[state.quick] && !QUICK[state.quick](o)) return false;
     if (!(state.cat === 'all' || catOf(o) === state.cat)) return false;
     if (state.area && areaKey(o) !== state.area) return false;
     for (const g in PRED) {
@@ -1647,8 +1779,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         </button>
         <span class="filters__div" aria-hidden="true"></span>
         <span class="views" role="group" aria-label="${esc(t('view.label'))}">
+          <button type="button" data-view="table" aria-pressed="${state.view === 'table'}">${esc(t('view.table'))}</button>
           <button type="button" data-view="grid" aria-pressed="${state.view === 'grid'}">${esc(t('view.grid'))}</button>
-          <button type="button" data-view="list" aria-pressed="${state.view === 'list'}">${esc(t('view.list'))}</button>
         </span>
       </span>`;
     $('#filters').innerHTML =
@@ -1740,6 +1872,30 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     document.dispatchEvent(new CustomEvent('iron:filter', { detail: { cat } }));
   }
 
+  /* ── working summary: counts that are also filters ──────────────────────── */
+  function renderSummary() {
+    const all = Iron.list();
+    const box = $('#sumNums'), qbox = $('#sumQuick');
+    if (!box) return;
+    const ready = all.filter((o) => o.condition === 'ready').length;
+    const nums = [
+      [all.length, t('sum.total'), null],
+      [ready, t('sum.ready'), null],
+      [all.filter(QUICK.nodocs).length, t('sum.nodocs'), 'nodocs'],
+      [all.filter(QUICK.noprice).length, t('sum.noprice'), 'noprice']
+    ];
+    box.innerHTML = nums.map(([n, label, q]) =>
+      q ? `<button class="sum__n" type="button" data-quick="${q}" aria-pressed="${state.quick === q}">
+             <b>${n}</b><span>${esc(label)}</span></button>`
+        : `<span class="sum__n sum__n--flat"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
+    const quicks = [['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
+    qbox.innerHTML = quicks.map(([k, label]) =>
+      `<button class="qf" type="button" data-quick="${k}" aria-pressed="${state.quick === k}">${esc(label)}<sup>${all.filter(QUICK[k]).length}</sup></button>`).join('')
+      + (state.quick ? `<button class="qf qf--clear" type="button" data-quick="">${esc(t('sum.all'))}</button>` : '');
+    [box, qbox].forEach((el) => el.querySelectorAll('[data-quick]').forEach((b) =>
+      b.addEventListener('click', () => { state.quick = b.dataset.quick || null; applyFilters(); })));
+  }
+
   /* ── the collection ──────────────────────────────────────────────────────── */
   function plate(o, i) {
     const st = statusOf(o);
@@ -1790,13 +1946,46 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     </button>`;
   }
 
+  const dash = '—';
+  const stageOf = (o) => (o.stage ? t('stage.' + o.stage) : dash);
+  const docsOf = (o) => (o.docs && o.docs.have != null && o.docs.total ? o.docs.have + ' / ' + o.docs.total : dash);
+  const priceOf = (o) => (o.price.sale != null ? money(o.price.sale, o.price.currency)
+    : (o.price.rentMonthly != null ? money(o.price.rentMonthly, o.price.currency) + ' ' + t('per.month') : t('price.request')));
+
+  /* the register: eleven properties should fit on one screen */
+  function tableRow(o, i) {
+    const st = statusOf(o);
+    return `<button class="row" data-id="${esc(o.id)}" role="row">
+      <span class="row__i">${no(i)}</span>
+      <span class="row__nm">${esc(nameOf(o))}</span>
+      <span class="row__k">${esc(kindOf(o))}</span>
+      <span class="row__loc">${esc(areaOf(o).split(',')[0])}</span>
+      <span class="row__st${st ? ' ' + st.cls : ''}">${st ? '<i></i>' + esc(st.label) : dash}</span>
+      <span class="row__p">${esc(priceOf(o))}</span>
+      <span class="row__d">${esc(docsOf(o))}</span>
+      <span class="row__r">${esc((o.responsible && o.responsible.name) || dash)}</span>
+      <span class="row__nx">${esc(o.nextStep || dash)}</span>
+    </button>`;
+  }
+  function tableHead() {
+    // head cells carry the same column classes as the body, otherwise the
+    // responsive rules hide body cells while the header keeps all nine and wraps
+    const cols = [['row__i','th.no'], ['row__nm','th.name'], ['row__k','th.kind'],
+                  ['row__loc','th.loc'], ['row__st','th.stage'], ['row__p','th.price'],
+                  ['row__d','th.docs'], ['row__r','th.owner'], ['row__nx','th.next']];
+    return `<div class="row row--head" role="row">${cols.map(([c, k]) =>
+      `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+  }
+
   function renderColl() {
     const all = Iron.list();
     const items = all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o));
     const coll = $('#coll');
-    coll.className = 'coll' + (state.view === 'list' ? ' coll--list' : '');
-    coll.innerHTML = items.map(({ o, i }) => entry(o, i)).join('');
-    coll.querySelectorAll('.ent').forEach((b) => {
+    coll.className = 'coll coll--' + state.view;
+    coll.innerHTML = state.view === 'table'
+      ? tableHead() + items.map(({ o, i }) => tableRow(o, i)).join('')
+      : items.map(({ o, i }) => entry(o, i)).join('');
+    coll.querySelectorAll('.ent, .row[data-id]').forEach((b) => {
       b.addEventListener('click', () => Iron.openObject(b.dataset.id));
     });
     // a private collection states its range, it does not announce a result count
@@ -2096,8 +2285,34 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     });
   })();
 
+  /* search */
+  (function () {
+    const q = $('#q'); if (!q) return;
+    let tmr;
+    q.addEventListener('input', () => {
+      clearTimeout(tmr);
+      tmr = setTimeout(() => { state.q = q.value; renderColl(); }, 120);
+    });
+  })();
+
+  /* Objects / Map are modes, not sections — the map no longer sits between
+     the header and the work. */
+  function setMode(m) {
+    state.mode = m;
+    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum');
+    if (plate) plate.hidden = m !== 'map';
+    if (objects) objects.hidden = m !== 'objects';
+    if (sum) sum.hidden = m !== 'objects';
+    document.querySelectorAll('.nav__t').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+    if (m === 'map' && window.IronPlate) window.IronPlate.render();
+  }
+  Iron.setMode = setMode;
+  document.querySelectorAll('.nav__t').forEach((b) =>
+    b.addEventListener('click', () => setMode(b.dataset.mode)));
+
   function renderAll() {
-    renderFigs(); renderPlaces(); renderFilters(); renderColl();
+    renderSummary(); renderPlaces(); renderFilters(); renderColl();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }
   document.addEventListener('iron:lang', renderAll);

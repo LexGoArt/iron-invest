@@ -39,8 +39,9 @@
   const kindOf = (o) => (o.kindKey ? t(o.kindKey) : '');
   const no = (i) => String(i + 1).padStart(2, '0');
 
-  const state = { cat: 'all', selected: null, view: 'grid', area: null, open: false,
-    f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false } };
+  const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
+    f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
+    q: '', quick: null, mode: 'objects' };
   const Iron = { state,
     list: () => window.IronStore.list(),
     get: (id) => window.IronStore.get(id),
@@ -110,7 +111,22 @@
     sea:  (o, on) => !on || !!o.location.seaView
   };
 
+  /* quick filters answer "what needs attention", not "what is pretty" */
+  const QUICK = {
+    nodocs:  (o) => !o.docs || o.docs.have == null || (o.docs.total && o.docs.have < o.docs.total),
+    noprice: (o) => o.price.sale == null && o.price.rentMonthly == null,
+    nostage: (o) => !o.stage,
+    noowner: (o) => !o.responsible || !o.responsible.name
+  };
+  function matchesQuery(o) {
+    const q = state.q.trim().toLowerCase();
+    if (!q) return true;
+    return [nameOf(o), areaOf(o), kindOf(o), (o.responsible && o.responsible.name) || '', o.nextStep || '']
+      .join(' ').toLowerCase().indexOf(q) > -1;
+  }
   function passes(o, skip) {
+    if (!matchesQuery(o)) return false;
+    if (state.quick && QUICK[state.quick] && !QUICK[state.quick](o)) return false;
     if (!(state.cat === 'all' || catOf(o) === state.cat)) return false;
     if (state.area && areaKey(o) !== state.area) return false;
     for (const g in PRED) {
@@ -179,8 +195,8 @@
         </button>
         <span class="filters__div" aria-hidden="true"></span>
         <span class="views" role="group" aria-label="${esc(t('view.label'))}">
+          <button type="button" data-view="table" aria-pressed="${state.view === 'table'}">${esc(t('view.table'))}</button>
           <button type="button" data-view="grid" aria-pressed="${state.view === 'grid'}">${esc(t('view.grid'))}</button>
-          <button type="button" data-view="list" aria-pressed="${state.view === 'list'}">${esc(t('view.list'))}</button>
         </span>
       </span>`;
     $('#filters').innerHTML =
@@ -272,6 +288,30 @@
     document.dispatchEvent(new CustomEvent('iron:filter', { detail: { cat } }));
   }
 
+  /* ── working summary: counts that are also filters ──────────────────────── */
+  function renderSummary() {
+    const all = Iron.list();
+    const box = $('#sumNums'), qbox = $('#sumQuick');
+    if (!box) return;
+    const ready = all.filter((o) => o.condition === 'ready').length;
+    const nums = [
+      [all.length, t('sum.total'), null],
+      [ready, t('sum.ready'), null],
+      [all.filter(QUICK.nodocs).length, t('sum.nodocs'), 'nodocs'],
+      [all.filter(QUICK.noprice).length, t('sum.noprice'), 'noprice']
+    ];
+    box.innerHTML = nums.map(([n, label, q]) =>
+      q ? `<button class="sum__n" type="button" data-quick="${q}" aria-pressed="${state.quick === q}">
+             <b>${n}</b><span>${esc(label)}</span></button>`
+        : `<span class="sum__n sum__n--flat"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
+    const quicks = [['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
+    qbox.innerHTML = quicks.map(([k, label]) =>
+      `<button class="qf" type="button" data-quick="${k}" aria-pressed="${state.quick === k}">${esc(label)}<sup>${all.filter(QUICK[k]).length}</sup></button>`).join('')
+      + (state.quick ? `<button class="qf qf--clear" type="button" data-quick="">${esc(t('sum.all'))}</button>` : '');
+    [box, qbox].forEach((el) => el.querySelectorAll('[data-quick]').forEach((b) =>
+      b.addEventListener('click', () => { state.quick = b.dataset.quick || null; applyFilters(); })));
+  }
+
   /* ── the collection ──────────────────────────────────────────────────────── */
   function plate(o, i) {
     const st = statusOf(o);
@@ -322,13 +362,46 @@
     </button>`;
   }
 
+  const dash = '—';
+  const stageOf = (o) => (o.stage ? t('stage.' + o.stage) : dash);
+  const docsOf = (o) => (o.docs && o.docs.have != null && o.docs.total ? o.docs.have + ' / ' + o.docs.total : dash);
+  const priceOf = (o) => (o.price.sale != null ? money(o.price.sale, o.price.currency)
+    : (o.price.rentMonthly != null ? money(o.price.rentMonthly, o.price.currency) + ' ' + t('per.month') : t('price.request')));
+
+  /* the register: eleven properties should fit on one screen */
+  function tableRow(o, i) {
+    const st = statusOf(o);
+    return `<button class="row" data-id="${esc(o.id)}" role="row">
+      <span class="row__i">${no(i)}</span>
+      <span class="row__nm">${esc(nameOf(o))}</span>
+      <span class="row__k">${esc(kindOf(o))}</span>
+      <span class="row__loc">${esc(areaOf(o).split(',')[0])}</span>
+      <span class="row__st${st ? ' ' + st.cls : ''}">${st ? '<i></i>' + esc(st.label) : dash}</span>
+      <span class="row__p">${esc(priceOf(o))}</span>
+      <span class="row__d">${esc(docsOf(o))}</span>
+      <span class="row__r">${esc((o.responsible && o.responsible.name) || dash)}</span>
+      <span class="row__nx">${esc(o.nextStep || dash)}</span>
+    </button>`;
+  }
+  function tableHead() {
+    // head cells carry the same column classes as the body, otherwise the
+    // responsive rules hide body cells while the header keeps all nine and wraps
+    const cols = [['row__i','th.no'], ['row__nm','th.name'], ['row__k','th.kind'],
+                  ['row__loc','th.loc'], ['row__st','th.stage'], ['row__p','th.price'],
+                  ['row__d','th.docs'], ['row__r','th.owner'], ['row__nx','th.next']];
+    return `<div class="row row--head" role="row">${cols.map(([c, k]) =>
+      `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+  }
+
   function renderColl() {
     const all = Iron.list();
     const items = all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o));
     const coll = $('#coll');
-    coll.className = 'coll' + (state.view === 'list' ? ' coll--list' : '');
-    coll.innerHTML = items.map(({ o, i }) => entry(o, i)).join('');
-    coll.querySelectorAll('.ent').forEach((b) => {
+    coll.className = 'coll coll--' + state.view;
+    coll.innerHTML = state.view === 'table'
+      ? tableHead() + items.map(({ o, i }) => tableRow(o, i)).join('')
+      : items.map(({ o, i }) => entry(o, i)).join('');
+    coll.querySelectorAll('.ent, .row[data-id]').forEach((b) => {
       b.addEventListener('click', () => Iron.openObject(b.dataset.id));
     });
     // a private collection states its range, it does not announce a result count
@@ -628,8 +701,34 @@
     });
   })();
 
+  /* search */
+  (function () {
+    const q = $('#q'); if (!q) return;
+    let tmr;
+    q.addEventListener('input', () => {
+      clearTimeout(tmr);
+      tmr = setTimeout(() => { state.q = q.value; renderColl(); }, 120);
+    });
+  })();
+
+  /* Objects / Map are modes, not sections — the map no longer sits between
+     the header and the work. */
+  function setMode(m) {
+    state.mode = m;
+    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum');
+    if (plate) plate.hidden = m !== 'map';
+    if (objects) objects.hidden = m !== 'objects';
+    if (sum) sum.hidden = m !== 'objects';
+    document.querySelectorAll('.nav__t').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+    if (m === 'map' && window.IronPlate) window.IronPlate.render();
+  }
+  Iron.setMode = setMode;
+  document.querySelectorAll('.nav__t').forEach((b) =>
+    b.addEventListener('click', () => setMode(b.dataset.mode)));
+
   function renderAll() {
-    renderFigs(); renderPlaces(); renderFilters(); renderColl();
+    renderSummary(); renderPlaces(); renderFilters(); renderColl();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }
   document.addEventListener('iron:lang', renderAll);

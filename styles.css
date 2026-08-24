@@ -153,11 +153,10 @@ img{ max-width:100%; display:block; }
 .mark__word{ height:30px; width:auto; flex:none; display:block; }
 @media (max-width:560px){ .mark__word{ display:none; } }
 
-.nav{ display:none; gap:var(--sp-6); margin-left:var(--sp-6); }
+.nav{ display:flex; gap:var(--sp-6); margin-left:var(--sp-6); }
 .nav a{ font-size:12px; font-weight:500; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-700);
   padding-block:6px; border-bottom:1px solid transparent; transition:border-color var(--t-1) var(--ease), color var(--t-1) var(--ease); }
 .nav a:hover{ color:var(--ink-900); border-bottom-color:var(--bronze); }
-@media (min-width:940px){ .nav{ display:flex; } }
 
 .head__right{ margin-left:auto; display:flex; align-items:center; gap:var(--sp-5); }
 /* language: a quiet text toggle, never a flag dropdown */
@@ -664,6 +663,110 @@ img{ max-width:100%; display:block; }
   .nav{ display:none; }
 }
 @media (min-width:721px){ .mnav{ display:none !important; } }
+
+
+/* ══ WORKING PORTAL ════════════════════════════════════════════════════════
+   Density over presentation: eleven properties belong on one screen, with
+   state and next action visible without opening anything.
+   ═════════════════════════════════════════════════════════════════════════ */
+.head__in{ height:58px; gap:var(--sp-5); }
+.mark__em{ height:32px; } .mark__word{ height:22px; }
+
+.nav{ gap:var(--sp-2); margin-left:var(--sp-4); }
+.nav__t{ background:none; border:none; padding:7px 12px; border-radius:var(--r-sm);
+  font-size:13px; font-weight:500; color:var(--ink-500);
+  transition:background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.nav__t:hover{ color:var(--ink-900); background:var(--bg-sunken); }
+.nav__t[aria-pressed="true"]{ color:var(--bg-page); background:var(--brand); }
+
+.search{ margin-left:auto; display:flex; align-items:center; min-width:0; }
+.search input{ width:clamp(140px, 22vw, 260px); height:34px; padding:0 12px;
+  border:1px solid var(--hairline); border-radius:var(--r-sm); background:var(--bg-surface);
+  font-family:var(--sans); font-size:13.5px; color:var(--ink-900);
+  transition:border-color var(--t-1) var(--ease); }
+.search input::placeholder{ color:var(--ink-500); }
+.search input:focus{ outline:none; border-color:var(--brand); }
+.search input:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+@media (max-width:860px){ .search input{ width:clamp(110px,26vw,200px); } }
+@media (max-width:600px){ .nav{ display:none; } }
+
+/* summary — the state of the portfolio, clickable */
+.sum{ border-bottom:1px solid var(--hairline); background:var(--bg-surface); }
+.sum__in{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-4) var(--sp-6);
+  padding-top:var(--sp-4); padding-bottom:var(--sp-4); }
+.sum__nums{ display:flex; flex-wrap:wrap; gap:var(--sp-5); }
+.sum__n{ display:flex; align-items:baseline; gap:7px; background:none; border:none; padding:4px 2px;
+  border-bottom:1px solid transparent; transition:border-color var(--t-1) var(--ease); }
+.sum__n b{ font-family:var(--mono); font-size:19px; font-weight:500; color:var(--ink-900); font-variant-numeric:tabular-nums; }
+.sum__n span{ font-size:13px; color:var(--ink-500); }
+button.sum__n:hover{ border-bottom-color:var(--hairline); }
+button.sum__n[aria-pressed="true"]{ border-bottom-color:var(--brand); }
+button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ color:var(--brand); }
+.sum__quick{ display:flex; flex-wrap:wrap; gap:8px; margin-left:auto; }
+.qf{ background:none; border:1px solid var(--hairline); border-radius:999px; padding:6px 12px;
+  font-size:12.5px; color:var(--ink-700);
+  transition:border-color var(--t-1) var(--ease), background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.qf sup{ font-family:var(--mono); font-size:10px; margin-left:5px; color:var(--ink-500); }
+.qf:hover{ border-color:var(--ink-500); }
+.qf[aria-pressed="true"]{ background:var(--brand); border-color:var(--brand); color:var(--bg-page); }
+.qf[aria-pressed="true"] sup{ color:var(--bronze-pale); }
+.qf--clear{ border-style:dashed; }
+
+/* the register table */
+.coll--table{ display:block; }
+.coll--table .row{ display:grid;
+  grid-template-columns:34px minmax(120px,1.1fr) minmax(90px,.9fr) minmax(80px,.7fr) minmax(96px,.8fr)
+                        minmax(88px,.7fr) 74px minmax(80px,.7fr) minmax(110px,1fr);
+  align-items:center; gap:var(--sp-4); width:100%; text-align:left;
+  padding:11px var(--sp-2); background:none; border:none;
+  border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-700);
+  transition:background var(--t-1) var(--ease); }
+.coll--table .row[data-id]:hover{ background:var(--bg-surface); }
+.row--head span{ font:inherit !important; color:inherit !important; }
+.row--head{ position:sticky; top:58px; z-index:2; background:var(--bg-page);
+  border-bottom:1px solid var(--ink-900); font-size:10.5px; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500); padding-block:9px; }
+.row > span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.row__i{ font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.row__nm{ font-family:var(--serif); font-size:16px; color:var(--ink-900); }
+.row[data-id]:hover .row__nm{ text-decoration:underline; text-decoration-color:var(--bronze); text-underline-offset:3px; }
+.row__st{ display:flex; align-items:center; gap:7px; }
+.row__st i{ width:6px; height:6px; border-radius:50%; background:currentColor; flex:none; }
+.row__p, .row__d{ font-family:var(--mono); font-size:12.5px; font-variant-numeric:tabular-nums; }
+.row__nx, .row__r, .row__d{ color:var(--ink-500); }
+/* Column count must match the cells that remain visible, or the grid wraps. */
+@media (max-width:1200px){
+  .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
+                                            minmax(96px,.8fr) minmax(88px,.8fr) minmax(100px,1fr); }
+  .row__d, .row__r{ display:none; }
+}
+@media (max-width:1000px){
+  .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
+                                            minmax(96px,.8fr) minmax(88px,.8fr); }
+  .row__d, .row__r, .row__nx{ display:none; }
+}
+@media (max-width:820px){
+  /* five cells remain: №, name, location, status, price */
+  .coll--table .row{ grid-template-columns:28px minmax(100px,1.4fr) minmax(78px,.8fr)
+                                            minmax(92px,.9fr) minmax(86px,.8fr); }
+  .row__k, .row__d, .row__r, .row__nx{ display:none; }
+}
+@media (max-width:560px){
+  .coll--table .row{ grid-template-columns:1fr auto; gap:4px var(--sp-3); padding:10px var(--sp-2); }
+  .coll--table .row--head{ display:none; }
+  .row__i, .row__k, .row__loc{ display:none; }
+  .row__nm{ font-size:15px; }
+  .row__st{ justify-self:end; font-size:12px; }
+  .row__p{ grid-column:1; }
+}
+
+/* density: the page was paced like a brochure */
+.sec{ padding-block:clamp(var(--sp-5), 3vw, var(--sp-7)); }
+.plate__in{ padding-top:var(--sp-4); }
+.plate__cap{ padding-bottom:var(--sp-4); }
+.filters{ padding-bottom:var(--sp-3); margin-bottom:var(--sp-4); }
+.pagefoot{ margin-top:var(--sp-6); }
+.pagefoot__in{ padding-top:var(--sp-4); padding-bottom:var(--sp-5); }
 
 /* ============================================================================
    PAGE FOOT — a single hairline row. The site carries no dark bands: it is a

@@ -45,6 +45,16 @@
       ota: { listed: null, incomeMonthly: null }
     },
     market: null,
+    /* ── working fields (internal portal) ──────────────────────────────────
+       Deliberately empty. This deployment is a PUBLIC GitHub Pages site, so
+       anything written here is readable by anyone. Fill these only once the
+       portal sits behind authentication. */
+    stage: null,            // 'watch'|'talks'|'docs'|'ready'|'deal'|'closed'
+    nextStep: null,         // what has to happen next
+    deadline: null,         // ISO date
+    blocker: null,          // what is holding it up
+    docs: { have: null, total: null },
+    updated: null,          // ISO date of the last change
     responsible: { name: null, date: null },
     media: { cover: null, photos: [], plan: null },
     strategy: { sale: null, rent: null, business: null },

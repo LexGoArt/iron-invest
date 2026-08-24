@@ -32,7 +32,15 @@
       'f.unknown': 'Не указана', 'use.res': 'Жилое', 'use.nonres': 'Нежилое',
       'empty.title': 'Ничего не найдено', 'empty.sub': 'Ни один объект не подходит под это сочетание фильтров.',
       'shown': 'Показано', 'of': 'из',
-      'view.label': 'Вид', 'view.grid': 'Плитка', 'view.list': 'Список',
+      'view.label': 'Вид', 'view.table': 'Таблица', 'view.grid': 'Плитка', 'view.list': 'Список',
+      'search.label': 'Поиск по объектам', 'search.ph': 'Поиск',
+      'sum.total': 'всего', 'sum.ready': 'готовы', 'sum.nodocs': 'без документов', 'sum.noprice': 'без цены',
+      'sum.nostage': 'Без стадии', 'sum.noowner': 'Без ответственного', 'sum.all': 'Показать все',
+      'th.no': '№', 'th.name': 'Объект', 'th.kind': 'Тип', 'th.loc': 'Локация', 'th.stage': 'Статус',
+      'th.price': 'Цена', 'th.docs': 'Документы', 'th.owner': 'Ответственный', 'th.next': 'Следующий шаг',
+      'stage.watch': 'Наблюдаем', 'stage.talks': 'Переговоры', 'stage.docs': 'Проверка документов',
+      'stage.ready': 'Готов к сделке', 'stage.deal': 'В сделке', 'stage.closed': 'Закрыт',
+      'foot.note2': 'Внутренний портал · данные предварительные',
       'coll.filtered': 'Показано только:', 'coll.showall': 'показать все',
       'cat.villa': 'Виллы и дома', 'cat.land': 'Участки', 'cat.hospitality': 'Гостиничные', 'cat.commercial': 'Коммерция',
 
@@ -129,7 +137,15 @@
       'f.unknown': 'Nie podano', 'use.res': 'Mieszkalne', 'use.nonres': 'Niemieszkalne',
       'empty.title': 'Nic nie znaleziono', 'empty.sub': 'Żaden obiekt nie pasuje do tego zestawu filtrów.',
       'shown': 'Pokazano', 'of': 'z',
-      'view.label': 'Widok', 'view.grid': 'Płytki', 'view.list': 'Lista',
+      'view.label': 'Widok', 'view.table': 'Tabela', 'view.grid': 'Płytki', 'view.list': 'Lista',
+      'search.label': 'Szukaj obiektów', 'search.ph': 'Szukaj',
+      'sum.total': 'łącznie', 'sum.ready': 'gotowe', 'sum.nodocs': 'bez dokumentów', 'sum.noprice': 'bez ceny',
+      'sum.nostage': 'Bez etapu', 'sum.noowner': 'Bez odpowiedzialnego', 'sum.all': 'Pokaż wszystkie',
+      'th.no': 'Nr', 'th.name': 'Obiekt', 'th.kind': 'Typ', 'th.loc': 'Lokalizacja', 'th.stage': 'Status',
+      'th.price': 'Cena', 'th.docs': 'Dokumenty', 'th.owner': 'Odpowiedzialny', 'th.next': 'Następny krok',
+      'stage.watch': 'Obserwujemy', 'stage.talks': 'Negocjacje', 'stage.docs': 'Weryfikacja dokumentów',
+      'stage.ready': 'Gotowy do transakcji', 'stage.deal': 'W transakcji', 'stage.closed': 'Zamknięty',
+      'foot.note2': 'Portal wewnętrzny · dane wstępne',
       'coll.filtered': 'Pokazano tylko:', 'coll.showall': 'pokaż wszystkie',
       'cat.villa': 'Wille i domy', 'cat.land': 'Działki', 'cat.hospitality': 'Hospitality', 'cat.commercial': 'Komercyjne',
 
@@ -226,7 +242,15 @@
       'f.unknown': 'Not stated', 'use.res': 'Residential', 'use.nonres': 'Non-residential',
       'empty.title': 'Nothing found', 'empty.sub': 'No property matches this combination of filters.',
       'shown': 'Showing', 'of': 'of',
-      'view.label': 'View', 'view.grid': 'Grid', 'view.list': 'List',
+      'view.label': 'View', 'view.table': 'Table', 'view.grid': 'Grid', 'view.list': 'List',
+      'search.label': 'Search properties', 'search.ph': 'Search',
+      'sum.total': 'total', 'sum.ready': 'ready', 'sum.nodocs': 'no documents', 'sum.noprice': 'no price',
+      'sum.nostage': 'No stage', 'sum.noowner': 'No owner', 'sum.all': 'Show all',
+      'th.no': 'No', 'th.name': 'Property', 'th.kind': 'Type', 'th.loc': 'Location', 'th.stage': 'Status',
+      'th.price': 'Price', 'th.docs': 'Documents', 'th.owner': 'Responsible', 'th.next': 'Next step',
+      'stage.watch': 'Watching', 'stage.talks': 'In talks', 'stage.docs': 'Document check',
+      'stage.ready': 'Ready to deal', 'stage.deal': 'In deal', 'stage.closed': 'Closed',
+      'foot.note2': 'Internal portal · provisional data',
       'coll.filtered': 'Showing only:', 'coll.showall': 'show all',
       'cat.villa': 'Villas & houses', 'cat.land': 'Land', 'cat.hospitality': 'Hospitality', 'cat.commercial': 'Commercial',
 
@@ -339,6 +363,7 @@
       document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = I18N.t(el.getAttribute('data-i18n')); });
       document.querySelectorAll('[data-i18n-html]').forEach((el) => { el.innerHTML = I18N.t(el.getAttribute('data-i18n-html')); });
       document.querySelectorAll('[data-i18n-aria]').forEach((el) => { el.setAttribute('aria-label', I18N.t(el.getAttribute('data-i18n-aria'))); });
+      document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.setAttribute('placeholder', I18N.t(el.getAttribute('data-i18n-ph'))); });
     }
   };
 

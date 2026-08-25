@@ -1129,26 +1129,38 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .rz__n[data-person]:focus-visible .rz__ring{ stroke:var(--bronze-focus); stroke-width:2.5; }
 
 /* ══ СПИСОК ВМЕСТО СХЕМЫ ═══════════════════════════════════════════════════ */
+/* Карточка роли — сетка, а не флекс-строка. Боковая колонка со статусом
+   брала ширину по max-content («требует подтверждения · объекты не назначены»),
+   вытесняла текст до min-content — роль ломалась по одному слову в столбик —
+   и наезжала поверх него. В карточке шириной 290px боковой колонки быть
+   не может: статус уходит отдельной строкой вниз. */
+/* Разделители рисует не фон контейнера, а тень каждой карточки: девять
+   карточек в четыре колонки оставляют две пустые ячейки, и серая заливка
+   проступала в них прямоугольными провалами. */
 .rlist{ list-style:none; margin:0; padding:0;
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1px;
-  background:var(--hairline); border:1px solid var(--hairline); }
-.rlist__b{ display:flex; gap:var(--sp-3); align-items:flex-start; width:100%;
-  padding:var(--sp-4); background:var(--bg-page); border:0; cursor:pointer;
-  text-align:left; transition:background var(--t-1) var(--ease); }
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1px; }
+.rlist__i{ display:flex; }                 /* чтобы кнопка занимала всю ячейку */
+.rlist__b{ display:grid; grid-template-columns:16px 1fr;
+  box-shadow:0 0 0 1px var(--hairline);
+  column-gap:var(--sp-3); row-gap:var(--sp-3); align-content:start;
+  width:100%; padding:var(--sp-4); background:var(--bg-page); border:0;
+  cursor:pointer; text-align:left; transition:background var(--t-1) var(--ease); }
 .rlist__b:hover{ background:var(--bg-surface); }
 .rlist__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
-.rlist__gl{ color:var(--ink-500); padding-top:2px; }
+.rlist__gl{ color:var(--ink-500); padding-top:3px; }
 .rlist__i.is-vacant .rlist__gl{ color:var(--ink-decor); }
-.rlist__t{ flex:1; min-width:0; display:block; }
+.rlist__t{ min-width:0; display:block; }
 .rlist__t b{ display:block; font-family:var(--mono); font-size:10px;
   letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500);
-  font-weight:400; margin-bottom:3px; }
+  font-weight:400; margin-bottom:4px; line-height:1.4; }
 .rlist__t > span{ display:block; font-family:var(--serif); font-size:15px;
   color:var(--ink-900); line-height:1.25; }
 .rlist__i.is-vacant .rlist__t > span{ font-style:italic; color:var(--ink-500); font-size:14px; }
-.rlist__m{ display:flex; flex-direction:column; align-items:flex-end; gap:3px;
-  flex:none; font-family:var(--mono); font-size:10.5px; color:var(--ink-700); }
-.rlist__m em{ font-style:normal; color:var(--ink-decor); font-size:10px; }
+.rlist__m{ grid-column:2; display:flex; flex-wrap:wrap; align-items:center;
+  gap:4px var(--sp-3); min-width:0; padding-top:var(--sp-3);
+  border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:10.5px; color:var(--ink-700); }
+.rlist__m em{ font-style:normal; color:var(--ink-decor); font-size:10px; min-width:0; }
 
 /* ══ КОЛОНКА ОТКРЫТЫХ ЗАДАЧ ════════════════════════════════════════════════ */
 .team__tasks{ font-family:var(--mono); font-size:13px; text-align:right;
@@ -1252,14 +1264,6 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .defs__in p:last-child{ margin-bottom:0; }
 .defs__in b{ color:var(--ink-900); font-weight:600; }
 
-/* На узком экране правая колонка списка («вакантно · объекты не назначены»)
-   не помещалась рядом с именем — она переезжает под него. */
-@media (max-width:560px){
-  .rlist__b{ flex-wrap:wrap; }
-  .rlist__m{ flex-direction:row; align-items:center; gap:var(--sp-3);
-    width:100%; padding-left:calc(14px + var(--sp-3)); }
-  .rlist__m em{ min-width:0; }
-}
 
 </style>
 </head>

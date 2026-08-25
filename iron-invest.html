@@ -790,7 +790,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 .team__row{ display:grid;
   grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr)
-                        88px minmax(110px,.8fr) 24px;
+                        88px minmax(124px,.8fr) 24px;
   align-items:center; gap:var(--sp-4); width:100%; text-align:left;
   padding:13px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-500);
@@ -837,11 +837,6 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .team__block{ margin-top:var(--sp-8); padding-top:var(--sp-6); border-top:1px solid var(--hairline); }
 .team__block h3{ font-family:var(--serif); font-weight:400; font-size:20px; color:var(--ink-900); }
 .team__note{ margin:var(--sp-2) 0 0; max-width:56ch; font-size:13.5px; color:var(--ink-500); }
-.team__open{ margin:var(--sp-4) 0 0; padding:0; list-style:none; max-width:62ch; }
-.team__open li{ position:relative; padding:9px 0 9px 18px; border-bottom:1px solid var(--hairline);
-  font-size:14px; color:var(--ink-700); }
-.team__open li::before{ content:"?"; position:absolute; left:0; font-family:var(--mono);
-  font-size:12px; color:var(--bronze-text); }
 
 /* who decides what */
 .dec{ margin-top:var(--sp-4); }
@@ -915,6 +910,123 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 /* Роль и зона усечены многоточием базовым правилом .team__row > span.
    Полная формулировка — в раскрытой карточке, там она не ограничена. */
 .team__role{ color:var(--ink-700); }
+
+/* ══ КОМАНДА · ГЛИФЫ И СОСТОЯНИЯ ═══════════════════════════════════════════ */
+.gl{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.25;
+  stroke-linecap:round; stroke-linejoin:round; display:block; }
+.team__gl{ display:flex; align-items:center; color:var(--ink-500); }
+.team__row.is-loaded .team__gl{ color:var(--bronze-text); }
+.team__row.is-vacant .team__gl, .team__row.is-vacant .team__nm{ color:var(--ink-500); }
+.team__row--head .team__gl{ color:transparent; }
+
+/* состояние функции: форма важнее цвета — плита печатается чёрно-белой */
+.team__st2{ width:7px; height:7px; margin-right:7px; flex:none; display:inline-block;
+  vertical-align:middle; border-radius:50%; }
+.team__st2--fixed{ background:var(--bronze); }
+.team__st2--tentative{ background:none; box-shadow:inset 0 0 0 1px var(--bronze-text); }
+.team__st2--vacant{ background:none; box-shadow:inset 0 0 0 1px var(--ink-500);
+  border-radius:0; transform:rotate(45deg); }
+.team__contact{ display:flex; align-items:center; color:var(--ink-700); }
+.team__row--head .team__contact{ display:block; }
+
+/* факт о состоянии функции — не оценка человека, поэтому подан как сноска */
+.team__fact{ margin:0 0 var(--sp-4); padding-left:var(--sp-3);
+  border-left:2px solid var(--bronze); color:var(--ink-700);
+  font-size:14px; line-height:1.55; }
+
+/* ══ FIG · ОБЩАЯ РАМКА ═════════════════════════════════════════════════════ */
+.fig{ margin:0 0 var(--sp-8); }
+.fig figcaption{ display:flex; gap:var(--sp-3); align-items:baseline;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-500);
+  padding-bottom:var(--sp-3); border-bottom:1px solid var(--hairline); margin-bottom:var(--sp-6); }
+.fig__n{ color:var(--bronze-text); flex:none; }
+.fig__body{ overflow-x:auto; }
+.fig__body svg{ width:100%; height:auto; min-width:640px; display:block; }
+
+/* ══ FIG.02 · КАРТА ОТВЕТСТВЕННОСТИ ════════════════════════════════════════ */
+.rz{ font-family:var(--sans); }
+.rz__link{ fill:none; stroke:var(--hairline); stroke-width:1; }
+.rz__link--tentative{ stroke-dasharray:5 4; }
+.rz__link--vacant{ stroke-dasharray:1.5 4; }
+.rz__hub{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.25; }
+.rz__hubT{ font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+  text-transform:uppercase; fill:var(--ink-700); }
+.rz__hubN{ font-family:var(--serif); font-size:19px; fill:var(--ink-900); }
+.rz__ring{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.25; }
+.rz__n--tentative .rz__ring{ stroke:var(--bronze-text); stroke-dasharray:4 3.5; }
+.rz__n--vacant .rz__ring{ stroke:var(--ink-500); stroke-dasharray:1.5 3.5; }
+.rz__gl{ fill:none; stroke:var(--ink-900); stroke-width:1.25;
+  stroke-linecap:round; stroke-linejoin:round; overflow:visible; }
+.rz__n--vacant .rz__gl{ stroke:var(--ink-500); }
+.rz__role{ font-family:var(--mono); font-size:9.5px; letter-spacing:.06em;
+  text-transform:uppercase; fill:var(--ink-500); }
+.rz__nm{ font-family:var(--serif); font-size:14px; fill:var(--ink-900); }
+.rz__n--vacant .rz__nm{ font-style:italic; fill:var(--ink-500); }
+
+/* ══ ПОКРЫТИЕ ФУНКЦИЙ ══════════════════════════════════════════════════════ */
+.cov{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-4) var(--sp-6);
+  margin-top:var(--sp-5); padding-top:var(--sp-4); border-top:1px solid var(--hairline); }
+.cov__bar{ display:flex; flex:1 1 220px; height:8px; gap:2px; min-width:180px; }
+.cov__seg{ display:block; }
+.cov__seg--fixed{ background:var(--bronze); }
+.cov__seg--tentative{ background:repeating-linear-gradient(45deg,
+  var(--bronze) 0 2px, transparent 2px 5px); box-shadow:inset 0 0 0 1px var(--bronze); }
+.cov__seg--vacant{ box-shadow:inset 0 0 0 1px var(--hairline); }
+.cov__legend{ display:flex; flex-wrap:wrap; gap:var(--sp-5);
+  font-family:var(--mono); font-size:11px; color:var(--ink-700); }
+.cov__lg{ display:flex; align-items:center; gap:6px; }
+.cov__lg b{ color:var(--ink-900); }
+.cov__sw{ width:9px; height:9px; flex:none; }
+.cov__sw--fixed{ background:var(--bronze); }
+.cov__sw--tentative{ box-shadow:inset 0 0 0 1px var(--bronze-text); }
+.cov__sw--vacant{ box-shadow:inset 0 0 0 1px var(--ink-500); transform:rotate(45deg); }
+
+/* ══ FIG.03 · ПУТЬ ОБЪЕКТА ═════════════════════════════════════════════════ */
+.pp__rail{ stroke:var(--hairline); stroke-width:1.5; fill:none; }
+.pp__dot{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.5; }
+.pp__lb{ font-family:var(--mono); font-size:10px; letter-spacing:.07em;
+  text-transform:uppercase; fill:var(--ink-700); }
+.pp__j{ cursor:pointer; }
+.pp__hit{ stroke:transparent; stroke-width:34; fill:none; }
+.pp__brk{ stroke:var(--hairline); stroke-width:1.25; }
+.pp__jn{ fill:var(--bg-page); stroke:var(--bronze); stroke-width:1.25;
+  transition:fill var(--t-2) var(--ease); }
+.pp__jt{ font-family:var(--mono); font-size:11px; fill:var(--bronze-text);
+  transition:fill var(--t-2) var(--ease); }
+.pp__j:hover .pp__jn, .pp__j.is-hi .pp__jn, .pp__j:focus-visible .pp__jn{ fill:var(--bronze); }
+.pp__j:hover .pp__jt, .pp__j.is-hi .pp__jt, .pp__j:focus-visible .pp__jt{ fill:#fff; }
+.pp__j:focus{ outline:none; }
+.pp__j:focus-visible .pp__jn{ stroke:var(--bronze-focus); stroke-width:2; }
+
+.ho__row.is-hi{ background:var(--bg-sunken); }
+.ho__n{ display:inline-flex; align-items:center; justify-content:center;
+  width:17px; height:17px; margin-right:8px; flex:none;
+  border:1px solid var(--bronze); border-radius:50%;
+  font-family:var(--mono); font-size:10.5px; font-weight:400; color:var(--bronze-text); }
+.ho__step{ display:flex; align-items:center; }
+
+/* правило проекта, а не открытый вопрос — отмечено, чтобы не искали пробел */
+.dec__row.is-rule .dec__w{ font-weight:600; }
+.dec__row.is-rule{ background:var(--bg-sunken); }
+
+/* ══ ОТКРЫТЫЕ ВОПРОСЫ ══════════════════════════════════════════════════════ */
+.team__open{ list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:var(--sp-5); }
+.team__open li{ padding:var(--sp-5); border:1px solid var(--hairline);
+  border-left:2px solid var(--bronze); background:var(--bg-sunken); }
+.op__q{ display:flex; gap:var(--sp-3); margin:0 0 var(--sp-3);
+  font-family:var(--serif); font-size:16px; color:var(--ink-900); line-height:1.35; }
+.op__q b{ font-family:var(--mono); font-size:11px; font-weight:400;
+  color:var(--bronze-text); padding-top:4px; flex:none; }
+.op__w{ margin:0 0 var(--sp-3); font-size:14px; line-height:1.55; color:var(--ink-700); }
+.op__n{ margin:0; padding-top:var(--sp-3); border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:11.5px; line-height:1.5; color:var(--ink-900); }
+
+@media (max-width:640px){
+  .fig__body svg{ min-width:560px; }
+  .team__open{ grid-template-columns:1fr; }
+}
 
 </style>
 </head>
@@ -1022,6 +1134,13 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
       <h2 data-i18n="team.title">Команда проекта</h2>
       <p data-i18n="team.lead">Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.</p>
     </div>
+    <figure class="fig" id="teamFig1">
+      <figcaption><span class="fig__n">Fig. 02</span>
+        <span data-i18n="team.fig1">Карта ответственности: что вокруг объекта и кто это держит</span></figcaption>
+      <div class="fig__body"><!-- filled by app.js --></div>
+      <div class="fig__key" id="teamKey"><!-- filled by app.js --></div>
+    </figure>
+
     <div class="team" id="team"><!-- filled by app.js --></div>
 
     <div class="team__block">
@@ -1037,6 +1156,11 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
     <div class="team__block">
       <h3 data-i18n="team.hoTitle">Где поток рвётся чаще всего</h3>
+      <figure class="fig" id="teamFig2">
+        <figcaption><span class="fig__n">Fig. 03</span>
+          <span data-i18n="team.fig2">Путь объекта и стыки, на которых он останавливается</span></figcaption>
+        <div class="fig__body"><!-- filled by app.js --></div>
+      </figure>
       <div class="ho" id="teamHo"><!-- filled by app.js --></div>
     </div>
 
@@ -1302,23 +1426,31 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
    ── ЧТО ЗДЕСЬ МОЖЕТ БЫТЬ, А ЧЕГО НЕ МОЖЕТ ─────────────────────────────────
    Раздел документирует ФУНКЦИЮ, а не оценку человека. Проверка перед тем,
    как что-то сюда вписать: «эту фразу было бы нормально показать тому, о ком
-   она написана?» Если нет — сюда она не идёт.
+   она написана?» Если нет — сюда она не идёт. Портал публичный.
 
    Никогда не попадает: оценки надёжности и компетентности людей,
    вознаграждение и доли, внутренние финансовые конструкции, всё, что
    сформулировано как мнение, а не как факт.
 
-   Собрано по рабочим совещаниям 21–22.08.2026. Пустое поле означает
+   Проблемы формулируются как состояние проекта, а не как претензия к
+   человеку: подлежащее — работа, а не фамилия. Правильная форма — «такой-то
+   комплект собран не полностью, ответственный не назначен». Пример
+   неправильной формы здесь не приводится: он сам был бы такой претензией.
+
+   Уточнено по правкам владельца 25.08.2026. Пустое поле означает
    «пока не зафиксировано» и показывается прочерком — выдумывать нельзя.
    ============================================================================ */
 (function () {
   const P = (o) => Object.assign({
     id: '', name: null, role: '', scope: '',
+    icon: 'dot',            // ключ глифа функции
+    state: 'fixed',         // 'fixed' — закреплено | 'tentative' — под вопросом | 'vacant' — не закреплено
     owns: '',               // чем функция владеет — одним предложением
     responsibilities: [],   // что человек делает
     deliverables: [],       // что обязан дать проекту: [{ text, status:'open'|'done'|null }]
     dependencies: [],       // что ему нужно от других, чтобы это было возможно
     checks: [],             // как понять, что функция работает
+    note: null,             // факт о состоянии функции, не оценка человека
     vacant: false
   }, o);
 
@@ -1326,7 +1458,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
     people: [
       P({
-        id: 'owner', name: 'Пётр Леонидович', role: 'Владелец',
+        id: 'owner', name: 'Пётр Леонидович', role: 'Владелец', icon: 'owner',
         scope: 'Стратегия, финансирование, договоры с партнёрами',
         owns: 'Конечное решение по деньгам, партнёрам и стратегии проекта.',
         responsibilities: [
@@ -1335,7 +1467,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           'Принимает решения о привлечении финансирования',
           'Ведёт ежедневный слот: час Греция, час Украина',
           'Разрешает вопросы, которые функции не сняли между собой',
-          'Утверждает итоговую цену и условия продажи по объекту'
+          'Утверждает итоговую цену и условия продажи по объекту',
+          'Утверждает любое денежное обязательство — порога нет'
         ],
         deliverables: [
           { text: 'Утверждённый годовой бюджет направления', status: 'open' },
@@ -1350,11 +1483,12 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         checks: [
           'Вопрос, вынесенный на слот, получает да или нет в тот же слот',
           'По любому объекту видно, кто и когда утвердил текущую цену'
-        ]
+        ],
+        note: 'Все денежные решения проходят через владельца. Это принятое правило проекта, а не пробел.'
       }),
 
       P({
-        id: 'ops', name: 'Алекс Гончаревский', role: 'Операционный директор',
+        id: 'ops', name: 'Алекс Гончаревский', role: 'Операционный директор', icon: 'ops',
         scope: 'Паспорта объектов, архив, портал, визуализации',
         owns: 'Единый источник правды по всем объектам — архив, паспорта, портал.',
         responsibilities: [
@@ -1368,6 +1502,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         deliverables: [
           { text: 'Паспорт на каждый из 11 объектов', status: 'open' },
           { text: 'Сводный реестр объектов', status: 'done' },
+          { text: 'Портал с картой и реестром', status: 'done' },
           { text: 'Сайт на польском и английском', status: 'open' },
           { text: 'Отчёт аудита присутствия на площадках', status: 'open' }
         ],
@@ -1383,70 +1518,53 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       }),
 
       P({
-        id: 'coordinator', name: 'Костя', role: 'Координатор проекта',
-        scope: 'Сборка активов в структуру, ритм работы, открытые вопросы',
-        owns: 'То, что разрозненные активы двигаются как одна структура, а не 11 историй.',
-        responsibilities: [
-          'Готовит повестку и протокол ежедневного слота',
-          'Собирает функции на рабочие сессии между слотами',
-          'Ведёт трекер открытых вопросов: кто кого ждёт',
-          'Держит партнёрское взаимодействие в рабочем ритме',
-          'Следит, чтобы решения владельца доходили без искажений'
-        ],
-        deliverables: [
-          { text: 'Протокол ежедневного слота', status: 'open' },
-          { text: 'Трекер межфункциональных вопросов', status: 'open' }
-        ],
-        dependencies: [
-          'Участие всех функций в слоте',
-          'Полномочие от владельца спрашивать за просрочку'
-        ],
-        checks: [
-          'Слот проходит по расписанию с нужными людьми',
-          'Открытый вопрос между функциями не висит неделями без ответственного'
-        ]
-      }),
-
-      P({
-        id: 'legal', name: 'Павел', role: 'Документы и право',
-        scope: 'Правоустанавливающие документы, модель сделки по объекту',
-        owns: 'Юридическую чистоту и правовую модель продажи по каждому объекту.',
+        id: 'legal', name: 'Павел', role: 'Право и финансы направления', icon: 'legal',
+        scope: 'Документы, структура сделки, экономика объекта',
+        owns: 'Юридическую чистоту, структуру сделки и экономику по каждому объекту.',
         responsibilities: [
           'Собирает и хранит правоустанавливающие документы и статус собственности',
-          'Фиксирует подключения в юридическом разрезе',
           'Готовит модель продажи отдельно по каждому объекту',
+          'Определяет юрлицо и структуру, через которую проходит сделка',
+          'Отслеживает налоговые последствия сделки',
+          'Собирает фактическую стоимость владения по объекту',
+          'Готовит экономику объекта до того, как ему присвоена цена',
+          'Сводит бюджет направления и следит за исполнением факт/план',
           'Проверяет материалы перед публикацией на утечку внутренних сведений',
           'Сигнализирует, если объект нельзя считать готовым к продаже'
         ],
         deliverables: [
           { text: 'Юридическое досье по объекту', status: 'open' },
-          { text: 'Модель продажи по объекту', status: 'open' }
+          { text: 'Модель продажи по объекту', status: 'open' },
+          { text: 'Схема владения по объекту', status: 'open' },
+          { text: 'Экономика объекта: себестоимость, цена, маржа', status: 'open' },
+          { text: 'Сводный бюджет направления', status: 'open' }
         ],
         dependencies: [
           'Физический доступ к документам и объектам',
           'Список приоритетных объектов',
-          'Бюджет на нотариальные и кадастровые расходы'
+          'Бюджет на нотариальные и кадастровые расходы',
+          'Доступ к данным о затратах по объектам'
         ],
         checks: [
-          'Ни один объект не помечен «готов к продаже» без задокументированного титула'
+          'Ни один объект не помечен «готов к продаже» без задокументированного титула',
+          'У любой опубликованной цены есть письменное обоснование',
+          'До подписания условий известно, через какую структуру идёт сделка'
         ]
       }),
 
       P({
-        id: 'marketing', name: 'Алина', role: 'Маркетинг',
-        scope: 'Польша и Скандинавия, контент, партнёрские агентства',
-        owns: 'То, как проект выглядит и звучит для покупателя в Европе.',
+        id: 'cmo', name: 'Богдан', role: 'Директор маркетинга', icon: 'cmo',
+        scope: 'Продвижение направления, распределение задач внутри маркетинга',
+        owns: 'Результат по продвижению и то, кто внутри маркетинга что делает.',
         responsibilities: [
-          'Строит позиционирование отдельно под польский и скандинавский рынок',
-          'Производит имиджевый контент по утверждённым фактам',
-          'Ведёт сеть партнёрских агентств',
-          'Сверяет каждый факт в материалах с паспортом объекта',
-          'Проверяет материалы на смешение языков и оставшиеся заглушки'
+          'Отвечает за продвижение направления в целом',
+          'Распределяет маркетинговые задачи внутри своей команды',
+          'Определяет, что именно закрывает сайт, а что — другие каналы',
+          'Согласует материалы с фактами из паспорта объекта'
         ],
         deliverables: [
-          { text: 'Кампания по рынку: Польша и Скандинавия', status: 'open' },
-          { text: 'Фото- и видеоконтент по объектам', status: 'open' },
-          { text: 'Реестр партнёрских агентств с условиями', status: 'open' }
+          { text: 'План продвижения направления', status: 'open' },
+          { text: 'Распределение зон внутри маркетинга', status: 'open' }
         ],
         dependencies: [
           'Проверенные факты и одобренные фото',
@@ -1454,26 +1572,105 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           'Утверждённая ценовая позиция и бюджет на кампании'
         ],
         checks: [
-          'Ни один факт в материалах не расходится с паспортом объекта',
-          'В материалах нет чужого языка и служебных пометок'
+          'По каждой маркетинговой задаче известен исполнитель',
+          'Ни один факт в материалах не расходится с паспортом объекта'
         ]
       }),
 
       P({
-        id: 'greece-ops', name: null, role: 'Операции в Греции',
+        id: 'web', name: 'Костя', role: 'Маркетинг: сайт и подрядчики', icon: 'web',
+        state: 'tentative',
+        scope: 'Сайт, подрядчики по сайту, продвижение',
+        owns: 'Сайт проекта и работу подрядчиков по нему.',
+        responsibilities: [
+          'Делает сайт или ведёт подрядчика, который его делает',
+          'Контролирует сроки и качество работ по сайту',
+          'Участвует в продвижении по задачам от директора маркетинга'
+        ],
+        deliverables: [
+          { text: 'Работающий сайт проекта', status: 'open' },
+          { text: 'Реестр подрядчиков по сайту с условиями', status: 'open' }
+        ],
+        dependencies: [
+          'Постановка задачи от директора маркетинга',
+          'Утверждённые факты и фото по объектам',
+          'Бюджет на подрядчиков'
+        ],
+        checks: [
+          'По сайту известны срок, подрядчик и текущая стадия'
+        ],
+        note: 'Точный объём зоны не зафиксирован. Границы определяет директор маркетинга.'
+      }),
+
+      P({
+        id: 'estimates', name: 'Алина', role: 'Сметы', icon: 'estimates',
+        scope: 'Сметы на работы по объектам, проверка объёмов',
+        owns: 'Стоимость работ по объекту в цифрах, которые можно проверить.',
+        responsibilities: [
+          'Считает сметы на подготовку объекта к продаже',
+          'Проверяет объёмы работ, заявленные подрядчиком',
+          'Сверяет фактические затраты со сметой',
+          'Даёт сравнение цен по подрядчикам'
+        ],
+        deliverables: [
+          { text: 'Смета работ по объекту', status: 'open' },
+          { text: 'Сверка факт/смета по завершённым работам', status: 'open' }
+        ],
+        dependencies: [
+          'Определённый объём работ по объекту',
+          'Техническое заключение о состоянии объекта',
+          'Доступ к фактическим счетам подрядчиков'
+        ],
+        checks: [
+          'Подрядчик не привлекается без сметы и сравнения по цене'
+        ]
+      }),
+
+      P({
+        id: 'onsite', name: 'Лариса', role: 'Работа на месте и сделки', icon: 'deal',
+        state: 'tentative',
+        scope: 'Доступ на объекты, ведение сделки, передача покупателю',
+        owns: 'Контакт с объектом и покупателем на территории Греции.',
+        responsibilities: [
+          'Обеспечивает доступ на объекты для осмотра и показа',
+          'Ведёт переговоры с покупателем по цене и условиям',
+          'Согласует с юристом условия конкретной сделки',
+          'Координирует передачу объекта: ключи, документы, счётчики',
+          'Остаётся точкой контакта для покупателя после сделки'
+        ],
+        deliverables: [
+          { text: 'Комплект документов по объектам', status: 'open' },
+          { text: 'Протокол переговоров по сделке', status: 'open' },
+          { text: 'Чек-лист передачи объекта', status: 'open' }
+        ],
+        dependencies: [
+          'Письменно закреплённая зона ответственности',
+          'Границы полномочий по цене и скидке',
+          'Модель продажи от юриста',
+          'Заблаговременное уведомление о визитах покупателей'
+        ],
+        checks: [
+          'По любой активной сделке есть ответственный, знающий её стадию',
+          'Запрос на доступ выполняется в согласованный срок'
+        ],
+        note: 'Зона закреплена фактически, но не оформлена письменно. Объём полномочий требует подтверждения владельца.'
+      }),
+
+      P({
+        id: 'greece-ops', name: null, role: 'Операции в Греции', icon: 'onsite',
+        state: 'vacant', vacant: true,
         scope: 'Отель, инвентаризация на месте, коммуникации',
         owns: 'Физическое состояние и готовность объектов на месте.',
         responsibilities: [
           'Ведёт отель до конца сезона и готовит к передаче',
           'Проводит инвентаризацию имущества на объектах',
           'Проверяет электричество, воду и септик на месте',
-          'Ведёт чек-листы готовности объекта к показу и сделке',
-          'Согласует доступ на объект с держателями ключей'
+          'Ведёт чек-листы готовности объекта к показу и сделке'
         ],
         deliverables: [
-          { text: 'Опись имущества по объекту', status: 'open' },
-          { text: 'Акт проверки коммуникаций', status: 'open' },
-          { text: 'Чек-лист готовности объекта', status: 'open' }
+          { text: 'Опись имущества по объекту', status: null },
+          { text: 'Акт проверки коммуникаций', status: null },
+          { text: 'Чек-лист готовности объекта', status: null }
         ],
         dependencies: [
           'Заблаговременное уведомление о визитах покупателей',
@@ -1483,28 +1680,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         ],
         checks: [
           'По любому объекту видно, когда в последний раз проверялись коммуникации'
-        ]
-      }),
-
-      P({
-        id: 'keys', name: 'Фома', role: 'Доступ на объекты',
-        scope: 'Квартира и магазин в Ханье',
-        owns: 'Физический доступ к закреплённым объектам.',
-        responsibilities: [
-          'Хранит ключи от квартиры и магазина в Ханье',
-          'Передаёт доступ для осмотра или показа по запросу',
-          'Сообщает о видимых изменениях состояния объекта'
         ],
-        deliverables: [
-          { text: 'Ключи от двух объектов в Ханье для осмотра', status: 'open' }
-        ],
-        dependencies: [
-          'Заранее согласованное время запроса',
-          'Одна точка контакта, а не пять разных людей'
-        ],
-        checks: [
-          'Запрос на доступ выполняется в согласованный срок без напоминаний'
-        ]
+        note: 'Человек не закреплён.'
       })
     ],
 
@@ -1512,136 +1689,66 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
        Названная дыра полезнее умолчания. */
     gaps: [
       P({
-        id: 'finance', vacant: true, role: 'Финансы направления',
-        scope: 'Экономика объекта, бюджет, сверки',
-        owns: 'Экономику каждого объекта: от чего считается цена и какая маржа.',
-        responsibilities: [
-          'Собирает фактическую стоимость владения по объекту',
-          'Готовит экономику объекта до того, как ему присвоена цена',
-          'Сводит бюджет проекта и следит за исполнением факт/план',
-          'Сверяет поступления и комиссии по каналам бронирования'
-        ],
-        deliverables: [
-          { text: 'Экономика объекта: себестоимость, цена, маржа', status: null },
-          { text: 'Сводный отчёт по направлению', status: null }
-        ],
-        dependencies: [
-          'Доступ к разрозненным данным о затратах',
-          'Мандат требовать экономику до публикации цены',
-          'Доступ к счетам и кабинетам каналов'
-        ],
-        checks: [
-          'У любой опубликованной цены есть письменное обоснование'
-        ]
-      }),
-      P({
-        id: 'tech', vacant: true, role: 'Технический надзор',
-        scope: 'Состояние объектов, сметы, подрядчики',
-        owns: 'Техническое состояние объектов и стоимость работ.',
+        id: 'tech', vacant: true, state: 'vacant', role: 'Технический надзор', icon: 'tech',
+        scope: 'Состояние объектов, подрядчики, контроль работ',
+        owns: 'Техническое состояние объектов и качество выполненных работ.',
         responsibilities: [
           'Даёт техническое заключение по объекту',
-          'Готовит смету на подготовку объекта к продаже',
+          'Определяет объём работ, который потом считает сметчик',
           'Выбирает подрядчиков и ведёт их реестр',
-          'Контролирует ход работ и сверяет факт со сметой'
+          'Контролирует ход работ и принимает результат'
         ],
         deliverables: [
           { text: 'Техническое заключение по объекту', status: null },
-          { text: 'Смета работ', status: null }
+          { text: 'Объём работ по объекту', status: null },
+          { text: 'Реестр подрядчиков', status: null }
         ],
         dependencies: [
           'Доступ на объект',
-          'Определённый объём работ',
-          'Право выбирать подрядчика в рамках бюджета'
+          'Право выбирать подрядчика в рамках утверждённого бюджета'
         ],
         checks: [
-          'Подрядчик не привлекается без письменного объёма работ и сравнения по цене'
-        ]
-      }),
-      P({
-        id: 'deal', vacant: true, role: 'Ведение сделки',
-        scope: 'Покупатель от первого контакта до подписания',
-        owns: 'Конкретного покупателя и переговоры по конкретной сделке.',
-        responsibilities: [
-          'Ведёт переговоры по цене и условиям',
-          'Фиксирует ход переговоров по каждой активной сделке',
-          'Согласует с юристом условия конкретной сделки',
-          'Держит воронку активных сделок в актуальном состоянии'
+          'Работы принимаются по заранее описанному объёму, а не по факту'
         ],
-        deliverables: [
-          { text: 'Протокол переговоров по сделке', status: null },
-          { text: 'Воронка активных сделок', status: null }
-        ],
-        dependencies: [
-          'Лид от маркетинга без потери контекста',
-          'Границы полномочий по цене и скидке',
-          'Модель продажи от юриста'
-        ],
-        checks: [
-          'По любой активной сделке есть ответственный, знающий её стадию'
-        ]
-      }),
-      P({
-        id: 'aftersale', vacant: true, role: 'После сделки',
-        scope: 'Передача объекта и отношения с покупателем',
-        owns: 'Отношения с покупателем после подписания.',
-        responsibilities: [
-          'Готовит чек-лист передачи объекта',
-          'Координирует передачу: ключи, документы, показания счётчиков',
-          'Остаётся точкой контакта для покупателя после сделки',
-          'Фиксирует обращения покупателя и их закрытие'
-        ],
-        deliverables: [
-          { text: 'Чек-лист передачи объекта', status: null },
-          { text: 'Реестр обращений после продажи', status: null }
-        ],
-        dependencies: [
-          'Чек-лист готовности от операций на месте',
-          'Доступность держателя ключей на дату передачи',
-          'Решение, что именно обещано покупателю после сделки'
-        ],
-        checks: [
-          'После передачи покупатель знает, к кому обращаться'
-        ]
-      }),
-      P({
-        id: 'entity', vacant: true, role: 'Юрлицо и налоги',
-        scope: 'Структура владения и сделки по объекту',
-        owns: 'То, через какую структуру проходит каждая сделка.',
-        responsibilities: [
-          'Определяет структуру владения и продажи по объекту',
-          'Отслеживает налоговые последствия сделки',
-          'Синхронизируется с юристом по проверенным объектам',
-          'Готовит вариант структуры до согласования условий с покупателем'
-        ],
-        deliverables: [
-          { text: 'Схема владения по объекту', status: null }
-        ],
-        dependencies: [
-          'Ясность по предпочтительной юрисдикции',
-          'Результат проверки титула от юриста'
-        ],
-        checks: [
-          'До подписания условий известно, через какую структуру идёт сделка'
-        ]
+        note: 'Ответственный не определён. Сметную часть закрывает Алина, техническую — никто.'
       })
     ],
 
     /* Повторяющиеся решения: кто решает, с кем советуется, кого информируют */
     decisions: [
-      { what: 'Цена объекта', who: 'owner', consult: ['finance', 'ops', 'marketing'], inform: ['coordinator', 'legal'] },
-      { what: 'Скидка на сделке', who: 'owner', consult: ['deal', 'finance'], inform: ['ops', 'legal'] },
-      { what: 'Капитальные затраты', who: 'owner', consult: ['tech', 'finance'], inform: ['coordinator'] },
-      { what: 'Выбор подрядчика', who: 'tech', consult: ['greece-ops', 'legal'], inform: ['ops'] },
-      { what: 'Условия сделки', who: 'owner', consult: ['legal', 'deal', 'entity'], inform: ['ops', 'coordinator'] },
-      { what: 'Публикация материалов', who: 'ops', consult: ['owner', 'marketing', 'legal'], inform: ['coordinator'] }
+      { what: 'Любое денежное обязательство', who: 'owner', consult: ['legal'], inform: ['ops'], rule: true },
+      { what: 'Цена объекта', who: 'owner', consult: ['legal', 'ops', 'cmo'], inform: ['onsite'] },
+      { what: 'Скидка на сделке', who: 'owner', consult: ['onsite', 'legal'], inform: ['ops'] },
+      { what: 'Капитальные затраты', who: 'owner', consult: ['tech', 'estimates', 'legal'], inform: ['ops'] },
+      { what: 'Выбор подрядчика', who: 'owner', consult: ['tech', 'estimates'], inform: ['ops'] },
+      { what: 'Условия сделки', who: 'owner', consult: ['legal', 'onsite'], inform: ['ops'] },
+      { what: 'Маркетинговые задачи', who: 'cmo', consult: ['ops'], inform: ['owner'] },
+      { what: 'Публикация материалов', who: 'ops', consult: ['owner', 'cmo', 'legal'], inform: [] }
     ],
 
     /* Не определено и требует решения владельца */
     open: [
-      'Денежный порог, ниже которого технадзор и операционный директор решают сами',
-      'Срок, в который владелец отвечает по спорным объектам',
-      'Срок предупреждения для держателей ключей',
-      'Длительность постпродажного сопровождения'
+      { q: 'Срок, в который владелец отвечает по вынесенному вопросу',
+        why: 'При отъезде владельца работа по спорным объектам останавливается: решить некому.',
+        need: 'Нужен предельный срок ответа и тот, кто решает вместо владельца, пока его нет.' },
+      { q: 'Кто закрывает технический надзор',
+        why: 'Сметы считает Алина, но объём работ и приёмку никто не подписывает.',
+        need: 'Назначить ответственного или вынести функцию на подряд.' },
+      { q: 'Комплект правоустанавливающих документов по объектам',
+        why: 'Документы собраны не по всем объектам, единый ответственный со сроком не назначен.',
+        need: 'Назначить одного ответственного и дату, к которой комплект закрыт.' },
+      { q: 'Письменное закрепление зоны на месте',
+        why: 'Доступ, сделка и передача фактически держатся на одном человеке без оформленных полномочий.',
+        need: 'Зафиксировать зону и границы полномочий письменно.' },
+      { q: 'Границы зоны маркетинга по сайту',
+        why: 'Не определено, что именно закрывает сайт и кто ведёт подрядчика.',
+        need: 'Директор маркетинга распределяет и фиксирует зоны.' },
+      { q: 'За сколько предупреждать о визите на объект',
+        why: 'Без общего правила показ может сорваться: на месте не готовы открыть объект.',
+        need: 'Договориться о минимальном сроке уведомления.' },
+      { q: 'Длительность сопровождения после продажи',
+        why: 'Не определено, как долго проект остаётся на связи с покупателем и за что отвечает.',
+        need: 'Определить срок и объём обязательств после передачи.' }
     ],
 
     /* Места, где поток чаще всего рвётся, и правило против каждого */
@@ -1664,7 +1771,10 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       { from: 'Продан', to: 'Передан',
         risk: 'Передача срывается: ключи недоступны, готовность не проверена',
         rule: 'Дата закрытия назначается только при готовом чек-листе и доступном держателе ключей' }
-    ]
+    ],
+
+    /* Путь объекта — этапы для схемы FIG.03 */
+    pipeline: ['Найден', 'Документы', 'Экономика', 'Материалы', 'Выставлен', 'Продан', 'Передан']
   };
 })();
 
@@ -1740,6 +1850,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'team.title': 'Команда проекта',
       'team.lead': 'Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.',
       'team.thName': 'Имя', 'team.thRole': 'Функция', 'team.thScope': 'Зона', 'team.thN': 'Объектов', 'team.thContact': 'Контакт',
+      'team.thState': 'Состояние',
+      'st.fixed': 'закреплено', 'st.tentative': 'под вопросом', 'st.vacant': 'не закреплено',
+      'team.fig1': 'Карта ответственности: что вокруг объекта и кто это держит',
+      'team.fig2': 'Путь объекта и стыки, на которых он останавливается',
+      'team.hub': 'Объектов', 'team.cov': 'Покрытие функций',
       'team.duties': 'Обязанности', 'team.owes': 'Обязан дать проекту', 'team.needs': 'Нужно от других', 'team.check': 'Как понять, что работает',
       'team.vacant': 'не назначен', 'team.unassigned': 'исполнитель не закреплён',
       'team.gapsTitle': 'Функции без исполнителя',
@@ -1856,6 +1971,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'team.title': 'Zespół projektu',
       'team.lead': 'Kto za co odpowiada, co ma dostarczyć i czego do tego potrzebuje.',
       'team.thName': 'Imię', 'team.thRole': 'Funkcja', 'team.thScope': 'Obszar', 'team.thN': 'Obiektów', 'team.thContact': 'Kontakt',
+      'team.thState': 'Stan',
+      'st.fixed': 'przypisane', 'st.tentative': 'do potwierdzenia', 'st.vacant': 'nieprzypisane',
+      'team.fig1': 'Mapa odpowiedzialności: co otacza obiekt i kto to prowadzi',
+      'team.fig2': 'Droga obiektu i styki, na których się zatrzymuje',
+      'team.hub': 'Obiektów', 'team.cov': 'Pokrycie funkcji',
       'team.duties': 'Obowiązki', 'team.owes': 'Ma dostarczyć', 'team.needs': 'Potrzebuje od innych', 'team.check': 'Jak sprawdzić, że działa',
       'team.vacant': 'nieobsadzona', 'team.unassigned': 'brak przypisania',
       'team.gapsTitle': 'Funkcje bez obsady',
@@ -1972,6 +2092,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'team.title': 'Project team',
       'team.lead': 'Who is responsible for what, what they owe the project, and what they need to deliver it.',
       'team.thName': 'Name', 'team.thRole': 'Function', 'team.thScope': 'Scope', 'team.thN': 'Properties', 'team.thContact': 'Contact',
+      'team.thState': 'Status',
+      'st.fixed': 'assigned', 'st.tentative': 'to confirm', 'st.vacant': 'unassigned',
+      'team.fig1': 'Responsibility map: what surrounds a property and who holds it',
+      'team.fig2': 'The path of a property and the joints where it stalls',
+      'team.hub': 'Properties', 'team.cov': 'Function coverage',
       'team.duties': 'Responsibilities', 'team.owes': 'Owes the project', 'team.needs': 'Needs from others', 'team.check': 'How to tell it works',
       'team.vacant': 'unstaffed', 'team.unassigned': 'no one assigned',
       'team.gapsTitle': 'Functions with no one assigned',
@@ -2869,6 +2994,32 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
      their content is prose-shaped, so a second slide-over would be a click
      tax on a roster meant to be read start to finish.
      ══════════════════════════════════════════════════════════════════════ */
+
+  /* Глифы функций. Чертёжный язык плиты: только контур, один вес линии,
+     currentColor — иконка живёт в потоке текста, а не рядом с ним. */
+  const PATHS = {};
+  const G = (d) => d;   // сырой контур: он нужен и в тексте, и внутри схемы
+  const GLYPH = {
+    owner:     G('<circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.2"/>'),
+    ops:       G('<rect x="2.5" y="2.5" width="5" height="5"/><rect x="8.5" y="2.5" width="5" height="5"/><rect x="2.5" y="8.5" width="5" height="5"/><rect x="8.5" y="8.5" width="5" height="5"/>'),
+    legal:     G('<path d="M3.5 2h6l3 3v9h-9z"/><path d="M9.5 2v3h3"/><path d="M5.5 8.5h5M5.5 11h3.5"/>'),
+    cmo:       G('<path d="M3 6.5v3h2.5l5 3v-9l-5 3z"/><path d="M12.5 5.5a4 4 0 0 1 0 5"/>'),
+    web:       G('<rect x="2" y="3" width="12" height="10"/><path d="M2 6h12"/><circle cx="4.2" cy="4.5" r=".5"/>'),
+    estimates: G('<rect x="2" y="5" width="12" height="6"/><path d="M5 5v2.5M8 5v3.5M11 5v2.5"/>'),
+    deal:      G('<path d="M2 8.5l3-3 3 3 3-3 3 3"/><path d="M2 12l3-3 3 3 3-3 3 3"/>'),
+    onsite:    G('<path d="M8 14s4.5-4.6 4.5-7.5a4.5 4.5 0 1 0-9 0C3.5 9.4 8 14 8 14z"/><circle cx="8" cy="6.5" r="1.8"/>'),
+    tech:      G('<circle cx="5.5" cy="5.5" r="3"/><path d="M7.7 7.7L13 13"/><path d="M11.5 11.5l-1.2 1.2 1.5 1.5 1.2-1.2z"/>'),
+    dot:       G('<circle cx="8" cy="8" r="3"/>')
+  };
+  Object.keys(GLYPH).forEach((k) => { PATHS[k] = GLYPH[k]; });
+  const glyph = (k) =>
+    `<svg class="gl" viewBox="0 0 16 16" aria-hidden="true">${PATHS[k] || PATHS.dot}</svg>`;
+
+  /* Три состояния функции. Различаются формой, а не только цветом —
+     цвет один и тот же в печати и у дальтоника. */
+  const STATE = { fixed: 'st.fixed', tentative: 'st.tentative', vacant: 'st.vacant' };
+  const stateOf = (p) => p.state || (p.vacant ? 'vacant' : 'fixed');
+
   const TEAM = window.IronTeam || { people: [], gaps: [], decisions: [], handoffs: [], open: [] };
   const everyone = () => TEAM.people.concat(TEAM.gaps);
   const roleOf = (id) => { const p = everyone().filter((x) => x.id === id)[0]; return p ? p.role : id; };
@@ -2877,9 +3028,111 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   const loadOf = (p) => Iron.list().filter((o) =>
     o.responsible && (o.responsible.personId === p.id)).length;
 
+  /* ── FIG.02 · Карта ответственности ───────────────────────────────────────
+     Радиальная схема: в центре объект, вокруг — функции, которые к нему
+     прикладываются. Форма узла кодирует состояние: сплошной контур —
+     закреплено, штрих — под вопросом, точки — не закреплено. Смысл читается
+     без цвета: схему печатают чёрно-белой. */
+  function figResp() {
+    const all = everyone();
+    const cx = 450, cy = 246, rx = 250, ry = 146;
+    const n = all.length;
+    const nodes = all.map((p, i) => {
+      const a = (-90 + (i * 360) / n) * Math.PI / 180;
+      const co = Math.cos(a), si = Math.sin(a);
+      return { p, co, si, x: cx + rx * co, y: cy + ry * si, st: stateOf(p) };
+    });
+
+    const links = nodes.map((d) => {
+      // лёгкий изгиб — иначе девять прямых лучей читаются как колесо, а не как связи
+      const mx = cx + (d.x - cx) * 0.55 - d.si * 26;
+      const my = cy + (d.y - cy) * 0.55 + d.co * 26;
+      return `<path class="rz__link rz__link--${d.st}" d="M${cx} ${cy}Q${mx.toFixed(1)} ${my.toFixed(1)} ${d.x.toFixed(1)} ${d.y.toFixed(1)}"/>`;
+    }).join('');
+
+    const marks = nodes.map((d) => {
+      const vert = Math.abs(d.co) < 0.3;                 // сверху и снизу подпись центрируется
+      const side = d.co >= 0 ? 1 : -1;
+      const ax = vert ? 'middle' : (side > 0 ? 'start' : 'end');
+      const lx = vert ? d.x : d.x + side * 26;
+      const ly = vert ? (d.si < 0 ? d.y - 34 : d.y + 40) : d.y - 4;
+      const nm = d.p.name || t(d.p.vacant ? 'team.vacant' : 'team.unassigned');
+      return `<g class="rz__n rz__n--${d.st}">
+        <circle class="rz__ring" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="17"/>
+        <svg x="${(d.x - 8).toFixed(1)}" y="${(d.y - 8).toFixed(1)}" width="16" height="16"
+             viewBox="0 0 16 16" class="rz__gl">${PATHS[d.p.icon] || PATHS.dot}</svg>
+        <text class="rz__role" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${ax}">${esc(d.p.role)}</text>
+        <text class="rz__nm" x="${lx.toFixed(1)}" y="${(ly + 15).toFixed(1)}" text-anchor="${ax}">${esc(nm)}</text>
+      </g>`;
+    }).join('');
+
+    return `<svg class="rz" viewBox="0 0 900 492" role="img"
+        aria-label="${esc(t('team.fig1'))}">
+      <g class="rz__links">${links}</g>
+      <circle class="rz__hub" cx="${cx}" cy="${cy}" r="46"/>
+      <text class="rz__hubT" x="${cx}" y="${cy - 3}" text-anchor="middle">${esc(t('team.hub'))}</text>
+      <text class="rz__hubN" x="${cx}" y="${cy + 15}" text-anchor="middle">${Iron.list().length}</text>
+      ${marks}
+    </svg>`;
+  }
+
+  /* Покрытие функций одной полосой: сколько закреплено, сколько под вопросом,
+     сколько не закреплено вовсе. Считается из данных, руками не дублируется. */
+  function figKey() {
+    const all = everyone();
+    const cnt = { fixed: 0, tentative: 0, vacant: 0 };
+    all.forEach((p) => { cnt[stateOf(p)] += 1; });
+    const total = all.length || 1;
+    const bar = ['fixed', 'tentative', 'vacant'].map((k) =>
+      cnt[k] ? `<i class="cov__seg cov__seg--${k}" style="flex:${cnt[k]}"
+                   title="${esc(t(STATE[k]))}: ${cnt[k]}"></i>` : '').join('');
+    const legend = ['fixed', 'tentative', 'vacant'].map((k) =>
+      `<span class="cov__lg"><i class="cov__sw cov__sw--${k}" aria-hidden="true"></i>
+        ${esc(t(STATE[k]))} <b>${cnt[k]}</b></span>`).join('');
+    return `<div class="cov">
+        <div class="cov__bar" role="img"
+          aria-label="${esc(t('team.cov'))}: ${cnt.fixed}/${total}">${bar}</div>
+        <div class="cov__legend">${legend}</div>
+      </div>`;
+  }
+
+  /* ── FIG.03 · Путь объекта ────────────────────────────────────────────────
+     Этапы — узлы, стыки между ними — места, где поток рвётся. Номер на стыке
+     совпадает с номером строки в таблице ниже: схема и текст — одно и то же,
+     просто с двух сторон. */
+  function figPipe() {
+    const st = TEAM.pipeline || [];
+    if (!st.length) return '';
+    const w = 900, pad = 58, y = 62;
+    const gap = (w - pad * 2) / (st.length - 1);
+    const nodes = st.map((label, i) => {
+      const x = pad + gap * i;
+      return `<g class="pp__n">
+        <circle class="pp__dot" cx="${x.toFixed(1)}" cy="${y}" r="7"/>
+        <text class="pp__lb" x="${x.toFixed(1)}" y="${y - 20}" text-anchor="middle">${esc(label)}</text>
+      </g>`;
+    }).join('');
+    const joints = (TEAM.handoffs || []).map((h, i) => {
+      const x = pad + gap * i + gap / 2;
+      return `<g class="pp__j" data-ho="${i}" tabindex="0" role="button"
+          aria-label="${esc(h.risk)}">
+        <path class="pp__hit" d="M${(x - gap / 2).toFixed(1)} ${y}h${gap.toFixed(1)}"/>
+        <path class="pp__brk" d="M${x.toFixed(1)} ${y - 9}v18"/>
+        <circle class="pp__jn" cx="${x.toFixed(1)}" cy="${y + 30}" r="10"/>
+        <text class="pp__jt" x="${x.toFixed(1)}" y="${y + 34}" text-anchor="middle">${i + 1}</text>
+      </g>`;
+    }).join('');
+    return `<svg class="pp" viewBox="0 0 ${w} 108" role="img"
+        aria-label="${esc(t('team.fig2'))}">
+      <path class="pp__rail" d="M${pad} ${y}H${w - pad}"/>
+      ${joints}${nodes}
+    </svg>`;
+  }
+
+
   function personRow(p, i) {
     const n = loadOf(p);
-    const contact = (p.contact && (p.contact.telegram || p.contact.email || p.contact.phone)) || null;
+    const st = stateOf(p);
     const groups = [
       ['team.duties', p.responsibilities.map((x) => `<li>${esc(x)}</li>`).join('')],
       ['team.owes', p.deliverables.map((d) =>
@@ -2887,19 +3140,21 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       ['team.needs', p.dependencies.length ? p.dependencies.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`],
       ['team.check', p.checks.length ? p.checks.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`]
     ];
-    return `<button class="team__row${n ? ' is-loaded' : ''}${p.vacant ? ' is-vacant' : ''}" type="button"
+    return `<button class="team__row is-${st}${n ? ' is-loaded' : ''}" type="button"
         aria-expanded="false" data-person="${esc(p.id)}">
-        <i class="team__dot" aria-hidden="true"></i>
+        <i class="team__gl" aria-hidden="true">${glyph(p.icon)}</i>
         <span class="team__nm">${p.name ? esc(p.name) : `<em>${esc(t(p.vacant ? 'team.vacant' : 'team.unassigned'))}</em>`}</span>
         <span class="team__role">${esc(p.role)}</span>
         <span class="team__scope" title="${esc(p.scope)}">${esc(p.scope)}</span>
         <span class="team__n">${n}</span>
-        <span class="team__contact">${contact ? esc(contact) : dash}</span>
+        <span class="team__contact"><i class="team__st2 team__st2--${st}"
+          aria-hidden="true"></i>${esc(t(STATE[st]))}</span>
         <span class="team__chev" aria-hidden="true"></span>
       </button>
       <div class="fpanel team__panel" data-open="false" id="tp-${esc(p.id)}">
         <div class="fpanel__clip"><div class="fpanel__in team__in">
           <p class="team__owns">${esc(p.owns)}</p>
+          ${p.note ? `<p class="team__fact">${esc(p.note)}</p>` : ''}
           ${groups.map(([k, html]) => `<div class="fgrp"><legend>${esc(t(k))}</legend>
              <ul class="team__list">${html}</ul></div>`).join('')}
         </div></div>
@@ -2911,16 +3166,20 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     // head cells carry the body's column classes, or the responsive rules hide
     // body cells while the header keeps all seven and misaligns
     const head = `<div class="team__row team__row--head" role="row">
-      <span class="team__dot"></span>
+      <span class="team__gl"></span>
       <span class="team__nm">${esc(t('team.thName'))}</span>
       <span class="team__role">${esc(t('team.thRole'))}</span>
       <span class="team__scope">${esc(t('team.thScope'))}</span>
       <span class="team__n">${esc(t('team.thN'))}</span>
-      <span class="team__contact">${esc(t('team.thContact'))}</span>
+      <span class="team__contact">${esc(t('team.thState'))}</span>
       <span class="team__chev"></span></div>`;
     box.innerHTML = head + TEAM.people.map(personRow).join('');
     const gaps = $('#teamGaps');
     if (gaps) gaps.innerHTML = TEAM.gaps.map(personRow).join('');
+
+    const f1 = $('#teamFig1'); if (f1) f1.querySelector('.fig__body').innerHTML = figResp();
+    const key = $('#teamKey'); if (key) key.innerHTML = figKey();
+    const f2 = $('#teamFig2'); if (f2) f2.querySelector('.fig__body').innerHTML = figPipe();
 
     [box, gaps].forEach((host) => host && host.querySelectorAll('[data-person]').forEach((b) => {
       b.addEventListener('click', () => {
@@ -2935,20 +3194,36 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     if (dec) dec.innerHTML = `<div class="dec__row dec__row--head">
         <span>${esc(t('team.decWhat'))}</span><span>${esc(t('team.decWho'))}</span>
         <span>${esc(t('team.decCons'))}</span><span>${esc(t('team.decInf'))}</span></div>`
-      + TEAM.decisions.map((d) => `<div class="dec__row">
+      + TEAM.decisions.map((d) => `<div class="dec__row${d.rule ? ' is-rule' : ''}">
           <span class="dec__w">${esc(d.what)}</span>
           <span class="dec__who">${esc(roleOf(d.who))}</span>
-          <span>${esc(d.consult.map(roleOf).join(' · '))}</span>
-          <span>${esc(d.inform.map(roleOf).join(' · '))}</span></div>`).join('');
+          <span>${d.consult.length ? esc(d.consult.map(roleOf).join(' · ')) : dash}</span>
+          <span>${d.inform.length ? esc(d.inform.map(roleOf).join(' · ')) : dash}</span></div>`).join('');
 
     const ho = $('#teamHo');
-    if (ho) ho.innerHTML = TEAM.handoffs.map((h) => `<div class="ho__row">
-        <span class="ho__step">${esc(h.from)} <i aria-hidden="true">→</i> ${esc(h.to)}</span>
+    if (ho) ho.innerHTML = TEAM.handoffs.map((h, i) => `<div class="ho__row" data-ho="${i}">
+        <span class="ho__step"><b class="ho__n">${i + 1}</b>${esc(h.from)} <i aria-hidden="true">→</i> ${esc(h.to)}</span>
         <span class="ho__risk">${esc(h.risk)}</span>
         <span class="ho__rule">${esc(h.rule)}</span></div>`).join('');
 
     const op = $('#teamOpen');
-    if (op) op.innerHTML = TEAM.open.map((x) => `<li>${esc(x)}</li>`).join('');
+    if (op) op.innerHTML = TEAM.open.map((x, i) => typeof x === 'string'
+      ? `<li><p class="op__q">${esc(x)}</p></li>`
+      : `<li><p class="op__q"><b>${i + 1}</b>${esc(x.q)}</p>
+           <p class="op__w">${esc(x.why)}</p>
+           <p class="op__n">${esc(x.need)}</p></li>`).join('');
+
+    // схема и таблица стыков — одно и то же с двух сторон: подсвечиваем вместе
+    if (f2 && ho) f2.querySelectorAll('.pp__j').forEach((j) => {
+      const row = ho.querySelector(`[data-ho="${j.dataset.ho}"]`);
+      if (!row) return;
+      const on = (v) => { row.classList.toggle('is-hi', v); j.classList.toggle('is-hi', v); };
+      j.addEventListener('mouseenter', () => on(true));
+      j.addEventListener('mouseleave', () => on(false));
+      j.addEventListener('focus', () => on(true));
+      j.addEventListener('blur', () => on(false));
+      j.addEventListener('click', () => row.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+    });
   }
 
   function renderAll() {

@@ -779,7 +779,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 .team__row{ display:grid;
   grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr)
-                        88px minmax(110px,.8fr) 24px;
+                        88px minmax(124px,.8fr) 24px;
   align-items:center; gap:var(--sp-4); width:100%; text-align:left;
   padding:13px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-500);
@@ -826,11 +826,6 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .team__block{ margin-top:var(--sp-8); padding-top:var(--sp-6); border-top:1px solid var(--hairline); }
 .team__block h3{ font-family:var(--serif); font-weight:400; font-size:20px; color:var(--ink-900); }
 .team__note{ margin:var(--sp-2) 0 0; max-width:56ch; font-size:13.5px; color:var(--ink-500); }
-.team__open{ margin:var(--sp-4) 0 0; padding:0; list-style:none; max-width:62ch; }
-.team__open li{ position:relative; padding:9px 0 9px 18px; border-bottom:1px solid var(--hairline);
-  font-size:14px; color:var(--ink-700); }
-.team__open li::before{ content:"?"; position:absolute; left:0; font-family:var(--mono);
-  font-size:12px; color:var(--bronze-text); }
 
 /* who decides what */
 .dec{ margin-top:var(--sp-4); }
@@ -904,3 +899,120 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 /* Роль и зона усечены многоточием базовым правилом .team__row > span.
    Полная формулировка — в раскрытой карточке, там она не ограничена. */
 .team__role{ color:var(--ink-700); }
+
+/* ══ КОМАНДА · ГЛИФЫ И СОСТОЯНИЯ ═══════════════════════════════════════════ */
+.gl{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.25;
+  stroke-linecap:round; stroke-linejoin:round; display:block; }
+.team__gl{ display:flex; align-items:center; color:var(--ink-500); }
+.team__row.is-loaded .team__gl{ color:var(--bronze-text); }
+.team__row.is-vacant .team__gl, .team__row.is-vacant .team__nm{ color:var(--ink-500); }
+.team__row--head .team__gl{ color:transparent; }
+
+/* состояние функции: форма важнее цвета — плита печатается чёрно-белой */
+.team__st2{ width:7px; height:7px; margin-right:7px; flex:none; display:inline-block;
+  vertical-align:middle; border-radius:50%; }
+.team__st2--fixed{ background:var(--bronze); }
+.team__st2--tentative{ background:none; box-shadow:inset 0 0 0 1px var(--bronze-text); }
+.team__st2--vacant{ background:none; box-shadow:inset 0 0 0 1px var(--ink-500);
+  border-radius:0; transform:rotate(45deg); }
+.team__contact{ display:flex; align-items:center; color:var(--ink-700); }
+.team__row--head .team__contact{ display:block; }
+
+/* факт о состоянии функции — не оценка человека, поэтому подан как сноска */
+.team__fact{ margin:0 0 var(--sp-4); padding-left:var(--sp-3);
+  border-left:2px solid var(--bronze); color:var(--ink-700);
+  font-size:14px; line-height:1.55; }
+
+/* ══ FIG · ОБЩАЯ РАМКА ═════════════════════════════════════════════════════ */
+.fig{ margin:0 0 var(--sp-8); }
+.fig figcaption{ display:flex; gap:var(--sp-3); align-items:baseline;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-500);
+  padding-bottom:var(--sp-3); border-bottom:1px solid var(--hairline); margin-bottom:var(--sp-6); }
+.fig__n{ color:var(--bronze-text); flex:none; }
+.fig__body{ overflow-x:auto; }
+.fig__body svg{ width:100%; height:auto; min-width:640px; display:block; }
+
+/* ══ FIG.02 · КАРТА ОТВЕТСТВЕННОСТИ ════════════════════════════════════════ */
+.rz{ font-family:var(--sans); }
+.rz__link{ fill:none; stroke:var(--hairline); stroke-width:1; }
+.rz__link--tentative{ stroke-dasharray:5 4; }
+.rz__link--vacant{ stroke-dasharray:1.5 4; }
+.rz__hub{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.25; }
+.rz__hubT{ font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+  text-transform:uppercase; fill:var(--ink-700); }
+.rz__hubN{ font-family:var(--serif); font-size:19px; fill:var(--ink-900); }
+.rz__ring{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.25; }
+.rz__n--tentative .rz__ring{ stroke:var(--bronze-text); stroke-dasharray:4 3.5; }
+.rz__n--vacant .rz__ring{ stroke:var(--ink-500); stroke-dasharray:1.5 3.5; }
+.rz__gl{ fill:none; stroke:var(--ink-900); stroke-width:1.25;
+  stroke-linecap:round; stroke-linejoin:round; overflow:visible; }
+.rz__n--vacant .rz__gl{ stroke:var(--ink-500); }
+.rz__role{ font-family:var(--mono); font-size:9.5px; letter-spacing:.06em;
+  text-transform:uppercase; fill:var(--ink-500); }
+.rz__nm{ font-family:var(--serif); font-size:14px; fill:var(--ink-900); }
+.rz__n--vacant .rz__nm{ font-style:italic; fill:var(--ink-500); }
+
+/* ══ ПОКРЫТИЕ ФУНКЦИЙ ══════════════════════════════════════════════════════ */
+.cov{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-4) var(--sp-6);
+  margin-top:var(--sp-5); padding-top:var(--sp-4); border-top:1px solid var(--hairline); }
+.cov__bar{ display:flex; flex:1 1 220px; height:8px; gap:2px; min-width:180px; }
+.cov__seg{ display:block; }
+.cov__seg--fixed{ background:var(--bronze); }
+.cov__seg--tentative{ background:repeating-linear-gradient(45deg,
+  var(--bronze) 0 2px, transparent 2px 5px); box-shadow:inset 0 0 0 1px var(--bronze); }
+.cov__seg--vacant{ box-shadow:inset 0 0 0 1px var(--hairline); }
+.cov__legend{ display:flex; flex-wrap:wrap; gap:var(--sp-5);
+  font-family:var(--mono); font-size:11px; color:var(--ink-700); }
+.cov__lg{ display:flex; align-items:center; gap:6px; }
+.cov__lg b{ color:var(--ink-900); }
+.cov__sw{ width:9px; height:9px; flex:none; }
+.cov__sw--fixed{ background:var(--bronze); }
+.cov__sw--tentative{ box-shadow:inset 0 0 0 1px var(--bronze-text); }
+.cov__sw--vacant{ box-shadow:inset 0 0 0 1px var(--ink-500); transform:rotate(45deg); }
+
+/* ══ FIG.03 · ПУТЬ ОБЪЕКТА ═════════════════════════════════════════════════ */
+.pp__rail{ stroke:var(--hairline); stroke-width:1.5; fill:none; }
+.pp__dot{ fill:var(--bg-page); stroke:var(--ink-900); stroke-width:1.5; }
+.pp__lb{ font-family:var(--mono); font-size:10px; letter-spacing:.07em;
+  text-transform:uppercase; fill:var(--ink-700); }
+.pp__j{ cursor:pointer; }
+.pp__hit{ stroke:transparent; stroke-width:34; fill:none; }
+.pp__brk{ stroke:var(--hairline); stroke-width:1.25; }
+.pp__jn{ fill:var(--bg-page); stroke:var(--bronze); stroke-width:1.25;
+  transition:fill var(--t-2) var(--ease); }
+.pp__jt{ font-family:var(--mono); font-size:11px; fill:var(--bronze-text);
+  transition:fill var(--t-2) var(--ease); }
+.pp__j:hover .pp__jn, .pp__j.is-hi .pp__jn, .pp__j:focus-visible .pp__jn{ fill:var(--bronze); }
+.pp__j:hover .pp__jt, .pp__j.is-hi .pp__jt, .pp__j:focus-visible .pp__jt{ fill:#fff; }
+.pp__j:focus{ outline:none; }
+.pp__j:focus-visible .pp__jn{ stroke:var(--bronze-focus); stroke-width:2; }
+
+.ho__row.is-hi{ background:var(--bg-sunken); }
+.ho__n{ display:inline-flex; align-items:center; justify-content:center;
+  width:17px; height:17px; margin-right:8px; flex:none;
+  border:1px solid var(--bronze); border-radius:50%;
+  font-family:var(--mono); font-size:10.5px; font-weight:400; color:var(--bronze-text); }
+.ho__step{ display:flex; align-items:center; }
+
+/* правило проекта, а не открытый вопрос — отмечено, чтобы не искали пробел */
+.dec__row.is-rule .dec__w{ font-weight:600; }
+.dec__row.is-rule{ background:var(--bg-sunken); }
+
+/* ══ ОТКРЫТЫЕ ВОПРОСЫ ══════════════════════════════════════════════════════ */
+.team__open{ list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:var(--sp-5); }
+.team__open li{ padding:var(--sp-5); border:1px solid var(--hairline);
+  border-left:2px solid var(--bronze); background:var(--bg-sunken); }
+.op__q{ display:flex; gap:var(--sp-3); margin:0 0 var(--sp-3);
+  font-family:var(--serif); font-size:16px; color:var(--ink-900); line-height:1.35; }
+.op__q b{ font-family:var(--mono); font-size:11px; font-weight:400;
+  color:var(--bronze-text); padding-top:4px; flex:none; }
+.op__w{ margin:0 0 var(--sp-3); font-size:14px; line-height:1.55; color:var(--ink-700); }
+.op__n{ margin:0; padding-top:var(--sp-3); border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:11.5px; line-height:1.5; color:var(--ink-900); }
+
+@media (max-width:640px){
+  .fig__body svg{ min-width:560px; }
+  .team__open{ grid-template-columns:1fr; }
+}

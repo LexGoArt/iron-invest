@@ -733,6 +733,32 @@
      their content is prose-shaped, so a second slide-over would be a click
      tax on a roster meant to be read start to finish.
      ══════════════════════════════════════════════════════════════════════ */
+
+  /* Глифы функций. Чертёжный язык плиты: только контур, один вес линии,
+     currentColor — иконка живёт в потоке текста, а не рядом с ним. */
+  const PATHS = {};
+  const G = (d) => d;   // сырой контур: он нужен и в тексте, и внутри схемы
+  const GLYPH = {
+    owner:     G('<circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2.2"/>'),
+    ops:       G('<rect x="2.5" y="2.5" width="5" height="5"/><rect x="8.5" y="2.5" width="5" height="5"/><rect x="2.5" y="8.5" width="5" height="5"/><rect x="8.5" y="8.5" width="5" height="5"/>'),
+    legal:     G('<path d="M3.5 2h6l3 3v9h-9z"/><path d="M9.5 2v3h3"/><path d="M5.5 8.5h5M5.5 11h3.5"/>'),
+    cmo:       G('<path d="M3 6.5v3h2.5l5 3v-9l-5 3z"/><path d="M12.5 5.5a4 4 0 0 1 0 5"/>'),
+    web:       G('<rect x="2" y="3" width="12" height="10"/><path d="M2 6h12"/><circle cx="4.2" cy="4.5" r=".5"/>'),
+    estimates: G('<rect x="2" y="5" width="12" height="6"/><path d="M5 5v2.5M8 5v3.5M11 5v2.5"/>'),
+    deal:      G('<path d="M2 8.5l3-3 3 3 3-3 3 3"/><path d="M2 12l3-3 3 3 3-3 3 3"/>'),
+    onsite:    G('<path d="M8 14s4.5-4.6 4.5-7.5a4.5 4.5 0 1 0-9 0C3.5 9.4 8 14 8 14z"/><circle cx="8" cy="6.5" r="1.8"/>'),
+    tech:      G('<circle cx="5.5" cy="5.5" r="3"/><path d="M7.7 7.7L13 13"/><path d="M11.5 11.5l-1.2 1.2 1.5 1.5 1.2-1.2z"/>'),
+    dot:       G('<circle cx="8" cy="8" r="3"/>')
+  };
+  Object.keys(GLYPH).forEach((k) => { PATHS[k] = GLYPH[k]; });
+  const glyph = (k) =>
+    `<svg class="gl" viewBox="0 0 16 16" aria-hidden="true">${PATHS[k] || PATHS.dot}</svg>`;
+
+  /* Три состояния функции. Различаются формой, а не только цветом —
+     цвет один и тот же в печати и у дальтоника. */
+  const STATE = { fixed: 'st.fixed', tentative: 'st.tentative', vacant: 'st.vacant' };
+  const stateOf = (p) => p.state || (p.vacant ? 'vacant' : 'fixed');
+
   const TEAM = window.IronTeam || { people: [], gaps: [], decisions: [], handoffs: [], open: [] };
   const everyone = () => TEAM.people.concat(TEAM.gaps);
   const roleOf = (id) => { const p = everyone().filter((x) => x.id === id)[0]; return p ? p.role : id; };
@@ -741,9 +767,111 @@
   const loadOf = (p) => Iron.list().filter((o) =>
     o.responsible && (o.responsible.personId === p.id)).length;
 
+  /* ── FIG.02 · Карта ответственности ───────────────────────────────────────
+     Радиальная схема: в центре объект, вокруг — функции, которые к нему
+     прикладываются. Форма узла кодирует состояние: сплошной контур —
+     закреплено, штрих — под вопросом, точки — не закреплено. Смысл читается
+     без цвета: схему печатают чёрно-белой. */
+  function figResp() {
+    const all = everyone();
+    const cx = 450, cy = 246, rx = 250, ry = 146;
+    const n = all.length;
+    const nodes = all.map((p, i) => {
+      const a = (-90 + (i * 360) / n) * Math.PI / 180;
+      const co = Math.cos(a), si = Math.sin(a);
+      return { p, co, si, x: cx + rx * co, y: cy + ry * si, st: stateOf(p) };
+    });
+
+    const links = nodes.map((d) => {
+      // лёгкий изгиб — иначе девять прямых лучей читаются как колесо, а не как связи
+      const mx = cx + (d.x - cx) * 0.55 - d.si * 26;
+      const my = cy + (d.y - cy) * 0.55 + d.co * 26;
+      return `<path class="rz__link rz__link--${d.st}" d="M${cx} ${cy}Q${mx.toFixed(1)} ${my.toFixed(1)} ${d.x.toFixed(1)} ${d.y.toFixed(1)}"/>`;
+    }).join('');
+
+    const marks = nodes.map((d) => {
+      const vert = Math.abs(d.co) < 0.3;                 // сверху и снизу подпись центрируется
+      const side = d.co >= 0 ? 1 : -1;
+      const ax = vert ? 'middle' : (side > 0 ? 'start' : 'end');
+      const lx = vert ? d.x : d.x + side * 26;
+      const ly = vert ? (d.si < 0 ? d.y - 34 : d.y + 40) : d.y - 4;
+      const nm = d.p.name || t(d.p.vacant ? 'team.vacant' : 'team.unassigned');
+      return `<g class="rz__n rz__n--${d.st}">
+        <circle class="rz__ring" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="17"/>
+        <svg x="${(d.x - 8).toFixed(1)}" y="${(d.y - 8).toFixed(1)}" width="16" height="16"
+             viewBox="0 0 16 16" class="rz__gl">${PATHS[d.p.icon] || PATHS.dot}</svg>
+        <text class="rz__role" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${ax}">${esc(d.p.role)}</text>
+        <text class="rz__nm" x="${lx.toFixed(1)}" y="${(ly + 15).toFixed(1)}" text-anchor="${ax}">${esc(nm)}</text>
+      </g>`;
+    }).join('');
+
+    return `<svg class="rz" viewBox="0 0 900 492" role="img"
+        aria-label="${esc(t('team.fig1'))}">
+      <g class="rz__links">${links}</g>
+      <circle class="rz__hub" cx="${cx}" cy="${cy}" r="46"/>
+      <text class="rz__hubT" x="${cx}" y="${cy - 3}" text-anchor="middle">${esc(t('team.hub'))}</text>
+      <text class="rz__hubN" x="${cx}" y="${cy + 15}" text-anchor="middle">${Iron.list().length}</text>
+      ${marks}
+    </svg>`;
+  }
+
+  /* Покрытие функций одной полосой: сколько закреплено, сколько под вопросом,
+     сколько не закреплено вовсе. Считается из данных, руками не дублируется. */
+  function figKey() {
+    const all = everyone();
+    const cnt = { fixed: 0, tentative: 0, vacant: 0 };
+    all.forEach((p) => { cnt[stateOf(p)] += 1; });
+    const total = all.length || 1;
+    const bar = ['fixed', 'tentative', 'vacant'].map((k) =>
+      cnt[k] ? `<i class="cov__seg cov__seg--${k}" style="flex:${cnt[k]}"
+                   title="${esc(t(STATE[k]))}: ${cnt[k]}"></i>` : '').join('');
+    const legend = ['fixed', 'tentative', 'vacant'].map((k) =>
+      `<span class="cov__lg"><i class="cov__sw cov__sw--${k}" aria-hidden="true"></i>
+        ${esc(t(STATE[k]))} <b>${cnt[k]}</b></span>`).join('');
+    return `<div class="cov">
+        <div class="cov__bar" role="img"
+          aria-label="${esc(t('team.cov'))}: ${cnt.fixed}/${total}">${bar}</div>
+        <div class="cov__legend">${legend}</div>
+      </div>`;
+  }
+
+  /* ── FIG.03 · Путь объекта ────────────────────────────────────────────────
+     Этапы — узлы, стыки между ними — места, где поток рвётся. Номер на стыке
+     совпадает с номером строки в таблице ниже: схема и текст — одно и то же,
+     просто с двух сторон. */
+  function figPipe() {
+    const st = TEAM.pipeline || [];
+    if (!st.length) return '';
+    const w = 900, pad = 58, y = 62;
+    const gap = (w - pad * 2) / (st.length - 1);
+    const nodes = st.map((label, i) => {
+      const x = pad + gap * i;
+      return `<g class="pp__n">
+        <circle class="pp__dot" cx="${x.toFixed(1)}" cy="${y}" r="7"/>
+        <text class="pp__lb" x="${x.toFixed(1)}" y="${y - 20}" text-anchor="middle">${esc(label)}</text>
+      </g>`;
+    }).join('');
+    const joints = (TEAM.handoffs || []).map((h, i) => {
+      const x = pad + gap * i + gap / 2;
+      return `<g class="pp__j" data-ho="${i}" tabindex="0" role="button"
+          aria-label="${esc(h.risk)}">
+        <path class="pp__hit" d="M${(x - gap / 2).toFixed(1)} ${y}h${gap.toFixed(1)}"/>
+        <path class="pp__brk" d="M${x.toFixed(1)} ${y - 9}v18"/>
+        <circle class="pp__jn" cx="${x.toFixed(1)}" cy="${y + 30}" r="10"/>
+        <text class="pp__jt" x="${x.toFixed(1)}" y="${y + 34}" text-anchor="middle">${i + 1}</text>
+      </g>`;
+    }).join('');
+    return `<svg class="pp" viewBox="0 0 ${w} 108" role="img"
+        aria-label="${esc(t('team.fig2'))}">
+      <path class="pp__rail" d="M${pad} ${y}H${w - pad}"/>
+      ${joints}${nodes}
+    </svg>`;
+  }
+
+
   function personRow(p, i) {
     const n = loadOf(p);
-    const contact = (p.contact && (p.contact.telegram || p.contact.email || p.contact.phone)) || null;
+    const st = stateOf(p);
     const groups = [
       ['team.duties', p.responsibilities.map((x) => `<li>${esc(x)}</li>`).join('')],
       ['team.owes', p.deliverables.map((d) =>
@@ -751,19 +879,21 @@
       ['team.needs', p.dependencies.length ? p.dependencies.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`],
       ['team.check', p.checks.length ? p.checks.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`]
     ];
-    return `<button class="team__row${n ? ' is-loaded' : ''}${p.vacant ? ' is-vacant' : ''}" type="button"
+    return `<button class="team__row is-${st}${n ? ' is-loaded' : ''}" type="button"
         aria-expanded="false" data-person="${esc(p.id)}">
-        <i class="team__dot" aria-hidden="true"></i>
+        <i class="team__gl" aria-hidden="true">${glyph(p.icon)}</i>
         <span class="team__nm">${p.name ? esc(p.name) : `<em>${esc(t(p.vacant ? 'team.vacant' : 'team.unassigned'))}</em>`}</span>
         <span class="team__role">${esc(p.role)}</span>
         <span class="team__scope" title="${esc(p.scope)}">${esc(p.scope)}</span>
         <span class="team__n">${n}</span>
-        <span class="team__contact">${contact ? esc(contact) : dash}</span>
+        <span class="team__contact"><i class="team__st2 team__st2--${st}"
+          aria-hidden="true"></i>${esc(t(STATE[st]))}</span>
         <span class="team__chev" aria-hidden="true"></span>
       </button>
       <div class="fpanel team__panel" data-open="false" id="tp-${esc(p.id)}">
         <div class="fpanel__clip"><div class="fpanel__in team__in">
           <p class="team__owns">${esc(p.owns)}</p>
+          ${p.note ? `<p class="team__fact">${esc(p.note)}</p>` : ''}
           ${groups.map(([k, html]) => `<div class="fgrp"><legend>${esc(t(k))}</legend>
              <ul class="team__list">${html}</ul></div>`).join('')}
         </div></div>
@@ -775,16 +905,20 @@
     // head cells carry the body's column classes, or the responsive rules hide
     // body cells while the header keeps all seven and misaligns
     const head = `<div class="team__row team__row--head" role="row">
-      <span class="team__dot"></span>
+      <span class="team__gl"></span>
       <span class="team__nm">${esc(t('team.thName'))}</span>
       <span class="team__role">${esc(t('team.thRole'))}</span>
       <span class="team__scope">${esc(t('team.thScope'))}</span>
       <span class="team__n">${esc(t('team.thN'))}</span>
-      <span class="team__contact">${esc(t('team.thContact'))}</span>
+      <span class="team__contact">${esc(t('team.thState'))}</span>
       <span class="team__chev"></span></div>`;
     box.innerHTML = head + TEAM.people.map(personRow).join('');
     const gaps = $('#teamGaps');
     if (gaps) gaps.innerHTML = TEAM.gaps.map(personRow).join('');
+
+    const f1 = $('#teamFig1'); if (f1) f1.querySelector('.fig__body').innerHTML = figResp();
+    const key = $('#teamKey'); if (key) key.innerHTML = figKey();
+    const f2 = $('#teamFig2'); if (f2) f2.querySelector('.fig__body').innerHTML = figPipe();
 
     [box, gaps].forEach((host) => host && host.querySelectorAll('[data-person]').forEach((b) => {
       b.addEventListener('click', () => {
@@ -799,20 +933,36 @@
     if (dec) dec.innerHTML = `<div class="dec__row dec__row--head">
         <span>${esc(t('team.decWhat'))}</span><span>${esc(t('team.decWho'))}</span>
         <span>${esc(t('team.decCons'))}</span><span>${esc(t('team.decInf'))}</span></div>`
-      + TEAM.decisions.map((d) => `<div class="dec__row">
+      + TEAM.decisions.map((d) => `<div class="dec__row${d.rule ? ' is-rule' : ''}">
           <span class="dec__w">${esc(d.what)}</span>
           <span class="dec__who">${esc(roleOf(d.who))}</span>
-          <span>${esc(d.consult.map(roleOf).join(' · '))}</span>
-          <span>${esc(d.inform.map(roleOf).join(' · '))}</span></div>`).join('');
+          <span>${d.consult.length ? esc(d.consult.map(roleOf).join(' · ')) : dash}</span>
+          <span>${d.inform.length ? esc(d.inform.map(roleOf).join(' · ')) : dash}</span></div>`).join('');
 
     const ho = $('#teamHo');
-    if (ho) ho.innerHTML = TEAM.handoffs.map((h) => `<div class="ho__row">
-        <span class="ho__step">${esc(h.from)} <i aria-hidden="true">→</i> ${esc(h.to)}</span>
+    if (ho) ho.innerHTML = TEAM.handoffs.map((h, i) => `<div class="ho__row" data-ho="${i}">
+        <span class="ho__step"><b class="ho__n">${i + 1}</b>${esc(h.from)} <i aria-hidden="true">→</i> ${esc(h.to)}</span>
         <span class="ho__risk">${esc(h.risk)}</span>
         <span class="ho__rule">${esc(h.rule)}</span></div>`).join('');
 
     const op = $('#teamOpen');
-    if (op) op.innerHTML = TEAM.open.map((x) => `<li>${esc(x)}</li>`).join('');
+    if (op) op.innerHTML = TEAM.open.map((x, i) => typeof x === 'string'
+      ? `<li><p class="op__q">${esc(x)}</p></li>`
+      : `<li><p class="op__q"><b>${i + 1}</b>${esc(x.q)}</p>
+           <p class="op__w">${esc(x.why)}</p>
+           <p class="op__n">${esc(x.need)}</p></li>`).join('');
+
+    // схема и таблица стыков — одно и то же с двух сторон: подсвечиваем вместе
+    if (f2 && ho) f2.querySelectorAll('.pp__j').forEach((j) => {
+      const row = ho.querySelector(`[data-ho="${j.dataset.ho}"]`);
+      if (!row) return;
+      const on = (v) => { row.classList.toggle('is-hi', v); j.classList.toggle('is-hi', v); };
+      j.addEventListener('mouseenter', () => on(true));
+      j.addEventListener('mouseleave', () => on(false));
+      j.addEventListener('focus', () => on(true));
+      j.addEventListener('blur', () => on(false));
+      j.addEventListener('click', () => row.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+    });
   }
 
   function renderAll() {

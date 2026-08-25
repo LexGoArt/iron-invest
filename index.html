@@ -4,13 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Iron Invest Group — объекты на Крите</title>
-<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Iron Invest Group — объекты на Крите, регион Ханья: виллы, дома, участки под застройку и доходная недвижимость. Карта и карточки объектов.">
 
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1787576637">
+<link rel="stylesheet" href="styles.css?v=1787675111">
 </head>
 <body>
 <svg class="logo-defs" aria-hidden="true" focusable="false">
@@ -36,6 +35,7 @@
     <nav class="nav" aria-label="Основная навигация" data-i18n-aria="a11y.nav">
       <button type="button" class="nav__t" data-mode="objects" aria-pressed="true" data-i18n="nav.collection">Объекты</button>
       <button type="button" class="nav__t" data-mode="map" aria-pressed="false" data-i18n="nav.map">Карта</button>
+      <button type="button" class="nav__t" data-mode="team" aria-pressed="false" data-i18n="nav.team">Команда</button>
     </nav>
     <label class="search">
       <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
@@ -61,6 +61,7 @@
   <nav aria-label="Основная навигация" data-i18n-aria="a11y.nav">
     <a href="#kolekcja" data-i18n="nav.collection">Объекты</a>
     <a href="#plate-sec" data-i18n="nav.map">Карта</a>
+    <a href="#team-sec" data-i18n="nav.team">Команда</a>
     <a href="#kontakt" data-i18n="nav.enquire">Запрос</a>
   </nav>
 </div>
@@ -107,6 +108,38 @@
 
 
 
+<!-- ═══ TEAM — функции, ответственность, права на решения ══════════════ -->
+<section class="sec" id="team-sec" hidden>
+  <div class="wrap">
+    <div class="team__head">
+      <h2 data-i18n="team.title">Команда проекта</h2>
+      <p data-i18n="team.lead">Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.</p>
+    </div>
+    <div class="team" id="team"><!-- filled by app.js --></div>
+
+    <div class="team__block">
+      <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
+      <p class="team__note" data-i18n="team.gapsLead">Проект их требует, но сейчас никто не держит целиком. Названная дыра полезнее умолчания.</p>
+      <div class="team" id="teamGaps"><!-- filled by app.js --></div>
+    </div>
+
+    <div class="team__block">
+      <h3 data-i18n="team.decTitle">Кто что решает</h3>
+      <div class="dec" id="teamDec"><!-- filled by app.js --></div>
+    </div>
+
+    <div class="team__block">
+      <h3 data-i18n="team.hoTitle">Где поток рвётся чаще всего</h3>
+      <div class="ho" id="teamHo"><!-- filled by app.js --></div>
+    </div>
+
+    <div class="team__block">
+      <h3 data-i18n="team.openTitle">Не определено — требует решения</h3>
+      <ul class="team__open" id="teamOpen"><!-- filled by app.js --></ul>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ FOOT — one working line ═══════════════════════════════════════ -->
 <footer class="pagefoot" id="kontakt">
   <div class="wrap pagefoot__in">
@@ -119,11 +152,12 @@
 <div class="scrim" id="scrim"></div>
 <aside class="dossier" id="dossier" role="dialog" aria-modal="true" aria-labelledby="dosName" aria-hidden="true"></aside>
 
-<script src="data.js?v=1787576637"></script>
-<script src="geo.js?v=1787576637"></script>
-<script src="store.js?v=1787576637"></script>
-<script src="i18n.js?v=1787576637"></script>
-<script src="app.js?v=1787576637"></script>
-<script src="figure.js?v=1787576637"></script>
+<script src="data.js?v=1787675111"></script>
+<script src="geo.js?v=1787675111"></script>
+<script src="team.js?v=1787675111"></script>
+<script src="store.js?v=1787675111"></script>
+<script src="i18n.js?v=1787675111"></script>
+<script src="app.js?v=1787675111"></script>
+<script src="figure.js?v=1787675111"></script>
 </body>
 </html>

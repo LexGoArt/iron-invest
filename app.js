@@ -715,10 +715,11 @@
      the header and the work. */
   function setMode(m) {
     state.mode = m;
-    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum');
+    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum'), team = $('#team-sec');
     if (plate) plate.hidden = m !== 'map';
     if (objects) objects.hidden = m !== 'objects';
     if (sum) sum.hidden = m !== 'objects';
+    if (team) team.hidden = m !== 'team';
     document.querySelectorAll('.nav__t').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
     if (m === 'map' && window.IronPlate) window.IronPlate.render();
@@ -727,8 +728,95 @@
   document.querySelectorAll('.nav__t').forEach((b) =>
     b.addEventListener('click', () => setMode(b.dataset.mode)));
 
+  /* ══ TEAM ═══════════════════════════════════════════════════════════════
+     Table for the scan, expand-in-place for the detail. People are few and
+     their content is prose-shaped, so a second slide-over would be a click
+     tax on a roster meant to be read start to finish.
+     ══════════════════════════════════════════════════════════════════════ */
+  const TEAM = window.IronTeam || { people: [], gaps: [], decisions: [], handoffs: [], open: [] };
+  const everyone = () => TEAM.people.concat(TEAM.gaps);
+  const roleOf = (id) => { const p = everyone().filter((x) => x.id === id)[0]; return p ? p.role : id; };
+
+  /* a person's load is derived, never stored — two copies would drift */
+  const loadOf = (p) => Iron.list().filter((o) =>
+    o.responsible && (o.responsible.personId === p.id)).length;
+
+  function personRow(p, i) {
+    const n = loadOf(p);
+    const contact = (p.contact && (p.contact.telegram || p.contact.email || p.contact.phone)) || null;
+    const groups = [
+      ['team.duties', p.responsibilities.map((x) => `<li>${esc(x)}</li>`).join('')],
+      ['team.owes', p.deliverables.map((d) =>
+        `<li><span>${esc(d.text)}</span><span class="team__st">${d.status ? esc(t('st.' + d.status)) : dash}</span></li>`).join('')],
+      ['team.needs', p.dependencies.length ? p.dependencies.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`],
+      ['team.check', p.checks.length ? p.checks.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`]
+    ];
+    return `<button class="team__row${n ? ' is-loaded' : ''}${p.vacant ? ' is-vacant' : ''}" type="button"
+        aria-expanded="false" data-person="${esc(p.id)}">
+        <i class="team__dot" aria-hidden="true"></i>
+        <span class="team__nm">${p.name ? esc(p.name) : `<em>${esc(t(p.vacant ? 'team.vacant' : 'team.unassigned'))}</em>`}</span>
+        <span class="team__role">${esc(p.role)}</span>
+        <span class="team__scope" title="${esc(p.scope)}">${esc(p.scope)}</span>
+        <span class="team__n">${n}</span>
+        <span class="team__contact">${contact ? esc(contact) : dash}</span>
+        <span class="team__chev" aria-hidden="true"></span>
+      </button>
+      <div class="fpanel team__panel" data-open="false" id="tp-${esc(p.id)}">
+        <div class="fpanel__clip"><div class="fpanel__in team__in">
+          <p class="team__owns">${esc(p.owns)}</p>
+          ${groups.map(([k, html]) => `<div class="fgrp"><legend>${esc(t(k))}</legend>
+             <ul class="team__list">${html}</ul></div>`).join('')}
+        </div></div>
+      </div>`;
+  }
+
+  function renderTeam() {
+    const box = $('#team'); if (!box) return;
+    // head cells carry the body's column classes, or the responsive rules hide
+    // body cells while the header keeps all seven and misaligns
+    const head = `<div class="team__row team__row--head" role="row">
+      <span class="team__dot"></span>
+      <span class="team__nm">${esc(t('team.thName'))}</span>
+      <span class="team__role">${esc(t('team.thRole'))}</span>
+      <span class="team__scope">${esc(t('team.thScope'))}</span>
+      <span class="team__n">${esc(t('team.thN'))}</span>
+      <span class="team__contact">${esc(t('team.thContact'))}</span>
+      <span class="team__chev"></span></div>`;
+    box.innerHTML = head + TEAM.people.map(personRow).join('');
+    const gaps = $('#teamGaps');
+    if (gaps) gaps.innerHTML = TEAM.gaps.map(personRow).join('');
+
+    [box, gaps].forEach((host) => host && host.querySelectorAll('[data-person]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const panel = document.getElementById('tp-' + b.dataset.person);
+        const open = b.getAttribute('aria-expanded') !== 'true';
+        b.setAttribute('aria-expanded', String(open));
+        if (panel) panel.dataset.open = String(open);
+      });
+    }));
+
+    const dec = $('#teamDec');
+    if (dec) dec.innerHTML = `<div class="dec__row dec__row--head">
+        <span>${esc(t('team.decWhat'))}</span><span>${esc(t('team.decWho'))}</span>
+        <span>${esc(t('team.decCons'))}</span><span>${esc(t('team.decInf'))}</span></div>`
+      + TEAM.decisions.map((d) => `<div class="dec__row">
+          <span class="dec__w">${esc(d.what)}</span>
+          <span class="dec__who">${esc(roleOf(d.who))}</span>
+          <span>${esc(d.consult.map(roleOf).join(' · '))}</span>
+          <span>${esc(d.inform.map(roleOf).join(' · '))}</span></div>`).join('');
+
+    const ho = $('#teamHo');
+    if (ho) ho.innerHTML = TEAM.handoffs.map((h) => `<div class="ho__row">
+        <span class="ho__step">${esc(h.from)} <i aria-hidden="true">→</i> ${esc(h.to)}</span>
+        <span class="ho__risk">${esc(h.risk)}</span>
+        <span class="ho__rule">${esc(h.rule)}</span></div>`).join('');
+
+    const op = $('#teamOpen');
+    if (op) op.innerHTML = TEAM.open.map((x) => `<li>${esc(x)}</li>`).join('');
+  }
+
   function renderAll() {
-    renderSummary(); renderPlaces(); renderFilters(); renderColl();
+    renderSummary(); renderPlaces(); renderFilters(); renderColl(); renderTeam();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }
   document.addEventListener('iron:lang', renderAll);

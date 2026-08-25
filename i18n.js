@@ -7,7 +7,18 @@
 (function () {
   const DICT = {
     ru: {
-      'nav.collection': 'Объекты', 'nav.map': 'Карта', 'nav.about': 'О нас', 'nav.enquire': 'Запрос',
+      'nav.collection': 'Объекты', 'nav.map': 'Карта', 'nav.team': 'Команда',
+      'team.title': 'Команда проекта',
+      'team.lead': 'Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.',
+      'team.thName': 'Имя', 'team.thRole': 'Функция', 'team.thScope': 'Зона', 'team.thN': 'Объектов', 'team.thContact': 'Контакт',
+      'team.duties': 'Обязанности', 'team.owes': 'Обязан дать проекту', 'team.needs': 'Нужно от других', 'team.check': 'Как понять, что работает',
+      'team.vacant': 'не назначен', 'team.unassigned': 'исполнитель не закреплён',
+      'team.gapsTitle': 'Функции без исполнителя',
+      'team.gapsLead': 'Проект их требует, но сейчас никто не держит целиком. Названная дыра полезнее умолчания.',
+      'team.decTitle': 'Кто что решает', 'team.decWhat': 'Решение', 'team.decWho': 'Решает', 'team.decCons': 'Консультирует', 'team.decInf': 'Информируется',
+      'team.hoTitle': 'Где поток рвётся чаще всего',
+      'team.openTitle': 'Не определено — требует решения',
+      'st.open': 'в работе', 'st.done': 'готово', 'nav.about': 'О нас', 'nav.enquire': 'Запрос',
 
       'hero.kick': 'Крит · Ханья · Апокоронас',
       'hero.title': 'Греческая недвижимость,<br>отобранная <em>поштучно</em>.',
@@ -112,7 +123,18 @@
     },
 
     pl: {
-      'nav.collection': 'Obiekty', 'nav.map': 'Mapa', 'nav.about': 'O nas', 'nav.enquire': 'Zapytanie',
+      'nav.collection': 'Obiekty', 'nav.map': 'Mapa', 'nav.team': 'Zespół',
+      'team.title': 'Zespół projektu',
+      'team.lead': 'Kto za co odpowiada, co ma dostarczyć i czego do tego potrzebuje.',
+      'team.thName': 'Imię', 'team.thRole': 'Funkcja', 'team.thScope': 'Obszar', 'team.thN': 'Obiektów', 'team.thContact': 'Kontakt',
+      'team.duties': 'Obowiązki', 'team.owes': 'Ma dostarczyć', 'team.needs': 'Potrzebuje od innych', 'team.check': 'Jak sprawdzić, że działa',
+      'team.vacant': 'nieobsadzona', 'team.unassigned': 'brak przypisania',
+      'team.gapsTitle': 'Funkcje bez obsady',
+      'team.gapsLead': 'Projekt ich wymaga, ale nikt ich obecnie nie prowadzi w całości.',
+      'team.decTitle': 'Kto co decyduje', 'team.decWhat': 'Decyzja', 'team.decWho': 'Decyduje', 'team.decCons': 'Konsultuje', 'team.decInf': 'Informowany',
+      'team.hoTitle': 'Gdzie przepływ najczęściej się rwie',
+      'team.openTitle': 'Nieokreślone — wymaga decyzji',
+      'st.open': 'w toku', 'st.done': 'gotowe', 'nav.about': 'O nas', 'nav.enquire': 'Zapytanie',
 
       'hero.kick': 'Kreta · Chania · Apokoronas',
       'hero.title': 'Nieruchomości greckie,<br>dobierane <em>pojedynczo</em>.',
@@ -217,7 +239,18 @@
     },
 
     en: {
-      'nav.collection': 'Properties', 'nav.map': 'Map', 'nav.about': 'About', 'nav.enquire': 'Enquire',
+      'nav.collection': 'Properties', 'nav.map': 'Map', 'nav.team': 'Team',
+      'team.title': 'Project team',
+      'team.lead': 'Who is responsible for what, what they owe the project, and what they need to deliver it.',
+      'team.thName': 'Name', 'team.thRole': 'Function', 'team.thScope': 'Scope', 'team.thN': 'Properties', 'team.thContact': 'Contact',
+      'team.duties': 'Responsibilities', 'team.owes': 'Owes the project', 'team.needs': 'Needs from others', 'team.check': 'How to tell it works',
+      'team.vacant': 'unstaffed', 'team.unassigned': 'no one assigned',
+      'team.gapsTitle': 'Functions with no one assigned',
+      'team.gapsLead': 'The project needs them, but no one currently owns them end to end.',
+      'team.decTitle': 'Who decides what', 'team.decWhat': 'Decision', 'team.decWho': 'Decides', 'team.decCons': 'Consulted', 'team.decInf': 'Informed',
+      'team.hoTitle': 'Where the flow breaks most often',
+      'team.openTitle': 'Undecided — needs a call',
+      'st.open': 'in progress', 'st.done': 'done', 'nav.about': 'About', 'nav.enquire': 'Enquire',
 
       'hero.kick': 'Crete · Chania · Apokoronas',
       'hero.title': 'Greek property,<br>selected <em>one by one</em>.',

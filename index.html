@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1787676475">
+<link rel="stylesheet" href="styles.css?v=1787678463">
 </head>
 <body>
 <svg class="logo-defs" aria-hidden="true" focusable="false">
@@ -58,23 +58,52 @@
 
 <!-- mobile navigation — everything the narrow header cannot hold -->
 <div class="mnav" id="mnav" hidden>
+  <!-- поиск и языки переехали сюда: в мобильной шапке они соревновались
+       с логотипом и бургером за одну строку -->
+  <label class="mnav__search">
+    <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
+    <input type="search" id="qm" autocomplete="off" placeholder="Поиск" data-i18n-ph="search.ph">
+  </label>
   <nav aria-label="Основная навигация" data-i18n-aria="a11y.nav">
     <a href="#kolekcja" data-i18n="nav.collection">Объекты</a>
     <a href="#plate-sec" data-i18n="nav.map">Карта</a>
     <a href="#team-sec" data-i18n="nav.team">Команда</a>
     <a href="#kontakt" data-i18n="nav.enquire">Запрос</a>
   </nav>
+  <div class="mnav__lang lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
+    <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+    <span aria-hidden="true">/</span>
+    <button type="button" data-lang="pl" aria-pressed="false">PL</button>
+    <span aria-hidden="true">/</span>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
 </div>
 
 <main id="main">
   <h1 class="sr-only" data-i18n="a11y.h1">Недвижимость в районе Ханьи — карта и каталог объектов</h1>
 
 
+<!-- ═══ ЧТО ЭТО ТАКОЕ — портал раньше не объяснял свою роль ═════════════ -->
+<section class="intro" id="intro">
+  <div class="wrap">
+    <h2 class="intro__h" data-i18n="intro.title">Управление объектами Iron Invest Group</h2>
+    <p class="intro__p" data-i18n="intro.lead">Готовность к продаже, документы, экономика, ответственные и следующие действия по объектам в регионе Ханьи.</p>
+    <p class="intro__meta">
+      <span data-i18n="intro.src">Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.</span>
+      <span class="intro__upd" id="introUpd"></span>
+    </p>
+  </div>
+</section>
+
 <!-- ═══ SUMMARY — the state of the portfolio, not a pitch ═════════════ -->
 <section class="sum" id="sum">
   <div class="wrap sum__in">
     <div class="sum__nums" id="sumNums"><!-- filled by app.js --></div>
     <div class="sum__quick" id="sumQuick" role="group" aria-label="Быстрые фильтры"><!-- filled by app.js --></div>
+    <details class="defs" id="defs">
+      <summary data-i18n="team.defTitle">Что означают статусы</summary>
+      <div class="defs__in" id="defsIn"><!-- filled by app.js --></div>
+    </details>
   </div>
 </section>
 
@@ -112,42 +141,64 @@
 <section class="sec" id="team-sec" hidden>
   <div class="wrap">
     <div class="team__head">
-      <h2 data-i18n="team.title">Команда проекта</h2>
-      <p data-i18n="team.lead">Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.</p>
-    </div>
-    <figure class="fig" id="teamFig1">
-      <figcaption><span class="fig__n">Fig. 02</span>
-        <span data-i18n="team.fig1">Карта ответственности: что вокруг объекта и кто это держит</span></figcaption>
-      <div class="fig__body"><!-- filled by app.js --></div>
-      <div class="fig__key" id="teamKey"><!-- filled by app.js --></div>
-    </figure>
-
-    <div class="team" id="team"><!-- filled by app.js --></div>
-
-    <div class="team__block">
-      <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
-      <p class="team__note" data-i18n="team.gapsLead">Проект их требует, но сейчас никто не держит целиком. Названная дыра полезнее умолчания.</p>
-      <div class="team" id="teamGaps"><!-- filled by app.js --></div>
+      <h2 data-i18n="team.title">Команда и роли</h2>
+      <p data-i18n="team.lead">Роли участников, их обязанности, ожидаемые результаты и необходимые входные данные.</p>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.decTitle">Кто что решает</h3>
-      <div class="dec" id="teamDec"><!-- filled by app.js --></div>
+    <!-- раздел был единым потоком выше 4000px; разбит на экраны -->
+    <nav class="tnav" id="teamNav" aria-label="Разделы" data-i18n-aria="team.nav"><!-- app.js --></nav>
+
+    <!-- 1 · СВОДКА — вопросы, требующие решения, подняты сюда -->
+    <div class="tpane" id="tp-sum" data-pane="sum">
+      <div class="cov" id="teamKey"><!-- app.js --></div>
+      <h3 data-i18n="team.openTitle">Вопросы, требующие решения</h3>
+      <ul class="team__open" id="teamOpen"><!-- app.js --></ul>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.hoTitle">Где поток рвётся чаще всего</h3>
-      <figure class="fig" id="teamFig2">
-        <figcaption><span class="fig__n">Fig. 03</span>
-          <span data-i18n="team.fig2">Путь объекта и стыки, на которых он останавливается</span></figcaption>
-        <div class="fig__body"><!-- filled by app.js --></div>
+    <!-- 2 · ЛЮДИ -->
+    <div class="tpane" id="tp-people" data-pane="people" hidden>
+      <div class="tbar">
+        <div class="seg" role="group" aria-label="Схема или список">
+          <button class="seg__b" type="button" data-tview="map" data-i18n="team.viewMap">Схема</button>
+          <button class="seg__b" type="button" data-tview="list" data-i18n="team.viewList">Список</button>
+        </div>
+        <div class="tbar__r">
+          <button class="qf" type="button" id="teamOnlyOpen" aria-pressed="false"
+            data-i18n="team.onlyOpen">Только незакрытые роли</button>
+          <button class="qf" type="button" id="teamToggleAll" data-i18n="team.expandAll">Развернуть все</button>
+        </div>
+      </div>
+      <figure class="fig fig--compact" id="teamFig1">
+        <figcaption><span class="fig__n">Fig. 02</span>
+          <span data-i18n="team.fig1">Ответственные за ключевые функции проекта</span></figcaption>
+        <div class="fig__body"><!-- app.js --></div>
       </figure>
-      <div class="ho" id="teamHo"><!-- filled by app.js --></div>
+      <div class="team" id="team"><!-- app.js --></div>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.openTitle">Не определено — требует решения</h3>
-      <ul class="team__open" id="teamOpen"><!-- filled by app.js --></ul>
+    <!-- 3 · ФУНКЦИИ БЕЗ ИСПОЛНИТЕЛЯ -->
+    <div class="tpane" id="tp-gaps" data-pane="gaps" hidden>
+      <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
+      <p class="team__note" data-i18n="team.gapsLead">Ниже перечислены функции, для которых пока не назначены ответственные.</p>
+      <div class="team" id="teamGaps"><!-- app.js --></div>
+    </div>
+
+    <!-- 4 · РЕШЕНИЯ И ПОЛНОМОЧИЯ -->
+    <div class="tpane" id="tp-dec" data-pane="dec" hidden>
+      <h3 data-i18n="team.decTitle">Кто что решает</h3>
+      <div class="legend" id="teamRaci"><!-- app.js --></div>
+      <div class="dec" id="teamDec"><!-- app.js --></div>
+    </div>
+
+    <!-- 5 · БЛОКЕРЫ ПРОЦЕССА -->
+    <div class="tpane" id="tp-ho" data-pane="ho" hidden>
+      <h3 data-i18n="team.hoTitle">Основные блокеры на пути объекта к продаже</h3>
+      <figure class="fig fig--compact" id="teamFig2">
+        <figcaption><span class="fig__n">Fig. 03</span>
+          <span data-i18n="team.fig2">Этапы движения объекта и точки, в которых работа останавливается</span></figcaption>
+        <div class="fig__body"><!-- app.js --></div>
+      </figure>
+      <div class="ho" id="teamHo"><!-- app.js --></div>
     </div>
   </div>
 </section>
@@ -164,12 +215,12 @@
 <div class="scrim" id="scrim"></div>
 <aside class="dossier" id="dossier" role="dialog" aria-modal="true" aria-labelledby="dosName" aria-hidden="true"></aside>
 
-<script src="data.js?v=1787676475"></script>
-<script src="geo.js?v=1787676475"></script>
-<script src="team.js?v=1787676475"></script>
-<script src="store.js?v=1787676475"></script>
-<script src="i18n.js?v=1787676475"></script>
-<script src="app.js?v=1787676475"></script>
-<script src="figure.js?v=1787676475"></script>
+<script src="data.js?v=1787678463"></script>
+<script src="geo.js?v=1787678463"></script>
+<script src="team.js?v=1787678463"></script>
+<script src="store.js?v=1787678463"></script>
+<script src="i18n.js?v=1787678463"></script>
+<script src="app.js?v=1787678463"></script>
+<script src="figure.js?v=1787678463"></script>
 </body>
 </html>

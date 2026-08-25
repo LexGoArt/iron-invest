@@ -36,10 +36,19 @@
   };
   const nameOf = (o) => pick(o, 'name');
   const areaOf = (o) => pick(o.location, 'area');
+  /* В таблице «Тип» — это типология, а не описание: «Дом под полный ремонт»
+     дублировал соседнюю колонку состояния и не влезал. Полная формулировка
+     остаётся в карточке объекта и в подсказке. */
   const kindOf = (o) => (o.kindKey ? t(o.kindKey) : '');
+  const kindShort = (o) => {
+    if (!o.kindKey) return '';
+    const sh = t(o.kindKey + '.s');            // t() возвращает сам ключ, если его нет
+    return sh === o.kindKey + '.s' ? t(o.kindKey) : sh;
+  };
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
+    tpane: 'sum', tview: 'map', sort: null, sortDir: 1,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -113,11 +122,36 @@
 
   /* quick filters answer "what needs attention", not "what is pretty" */
   const QUICK = {
+    blocked: (o) => Iron.blockersOf(o).length > 0,
     nodocs:  (o) => !o.docs || o.docs.have == null || (o.docs.total && o.docs.have < o.docs.total),
     noprice: (o) => o.price.sale == null && o.price.rentMonthly == null,
     nostage: (o) => !o.stage,
-    noowner: (o) => !o.responsible || !o.responsible.name
+    noowner: (o) => !o.responsible || !o.responsible.personId
   };
+
+  /* ── ТРИ РАЗНЫЕ ВЕЩИ, КОТОРЫЕ РАНЬШЕ НАЗЫВАЛИСЬ ОДНИМ СЛОВОМ «ГОТОВ» ──────
+     1. condition  — физическое состояние стен: его видно глазами;
+     2. stage      — где объект в процессе: это управленческий факт;
+     3. readiness  — можно ли его выставлять: это ВЫВОД из первых двух плюс
+                     документы, цена и ответственный.
+     Портал раньше показывал «7 готовы», имея в виду (1), а читалось это как
+     (3) — при том что по всем 11 не было ни документов, ни цены. Поэтому
+     readiness не хранится в данных: он вычисляется, и разойтись с фактами
+     физически не может. */
+  const BLOCKERS = [
+    { k: 'docs',  test: QUICK.nodocs },
+    { k: 'price', test: QUICK.noprice },
+    { k: 'stage', test: QUICK.nostage },
+    { k: 'owner', test: QUICK.noowner }
+  ];
+  const blockersOf = (o) => BLOCKERS.filter((b) => b.test(o)).map((b) => b.k);
+  const readinessOf = (o) => {
+    const n = blockersOf(o).length;
+    if (n === 0) return o.stage === 'ready' || o.stage === 'deal' ? 'deal' : 'publish';
+    return 'blocked';
+  };
+  Iron.blockersOf = blockersOf;
+  Iron.readinessOf = readinessOf;
   function matchesQuery(o) {
     const q = state.q.trim().toLowerCase();
     if (!q) return true;
@@ -289,25 +323,45 @@
   }
 
   /* ── working summary: counts that are also filters ──────────────────────── */
+  /* дата в локали страницы: реестр хранит ISO, читатель видит своё */
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    const loc = { ru: 'ru-RU', pl: 'pl-PL', en: 'en-GB' }[lang()] || 'ru-RU';
+    return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
   function renderSummary() {
     const all = Iron.list();
+    const upd = $('#introUpd');
+    if (upd) {
+      const d = (window.IronData && window.IronData.registryUpdated) || null;
+      upd.textContent = d ? t('intro.upd') + ' ' + fmtDate(d) : '';
+    }
     const box = $('#sumNums'), qbox = $('#sumQuick');
     if (!box) return;
-    const ready = all.filter((o) => o.condition === 'ready').length;
+    const techReady = all.filter((o) => o.condition === 'ready').length;
+    const publishable = all.filter((o) => readinessOf(o) !== 'blocked').length;
+    const blocked = all.filter((o) => readinessOf(o) === 'blocked').length;
     const nums = [
-      [all.length, t('sum.total'), null],
-      [ready, t('sum.ready'), null],
-      [all.filter(QUICK.nodocs).length, t('sum.nodocs'), 'nodocs'],
-      [all.filter(QUICK.noprice).length, t('sum.noprice'), 'noprice']
+      [all.length, t('sum.total'), null, null],
+      [techReady, t('sum.techReady'), null, 'flat'],
+      [publishable, t('sum.publishable'), null, publishable ? 'ok' : 'zero'],
+      [blocked, t('sum.blocked'), 'blocked', blocked ? 'warn' : 'ok']
     ];
-    box.innerHTML = nums.map(([n, label, q]) =>
-      q ? `<button class="sum__n" type="button" data-quick="${q}" aria-pressed="${state.quick === q}">
-             <b>${n}</b><span>${esc(label)}</span></button>`
-        : `<span class="sum__n sum__n--flat"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
-    const quicks = [['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
+    box.innerHTML = nums.map(([n, label, q, tone]) =>
+      q ? `<button class="sum__n sum__n--${tone || 'flat'}" type="button" data-quick="${q}"
+             aria-pressed="${state.quick === q}"><b>${n}</b><span>${esc(label)}</span></button>`
+        : `<span class="sum__n sum__n--${tone || 'flat'}"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
+    const quicks = [['nodocs', t('sum.nodocs')], ['noprice', t('sum.noprice')],
+                    ['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
     qbox.innerHTML = quicks.map(([k, label]) =>
       `<button class="qf" type="button" data-quick="${k}" aria-pressed="${state.quick === k}">${esc(label)}<sup>${all.filter(QUICK[k]).length}</sup></button>`).join('')
       + (state.quick ? `<button class="qf qf--clear" type="button" data-quick="">${esc(t('sum.all'))}</button>` : '');
+    const defs = $('#defsIn');
+    if (defs) defs.innerHTML = ['cond', 'pub', 'blk'].map((k) =>
+      `<p><b>${esc(t('def.' + k + 'T'))}</b> ${esc(t('def.' + k + 'D'))}</p>`).join('');
+
     [box, qbox].forEach((el) => el.querySelectorAll('[data-quick]').forEach((b) =>
       b.addEventListener('click', () => { state.quick = b.dataset.quick || null; applyFilters(); })));
   }
@@ -369,33 +423,75 @@
     : (o.price.rentMonthly != null ? money(o.price.rentMonthly, o.price.currency) + ' ' + t('per.month') : t('price.request')));
 
   /* the register: eleven properties should fit on one screen */
+  /* Каждая ячейка, которую может обрезать, несёт полный текст в title:
+     решение принимают по этим колонкам, и «Ответстве…» его не поддерживает. */
+  const cell = (cls, text, extra) => {
+    // часть источников уже возвращает прочерк — он тоже означает «нет данных»
+    const empty = text == null || text === '' || text === dash;
+    const v = empty ? dash : String(text);
+    // пустое поле помечается: на мобильном карточка не должна состоять из прочерков
+    return `<span class="${cls}${empty ? ' is-empty' : ''}${extra || ''}"
+      title="${esc(v)}">${esc(v)}</span>`;
+  };
   function tableRow(o, i) {
     const st = statusOf(o);
+    const price = o.price.sale != null || o.price.rentMonthly != null
+      ? priceOf(o) : t('price.requestShort');
     return `<button class="row" data-id="${esc(o.id)}" role="row">
       <span class="row__i">${no(i)}</span>
-      <span class="row__nm">${esc(nameOf(o))}</span>
-      <span class="row__k">${esc(kindOf(o))}</span>
-      <span class="row__loc">${esc(areaOf(o).split(',')[0])}</span>
-      <span class="row__st${st ? ' ' + st.cls : ''}">${st ? '<i></i>' + esc(st.label) : dash}</span>
-      <span class="row__p">${esc(priceOf(o))}</span>
-      <span class="row__d">${esc(docsOf(o))}</span>
-      <span class="row__r">${esc((o.responsible && o.responsible.name) || dash)}</span>
-      <span class="row__nx">${esc(o.nextStep || dash)}</span>
+      ${cell('row__nm', nameOf(o))}
+      <span class="row__k" title="${esc(kindOf(o))}">${esc(kindShort(o))}</span>
+      ${cell('row__loc', areaOf(o).split(',')[0])}
+      <span class="row__st${st ? ' ' + st.cls : ''}" title="${esc(st ? st.label : dash)}">${st ? '<i></i>' + esc(st.label) : dash}</span>
+      ${cell('row__p', price)}
+      ${cell('row__d', docsOf(o))}
+      ${cell('row__r', (o.responsible && o.responsible.name) || null, '" data-lb="' + esc(t('th.owner')))}
+      ${cell('row__nx', o.nextStep || null, '" data-lb="' + esc(t('th.next')))}
     </button>`;
   }
   function tableHead() {
     // head cells carry the same column classes as the body, otherwise the
     // responsive rules hide body cells while the header keeps all nine and wraps
-    const cols = [['row__i','th.no'], ['row__nm','th.name'], ['row__k','th.kind'],
-                  ['row__loc','th.loc'], ['row__st','th.stage'], ['row__p','th.price'],
-                  ['row__d','th.docs'], ['row__r','th.owner'], ['row__nx','th.next']];
-    return `<div class="row row--head" role="row">${cols.map(([c, k]) =>
-      `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+    const cols = [['row__i','th.no',null], ['row__nm','th.name','name'], ['row__k','th.kind','kind'],
+                  ['row__loc','th.loc','loc'], ['row__st','th.stage','cond'], ['row__p','th.price','price'],
+                  ['row__d','th.docs','docs'], ['row__r','th.owner','owner'], ['row__nx','th.next','next']];
+    return `<div class="row row--head" role="row">${cols.map(([c, k, sortKey]) => sortKey
+      ? `<button class="${c} th" type="button" data-sort="${sortKey}"
+           aria-sort="${state.sort === sortKey ? (state.sortDir > 0 ? 'ascending' : 'descending') : 'none'}"
+           >${esc(t(k))}<i class="th__a" aria-hidden="true"></i></button>`
+      : `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+  }
+
+  /* Сортировка. Ключ считается один раз на строку, пустые значения всегда
+     уезжают вниз независимо от направления: «нет данных» — это не «меньше». */
+  const SORTV = {
+    name: (o) => nameOf(o).toLowerCase(),
+    kind: (o) => kindOf(o).toLowerCase(),
+    loc:  (o) => areaOf(o).toLowerCase(),
+    cond: (o) => o.condition || '',
+    price:(o) => (o.price.sale != null ? o.price.sale
+                 : (o.price.rentMonthly != null ? o.price.rentMonthly : null)),
+    docs: (o) => (o.docs && o.docs.have != null ? o.docs.have : null),
+    owner:(o) => (o.responsible && o.responsible.name) || '',
+    next: (o) => o.nextStep || ''
+  };
+  function sortItems(items) {
+    const k = state.sort; if (!k || !SORTV[k]) return items;
+    const dir = state.sortDir || 1;
+    return items.slice().sort((a, b) => {
+      const x = SORTV[k](a.o), y = SORTV[k](b.o);
+      const ex = x == null || x === '', ey = y == null || y === '';
+      if (ex && ey) return a.i - b.i;
+      if (ex) return 1;              // пустое — всегда внизу
+      if (ey) return -1;
+      if (typeof x === 'number' && typeof y === 'number') return (x - y) * dir;
+      return String(x).localeCompare(String(y), lang()) * dir;
+    });
   }
 
   function renderColl() {
     const all = Iron.list();
-    const items = all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o));
+    const items = sortItems(all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o)));
     const coll = $('#coll');
     coll.className = 'coll coll--' + state.view;
     coll.innerHTML = state.view === 'table'
@@ -404,10 +500,26 @@
     coll.querySelectorAll('.ent, .row[data-id]').forEach((b) => {
       b.addEventListener('click', () => Iron.openObject(b.dataset.id));
     });
+    coll.querySelectorAll('[data-sort]').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.sort;
+      state.sortDir = state.sort === k ? -(state.sortDir || 1) : 1;
+      state.sort = k;
+      renderColl();
+    }));
     // a private collection states its range, it does not announce a result count
     const cc = $('#collCount');
     if (cc) cc.textContent = `${t('nav.collection')} · ${all.length}`;
     renderChips();
+
+    /* Разошедшиеся колонки шапки и тела ломали таблицу уже трижды и каждый раз
+       молча. Пусть теперь кричит: проверка стоит один проход по девяти узлам. */
+    if (state.view === 'table') {
+      const vis = (r) => r ? [].filter.call(r.children,
+        (c) => getComputedStyle(c).display !== 'none').length : 0;
+      const h = vis(coll.querySelector('.row--head'));
+      const b = vis(coll.querySelector('.row[data-id]'));
+      if (h && b && h !== b) console.warn(`[iron] колонки разошлись: шапка ${h}, строка ${b}`);
+    }
 
     // nothing matched — say so plainly and offer the one recovery action
     const emptyBox = $('#empty');
@@ -703,22 +815,29 @@
 
   /* search */
   (function () {
-    const q = $('#q'); if (!q) return;
+    const inputs = [$('#q'), $('#qm')].filter(Boolean);
+    if (!inputs.length) return;
     let tmr;
-    q.addEventListener('input', () => {
+    inputs.forEach((el) => el.addEventListener('input', () => {
       clearTimeout(tmr);
-      tmr = setTimeout(() => { state.q = q.value; renderColl(); }, 120);
-    });
+      tmr = setTimeout(() => {
+        state.q = el.value;
+        inputs.forEach((o) => { if (o !== el) o.value = el.value; });  // два поля, один запрос
+        renderColl();
+      }, 120);
+    }));
   })();
 
   /* Objects / Map are modes, not sections — the map no longer sits between
      the header and the work. */
   function setMode(m) {
     state.mode = m;
-    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum'), team = $('#team-sec');
+    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum'), team = $('#team-sec'),
+          intro = $('#intro');
     if (plate) plate.hidden = m !== 'map';
     if (objects) objects.hidden = m !== 'objects';
     if (sum) sum.hidden = m !== 'objects';
+    if (intro) intro.hidden = m === 'team';
     if (team) team.hidden = m !== 'team';
     document.querySelectorAll('.nav__t').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
@@ -796,7 +915,8 @@
       const lx = vert ? d.x : d.x + side * 26;
       const ly = vert ? (d.si < 0 ? d.y - 34 : d.y + 40) : d.y - 4;
       const nm = d.p.name || t(d.p.vacant ? 'team.vacant' : 'team.unassigned');
-      return `<g class="rz__n rz__n--${d.st}">
+      return `<g class="rz__n rz__n--${d.st}" data-person="${esc(d.p.id)}"
+        tabindex="0" role="button" aria-label="${esc(d.p.role)}">
         <circle class="rz__ring" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="17"/>
         <svg x="${(d.x - 8).toFixed(1)}" y="${(d.y - 8).toFixed(1)}" width="16" height="16"
              viewBox="0 0 16 16" class="rz__gl">${PATHS[d.p.icon] || PATHS.dot}</svg>
@@ -879,13 +999,18 @@
       ['team.needs', p.dependencies.length ? p.dependencies.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`],
       ['team.check', p.checks.length ? p.checks.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`]
     ];
+    const openTasks = p.deliverables.filter((d) => d.status === 'open').length;
     return `<button class="team__row is-${st}${n ? ' is-loaded' : ''}" type="button"
-        aria-expanded="false" data-person="${esc(p.id)}">
+        aria-expanded="false" data-person="${esc(p.id)}" data-state="${st}"
+        aria-controls="tp-${esc(p.id)}">
         <i class="team__gl" aria-hidden="true">${glyph(p.icon)}</i>
-        <span class="team__nm">${p.name ? esc(p.name) : `<em>${esc(t(p.vacant ? 'team.vacant' : 'team.unassigned'))}</em>`}</span>
-        <span class="team__role">${esc(p.role)}</span>
+        <span class="team__nm" data-state-label="${esc(p.role + ' · ' + t(STATE[st]))}"
+          title="${esc(p.name || t('team.unassigned'))}"
+          >${p.name ? esc(p.name) : `<em>${esc(t('team.unassigned'))}</em>`}</span>
+        <span class="team__role" title="${esc(p.role)}">${esc(p.role)}</span>
         <span class="team__scope" title="${esc(p.scope)}">${esc(p.scope)}</span>
-        <span class="team__n">${n}</span>
+        <span class="team__n">${n ? n : `<i class="tbd" title="${esc(t('team.noObjects'))}">${dash}</i>`}</span>
+        <span class="team__tasks">${openTasks || dash}</span>
         <span class="team__contact"><i class="team__st2 team__st2--${st}"
           aria-hidden="true"></i>${esc(t(STATE[st]))}</span>
         <span class="team__chev" aria-hidden="true"></span>
@@ -893,11 +1018,42 @@
       <div class="fpanel team__panel" data-open="false" id="tp-${esc(p.id)}">
         <div class="fpanel__clip"><div class="fpanel__in team__in">
           <p class="team__owns">${esc(p.owns)}</p>
+          <p class="team__zone"><b>${esc(t('team.thScope'))}:</b> ${esc(p.scope)}</p>
           ${p.note ? `<p class="team__fact">${esc(p.note)}</p>` : ''}
           ${groups.map(([k, html]) => `<div class="fgrp"><legend>${esc(t(k))}</legend>
              <ul class="team__list">${html}</ul></div>`).join('')}
         </div></div>
       </div>`;
+  }
+
+  /* Список вместо схемы: на узком экране радиальная карта нечитаема, а на
+     широком её иногда просто не хочется рассматривать. Одни и те же данные. */
+  function respList() {
+    return `<ul class="rlist">` + everyone().map((p) => {
+      const st = stateOf(p);
+      const n = loadOf(p);
+      return `<li class="rlist__i is-${st}">
+        <button class="rlist__b" type="button" data-goto="${esc(p.id)}">
+          <i class="rlist__gl" aria-hidden="true">${glyph(p.icon)}</i>
+          <span class="rlist__t">
+            <b>${esc(p.role)}</b>
+            <span>${p.name ? esc(p.name) : t('team.unassigned')}</span>
+          </span>
+          <span class="rlist__m">
+            <i class="team__st2 team__st2--${st}" aria-hidden="true"></i>${esc(t(STATE[st]))}
+            <em>${n ? n + ' ' + t('team.thN').toLowerCase() : t('team.noObjects')}</em>
+          </span>
+        </button></li>`;
+    }).join('') + `</ul>`;
+  }
+
+  /* переход со схемы или списка к строке человека — и сразу раскрыть её */
+  function gotoPerson(id) {
+    const btn = document.querySelector(`.team__row[data-person="${id}"]`);
+    if (!btn) return;
+    if (btn.getAttribute('aria-expanded') !== 'true') btn.click();
+    btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    btn.focus({ preventScroll: true });
   }
 
   function renderTeam() {
@@ -910,14 +1066,34 @@
       <span class="team__role">${esc(t('team.thRole'))}</span>
       <span class="team__scope">${esc(t('team.thScope'))}</span>
       <span class="team__n">${esc(t('team.thN'))}</span>
+      <span class="team__tasks">${esc(t('team.thTasks'))}</span>
       <span class="team__contact">${esc(t('team.thState'))}</span>
       <span class="team__chev"></span></div>`;
     box.innerHTML = head + TEAM.people.map(personRow).join('');
     const gaps = $('#teamGaps');
     if (gaps) gaps.innerHTML = TEAM.gaps.map(personRow).join('');
 
-    const f1 = $('#teamFig1'); if (f1) f1.querySelector('.fig__body').innerHTML = figResp();
+    const f1 = $('#teamFig1');
+    if (f1) {
+      // на узком экране радиальная схема нечитаема: список — не деградация,
+      // а единственная форма, в которой эти данные там работают
+      const forced = window.matchMedia('(max-width:720px)').matches;
+      const list = forced || state.tview === 'list';
+      const seg = document.querySelector('.tbar .seg');
+      if (seg) seg.hidden = forced;
+      f1.querySelector('.fig__body').innerHTML = list ? respList() : figResp();
+      f1.classList.toggle('fig--list', list);
+      f1.querySelectorAll('[data-goto], .rz__n').forEach((el) => {
+        const id = el.dataset.goto || el.dataset.person;
+        if (id) el.addEventListener('click', () => gotoPerson(id));
+      });
+    }
+    document.querySelectorAll('[data-tview]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.tview === state.tview)));
     const key = $('#teamKey'); if (key) key.innerHTML = figKey();
+    const raci = $('#teamRaci');
+    if (raci) raci.innerHTML = `<b>${esc(t('raci.title'))}</b>`
+      + ['d', 'c', 'i'].map((k) => `<span>${esc(t('raci.' + k))}</span>`).join('');
     const f2 = $('#teamFig2'); if (f2) f2.querySelector('.fig__body').innerHTML = figPipe();
 
     [box, gaps].forEach((host) => host && host.querySelectorAll('[data-person]').forEach((b) => {
@@ -965,8 +1141,88 @@
     });
   }
 
+  /* Разделы «Команды». Раньше всё лежало одним потоком выше четырёх тысяч
+     пикселей, и вопросы, требующие решения, оказывались в самом низу —
+     то есть самое рабочее содержимое читалось последним. */
+  // у вкладки своё короткое имя: заголовок раздела в неё не помещается
+  const TPANES = [
+    ['sum', 'tab.sum'], ['people', 'tab.people'], ['gaps', 'tab.gaps'],
+    ['dec', 'tab.dec'], ['ho', 'tab.ho']
+  ];
+  function setPane(k) {
+    state.tpane = k;
+    document.querySelectorAll('.tpane').forEach((p) => { p.hidden = p.dataset.pane !== k; });
+    document.querySelectorAll('[data-tpane]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.tpane === k)));
+    if (k === 'people' || k === 'ho') renderTeam();
+  }
+  function renderTeamNav() {
+    const nav = $('#teamNav'); if (!nav) return;
+    const n = { gaps: (TEAM.gaps || []).length, ho: (TEAM.handoffs || []).length,
+                sum: (TEAM.open || []).length, people: (TEAM.people || []).length,
+                dec: (TEAM.decisions || []).length };
+    nav.innerHTML = TPANES.map(([k, key]) =>
+      `<button class="tnav__b" type="button" data-tpane="${k}"
+        aria-pressed="${state.tpane === k}">${esc(t(key))}<sup>${n[k]}</sup></button>`).join('');
+    nav.querySelectorAll('[data-tpane]').forEach((b) =>
+      b.addEventListener('click', () => setPane(b.dataset.tpane)));
+  }
+
+  (function teamControls() {
+    document.addEventListener('click', (e) => {
+      const v = e.target.closest('[data-tview]');
+      if (v) { state.tview = v.dataset.tview; renderTeam(); return; }
+
+      const all = e.target.closest('#teamToggleAll');
+      if (all) {
+        const rows = document.querySelectorAll('#team .team__row[data-person]');
+        const open = all.dataset.open !== 'true';
+        rows.forEach((r) => { if ((r.getAttribute('aria-expanded') === 'true') !== open) r.click(); });
+        all.dataset.open = String(open);
+        all.textContent = t(open ? 'team.collapseAll' : 'team.expandAll');
+        return;
+      }
+
+      const only = e.target.closest('#teamOnlyOpen');
+      if (only) {
+        const on = only.getAttribute('aria-pressed') !== 'true';
+        only.setAttribute('aria-pressed', String(on));
+        document.querySelectorAll('#team .team__row[data-person]').forEach((r) => {
+          const hide = on && r.dataset.state === 'fixed';
+          r.hidden = hide;
+          const panel = document.getElementById('tp-' + r.dataset.person);
+          if (panel && hide) { panel.dataset.open = 'false'; r.setAttribute('aria-expanded', 'false'); }
+          if (panel) panel.hidden = hide;
+        });
+      }
+    });
+    // схема доступна с клавиатуры: узел — это кнопка
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const nd = e.target.closest && e.target.closest('.rz__n[data-person]');
+      if (nd) { e.preventDefault(); gotoPerson(nd.dataset.person); }
+    });
+  })();
+
+  /* Свёрнутая панель схлопнута через grid-template-rows:0fr, но её содержимое
+     остаётся в дереве доступности: скринридер читает все группы фильтров, а Tab
+     уходит в невидимые чекбоксы. overflow:hidden от этого не спасает — нужен
+     inert. Тот же механизм используют карточки людей, поэтому правим оба. */
+  function syncInert() {
+    document.querySelectorAll('.fpanel').forEach((p) => {
+      const open = p.dataset.open === 'true';
+      const clip = p.querySelector('.fpanel__clip');
+      if (clip) clip.inert = !open;
+    });
+  }
+  Iron.syncInert = syncInert;
+  new MutationObserver(syncInert).observe(document.body,
+    { subtree: true, attributes: true, attributeFilter: ['data-open'] });
+
   function renderAll() {
-    renderSummary(); renderPlaces(); renderFilters(); renderColl(); renderTeam();
+    renderSummary(); renderPlaces(); renderFilters(); renderColl();
+    renderTeamNav(); renderTeam();
+    syncInert();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }
   document.addEventListener('iron:lang', renderAll);

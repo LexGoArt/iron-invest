@@ -715,9 +715,9 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 /* the register table */
 .coll--table{ display:block; }
 .coll--table .row{ display:grid;
-  grid-template-columns:34px minmax(120px,1.1fr) minmax(90px,.9fr) minmax(80px,.7fr) minmax(96px,.8fr)
-                        minmax(88px,.7fr) 74px minmax(80px,.7fr) minmax(110px,1fr);
-  align-items:center; gap:var(--sp-4); width:100%; text-align:left;
+  grid-template-columns:30px minmax(132px,1.15fr) minmax(74px,.6fr) minmax(76px,.6fr) minmax(104px,.8fr)
+                        minmax(94px,.7fr) 60px minmax(84px,.65fr) minmax(124px,1.15fr);
+  align-items:center; gap:var(--sp-3); width:100%; text-align:left;
   padding:11px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-700);
   transition:background var(--t-1) var(--ease); }
@@ -738,26 +738,50 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 @media (max-width:1200px){
   .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
                                             minmax(96px,.8fr) minmax(88px,.8fr) minmax(100px,1fr); }
-  .row__d, .row__r{ display:none; }
+  .coll--table .row > .row__d, .coll--table .row > .row__r{ display:none; }
 }
 @media (max-width:1000px){
   .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
                                             minmax(96px,.8fr) minmax(88px,.8fr); }
-  .row__d, .row__r, .row__nx{ display:none; }
+  .coll--table .row > .row__d, .coll--table .row > .row__r,
+  .coll--table .row > .row__nx{ display:none; }
 }
 @media (max-width:820px){
   /* five cells remain: №, name, location, status, price */
   .coll--table .row{ grid-template-columns:28px minmax(100px,1.4fr) minmax(78px,.8fr)
                                             minmax(92px,.9fr) minmax(86px,.8fr); }
-  .row__k, .row__d, .row__r, .row__nx{ display:none; }
+  .coll--table .row > .row__k, .coll--table .row > .row__d,
+  .coll--table .row > .row__r, .coll--table .row > .row__nx{ display:none; }
 }
+/* Мобильная карточка. Раньше оставались название, цена и состояние — то есть
+   ровно то, что нужно покупателю, и ничего из того, что нужно сотруднику.
+   Теперь строка превращается в карточку: состояние, кто ведёт, следующий шаг;
+   цена и документы уходят во вторую очередь. */
 @media (max-width:560px){
-  .coll--table .row{ grid-template-columns:1fr auto; gap:4px var(--sp-3); padding:10px var(--sp-2); }
+  .coll--table .row{ grid-template-columns:1fr auto; gap:5px var(--sp-3);
+    padding:var(--sp-4) var(--sp-2); align-items:start; }
   .coll--table .row--head{ display:none; }
-  .row__i, .row__k, .row__loc{ display:none; }
-  .row__nm{ font-size:15px; }
-  .row__st{ justify-self:end; font-size:12px; }
+  .coll--table .row > .row__i, .coll--table .row > .row__k{ display:none; }
+  .row__nm{ font-size:16px; grid-column:1; align-self:center; }
+  .row__st{ grid-column:2; grid-row:1; justify-self:end; font-size:11.5px; align-self:center; }
+  .row__loc{ grid-column:1 / -1; font-family:var(--mono); font-size:11px;
+    color:var(--ink-500); }
+  .row__r{ grid-column:1 / -1; display:block !important; }
+  .row__nx{ grid-column:1 / -1; display:block !important;
+    white-space:normal; color:var(--ink-900); font-size:13.5px; }
+  /* пока поле не заполнено, строка из одного прочерка бесполезна */
+  .coll--table .row > .row__r.is-empty,
+  .coll--table .row > .row__nx.is-empty,
+  .coll--table .row > .row__d.is-empty{ display:none !important; }
+  .row__p, .row__d{ display:block !important; font-family:var(--mono); font-size:11.5px;
+    color:var(--ink-500); }
   .row__p{ grid-column:1; }
+  .row__d{ grid-column:2; justify-self:end; }
+  /* подписи, которых на мобильном нет в шапке */
+  .row__r::before{ content:attr(data-lb) " "; font-family:var(--mono); font-size:10px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink-decor); }
+  .row__nx::before{ content:attr(data-lb) " "; font-family:var(--mono); font-size:10px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink-decor); }
 }
 
 /* density: the page was paced like a brochure */
@@ -779,7 +803,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 .team__row{ display:grid;
   grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr)
-                        88px minmax(124px,.8fr) 24px;
+                        78px 56px minmax(192px,.7fr) 24px;
   align-items:center; gap:var(--sp-4); width:100%; text-align:left;
   padding:13px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-500);
@@ -857,18 +881,33 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   .ho__row{ grid-template-columns:1fr; gap:5px; }
 }
 
-@media (max-width:1200px){
-  .team__row{ grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr) 88px 24px; }
-  .team__contact{ display:none; }
+/* Адаптив таблицы команды. Термин «требует подтверждения» длиннее прежнего
+   «под вопросом», поэтому колонка состояния уходит последней, а не первой:
+   без неё строка перестаёт отвечать на главный вопрос раздела.
+   Правила скрытия — через `.team .team__X`, иначе их перебивает
+   `.team__row{display:grid}` и шапка расходится с телом. */
+@media (max-width:1160px){
+  .team__row{ grid-template-columns:16px minmax(140px,1fr) minmax(120px,.9fr) 78px 56px 192px 24px; }
+  .team .team__scope{ display:none; }
 }
-@media (max-width:1000px){
-  .team__row{ grid-template-columns:16px minmax(140px,1.2fr) minmax(130px,1fr) 88px 24px; }
-  .team__scope{ display:none; }
+@media (max-width:900px){
+  .team__row{ grid-template-columns:16px minmax(130px,1fr) minmax(110px,.9fr) 78px 192px 24px; }
+  .team .team__tasks{ display:none; }
 }
-@media (max-width:620px){
-  .team__row{ grid-template-columns:16px 1fr auto 24px; gap:var(--sp-3); }
-  .team__role{ display:none; }
+@media (max-width:720px){
+  .team__row{ grid-template-columns:16px minmax(120px,1fr) 78px 192px 24px; }
+  .team .team__role{ display:none; }
+}
+@media (max-width:520px){
+  .team__row{ grid-template-columns:16px 1fr 24px; gap:var(--sp-3); }
+  .team .team__n, .team .team__contact{ display:none; }
   .team .team__row--head{ display:none; }
+  /* состояние переезжает под имя: колонки для него уже нет, а смысл нужен */
+  .team__nm{ white-space:normal; }
+  .team__nm::after{ content:attr(data-state-label); display:block;
+    white-space:normal;                 /* иначе унаследует nowrap и обрежется */
+    font-family:var(--mono); font-size:10px; letter-spacing:.06em; line-height:1.4;
+    text-transform:uppercase; color:var(--ink-500); margin-top:3px; }
 }
 
 /* ============================================================================
@@ -931,7 +970,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   padding-bottom:var(--sp-3); border-bottom:1px solid var(--hairline); margin-bottom:var(--sp-6); }
 .fig__n{ color:var(--bronze-text); flex:none; }
 .fig__body{ overflow-x:auto; }
-.fig__body svg{ width:100%; height:auto; min-width:640px; display:block; }
+.fig__body > svg{ width:100%; height:auto; min-width:640px; display:block; }
 
 /* ══ FIG.02 · КАРТА ОТВЕТСТВЕННОСТИ ════════════════════════════════════════ */
 .rz{ font-family:var(--sans); }
@@ -1013,6 +1052,200 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   font-family:var(--mono); font-size:11.5px; line-height:1.5; color:var(--ink-900); }
 
 @media (max-width:640px){
-  .fig__body svg{ min-width:560px; }
+  .fig__body > svg{ min-width:560px; }
   .team__open{ grid-template-columns:1fr; }
+}
+
+/* ══ ПЕРВЫЙ ЭКРАН · портал раньше не называл себя ══════════════════════════ */
+.intro{ padding:var(--sp-7) 0 var(--sp-5); }
+.intro__h{ margin:0 0 var(--sp-3); font-family:var(--serif); font-weight:400;
+  font-size:clamp(26px,3.4vw,38px); line-height:1.12; color:var(--ink-900);
+  letter-spacing:-.01em; }
+.intro__p{ margin:0 0 var(--sp-4); max-width:62ch; font-size:clamp(15px,1.5vw,17px);
+  line-height:1.55; color:var(--ink-700); }
+.intro__meta{ display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-5); margin:0;
+  padding-top:var(--sp-4); border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.intro__upd{ color:var(--ink-900); }
+
+/* ══ ИЕРАРХИЯ СВОДКИ ═══════════════════════════════════════════════════════
+   Раньше все числа весили одинаково, и «11 с блокерами» читалось так же
+   спокойно, как «11 объектов». Цвет — только там, где есть проблема. */
+.sum__n--warn b{ color:var(--signal); }
+.sum__n--warn{ box-shadow:inset 0 0 0 1px rgba(192,85,43,.28); }
+.sum__n--ok b{ color:var(--st-ready); }
+.sum__n--zero b{ color:var(--ink-500); }
+
+/* ══ ВНУТРЕННЯЯ НАВИГАЦИЯ РАЗДЕЛА ══════════════════════════════════════════ */
+.tnav{ display:flex; flex-wrap:wrap; gap:2px; margin:var(--sp-5) 0 var(--sp-6);
+  border-bottom:1px solid var(--hairline); }
+.tnav__b{ appearance:none; background:none; border:0; cursor:pointer;
+  padding:10px var(--sp-4); margin-bottom:-1px;
+  border-bottom:2px solid transparent;
+  font-family:var(--mono); font-size:11px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-500);
+  transition:color var(--t-1) var(--ease), border-color var(--t-1) var(--ease); }
+.tnav__b sup{ margin-left:5px; font-size:9.5px; color:var(--ink-decor); }
+.tnav__b:hover{ color:var(--ink-900); }
+.tnav__b[aria-pressed="true"]{ color:var(--ink-900); border-bottom-color:var(--bronze); }
+.tnav__b[aria-pressed="true"] sup{ color:var(--bronze-text); }
+.tnav__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+
+.tpane[hidden]{ display:none; }
+.tpane > h3{ margin:0 0 var(--sp-3); }
+
+/* ══ ПАНЕЛЬ УПРАВЛЕНИЯ СПИСКОМ ЛЮДЕЙ ═══════════════════════════════════════ */
+.tbar{ display:flex; flex-wrap:wrap; gap:var(--sp-4); align-items:center;
+  justify-content:space-between; margin-bottom:var(--sp-5); }
+.tbar__r{ display:flex; flex-wrap:wrap; gap:var(--sp-2); }
+.seg{ display:inline-flex; border:1px solid var(--hairline); border-radius:var(--r-sm);
+  overflow:hidden; }
+.seg__b{ appearance:none; background:none; border:0; cursor:pointer;
+  padding:7px var(--sp-4); font-family:var(--mono); font-size:11px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500);
+  transition:background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.seg__b + .seg__b{ border-left:1px solid var(--hairline); }
+.seg__b:hover{ color:var(--ink-900); }
+.seg__b[aria-pressed="true"]{ background:var(--ink-900); color:var(--bg-page); }
+.seg__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+
+/* ══ СХЕМА КОМПАКТНЕЕ ══════════════════════════════════════════════════════ */
+.fig--compact .fig__body > svg{ max-width:760px; margin-inline:auto; }
+.fig--list .fig__body{ overflow:visible; }
+.rz__n[data-person]{ cursor:pointer; }
+.rz__n[data-person]:hover .rz__ring{ stroke-width:2.25; }
+.rz__n[data-person]:focus{ outline:none; }
+.rz__n[data-person]:focus-visible .rz__ring{ stroke:var(--bronze-focus); stroke-width:2.5; }
+
+/* ══ СПИСОК ВМЕСТО СХЕМЫ ═══════════════════════════════════════════════════ */
+.rlist{ list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1px;
+  background:var(--hairline); border:1px solid var(--hairline); }
+.rlist__b{ display:flex; gap:var(--sp-3); align-items:flex-start; width:100%;
+  padding:var(--sp-4); background:var(--bg-page); border:0; cursor:pointer;
+  text-align:left; transition:background var(--t-1) var(--ease); }
+.rlist__b:hover{ background:var(--bg-surface); }
+.rlist__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+.rlist__gl{ color:var(--ink-500); padding-top:2px; }
+.rlist__i.is-vacant .rlist__gl{ color:var(--ink-decor); }
+.rlist__t{ flex:1; min-width:0; display:block; }
+.rlist__t b{ display:block; font-family:var(--mono); font-size:10px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500);
+  font-weight:400; margin-bottom:3px; }
+.rlist__t > span{ display:block; font-family:var(--serif); font-size:15px;
+  color:var(--ink-900); line-height:1.25; }
+.rlist__i.is-vacant .rlist__t > span{ font-style:italic; color:var(--ink-500); font-size:14px; }
+.rlist__m{ display:flex; flex-direction:column; align-items:flex-end; gap:3px;
+  flex:none; font-family:var(--mono); font-size:10.5px; color:var(--ink-700); }
+.rlist__m em{ font-style:normal; color:var(--ink-decor); font-size:10px; }
+
+/* ══ КОЛОНКА ОТКРЫТЫХ ЗАДАЧ ════════════════════════════════════════════════ */
+.team__tasks{ font-family:var(--mono); font-size:13px; text-align:right;
+  color:var(--ink-900); font-variant-numeric:tabular-nums; }
+.team__row--head .team__tasks{ font:inherit; text-align:right; }
+.team__n .tbd{ font-style:normal; color:var(--ink-decor); }
+.team__zone{ margin:0 0 var(--sp-4); font-size:14px; line-height:1.55; color:var(--ink-700); }
+.team__zone b{ font-family:var(--mono); font-size:10.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); font-weight:400; }
+
+/* ══ ЛЕГЕНДА RACI ══════════════════════════════════════════════════════════ */
+.legend{ display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-5);
+  margin:0 0 var(--sp-5); padding:var(--sp-4);
+  background:var(--bg-sunken); border-left:2px solid var(--bronze);
+  font-size:13px; line-height:1.5; color:var(--ink-700); }
+.legend b{ flex-basis:100%; font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500);
+  font-weight:400; }
+
+@media (max-width:820px){
+  .tbar{ flex-direction:column; align-items:stretch; }
+  .tbar__r{ justify-content:flex-start; }
+  .rlist{ grid-template-columns:1fr; }
+}
+
+/* ══ ТАБЛИЦА: сортировка и явная строка ════════════════════════════════════ */
+.row--head .th{ appearance:none; overflow:hidden; background:none; border:0; padding:0; cursor:pointer;
+  display:flex; align-items:center; gap:4px; min-width:0;
+  font:inherit; color:inherit; letter-spacing:inherit; text-transform:inherit;
+  text-align:left; transition:color var(--t-1) var(--ease); }
+.row--head .th:hover{ color:var(--ink-900); }
+.row--head .th:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+.th__a{ width:0; height:0; flex:none; opacity:0;
+  border-left:3.5px solid transparent; border-right:3.5px solid transparent;
+  border-bottom:4px solid currentColor; transition:opacity var(--t-1) var(--ease); }
+.row--head .th:hover .th__a{ opacity:.35; }
+.th[aria-sort="ascending"]{ color:var(--ink-900); }
+.th[aria-sort="descending"]{ color:var(--ink-900); }
+.th[aria-sort="ascending"] .th__a{ opacity:1; color:var(--bronze-text); }
+.th[aria-sort="descending"] .th__a{ opacity:1; color:var(--bronze-text);
+  transform:rotate(180deg); }
+
+/* строка кликабельна — это должно быть видно, а не угадываться */
+.coll--table .row[data-id]{ position:relative; cursor:pointer; }
+.coll--table .row[data-id]::before{ content:""; position:absolute; left:0; top:0; bottom:0;
+  width:2px; background:var(--bronze); opacity:0;
+  transition:opacity var(--t-1) var(--ease); }
+.coll--table .row[data-id]:hover::before,
+.coll--table .row[data-id]:focus-visible::before{ opacity:1; }
+.coll--table .row[data-id]:hover .row__nm{ text-decoration:underline;
+  text-decoration-color:var(--hairline); text-underline-offset:3px; }
+
+/* «нет данных» — серый; всё остальное серым быть не должно */
+.row__nx, .row__r{ color:var(--ink-700); }
+
+/* Девять колонок не помещаются ниже ~1080px. Убираем «Тип» — по нему решение
+   не принимают, а название объекта его и так подразумевает. Состояние и
+   следующий шаг остаются всегда: аудит справедливо назвал их ключевыми. */
+@media (max-width:1080px) and (min-width:861px){
+  .coll--table .row{ grid-template-columns:30px minmax(132px,1.2fr) minmax(78px,.6fr)
+    minmax(112px,.85fr) minmax(96px,.7fr) 60px minmax(86px,.65fr) minmax(130px,1.2fr); }
+  .coll--table .row > .row__k{ display:none; }
+}
+
+/* ══ МОБИЛЬНАЯ ШАПКА ═══════════════════════════════════════════════════════
+   Логотип, поиск, три языка и бургер в одной строке не помещались.
+   Поиск и языки живут в меню, в шапке остаётся марка и бургер. */
+.mnav__search{ display:block; margin-bottom:var(--sp-5); }
+.mnav__search input{ width:100%; padding:11px var(--sp-4);
+  background:var(--bg-page); border:1px solid var(--hairline); border-radius:var(--r-sm);
+  font:inherit; font-size:16px; color:var(--ink-900); }
+.mnav__search input:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:1px; }
+.mnav__lang{ margin-top:var(--sp-5); padding-top:var(--sp-4);
+  border-top:1px solid var(--hairline); }
+@media (max-width:900px){
+  .head .search{ display:none; }
+  .head__right > .lang{ display:none; }
+}
+@media (min-width:901px){
+  .mnav__search, .mnav__lang{ display:none; }
+}
+
+/* ══ ОПРЕДЕЛЕНИЯ СТАТУСОВ ══════════════════════════════════════════════════
+   «7 готовы» и «11 без документов» противоречили друг другу ровно потому,
+   что слово «готов» не было определено. Определение стоит рядом с числом. */
+.defs{ margin-top:var(--sp-4); }
+.defs > summary{ display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  list-style:none; font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500);
+  transition:color var(--t-1) var(--ease); }
+.defs > summary::-webkit-details-marker{ display:none; }
+.defs > summary::after{ content:""; width:0; height:0;
+  border-left:3.5px solid transparent; border-right:3.5px solid transparent;
+  border-top:4px solid currentColor; transition:transform var(--t-1) var(--ease); }
+.defs[open] > summary{ color:var(--ink-900); }
+.defs[open] > summary::after{ transform:rotate(180deg); }
+.defs > summary:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:3px; }
+.defs__in{ margin-top:var(--sp-4); padding-left:var(--sp-4);
+  border-left:2px solid var(--bronze); max-width:76ch; }
+.defs__in p{ margin:0 0 var(--sp-3); font-size:13.5px; line-height:1.55; color:var(--ink-700); }
+.defs__in p:last-child{ margin-bottom:0; }
+.defs__in b{ color:var(--ink-900); font-weight:600; }
+
+/* На узком экране правая колонка списка («вакантно · объекты не назначены»)
+   не помещалась рядом с именем — она переезжает под него. */
+@media (max-width:560px){
+  .rlist__b{ flex-wrap:wrap; }
+  .rlist__m{ flex-direction:row; align-items:center; gap:var(--sp-3);
+    width:100%; padding-left:calc(14px + var(--sp-3)); }
+  .rlist__m em{ min-width:0; }
 }

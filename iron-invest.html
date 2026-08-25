@@ -726,9 +726,9 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 /* the register table */
 .coll--table{ display:block; }
 .coll--table .row{ display:grid;
-  grid-template-columns:34px minmax(120px,1.1fr) minmax(90px,.9fr) minmax(80px,.7fr) minmax(96px,.8fr)
-                        minmax(88px,.7fr) 74px minmax(80px,.7fr) minmax(110px,1fr);
-  align-items:center; gap:var(--sp-4); width:100%; text-align:left;
+  grid-template-columns:30px minmax(132px,1.15fr) minmax(74px,.6fr) minmax(76px,.6fr) minmax(104px,.8fr)
+                        minmax(94px,.7fr) 60px minmax(84px,.65fr) minmax(124px,1.15fr);
+  align-items:center; gap:var(--sp-3); width:100%; text-align:left;
   padding:11px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-700);
   transition:background var(--t-1) var(--ease); }
@@ -749,26 +749,50 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 @media (max-width:1200px){
   .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
                                             minmax(96px,.8fr) minmax(88px,.8fr) minmax(100px,1fr); }
-  .row__d, .row__r{ display:none; }
+  .coll--table .row > .row__d, .coll--table .row > .row__r{ display:none; }
 }
 @media (max-width:1000px){
   .coll--table .row{ grid-template-columns:30px minmax(110px,1.3fr) minmax(90px,.9fr) minmax(80px,.7fr)
                                             minmax(96px,.8fr) minmax(88px,.8fr); }
-  .row__d, .row__r, .row__nx{ display:none; }
+  .coll--table .row > .row__d, .coll--table .row > .row__r,
+  .coll--table .row > .row__nx{ display:none; }
 }
 @media (max-width:820px){
   /* five cells remain: №, name, location, status, price */
   .coll--table .row{ grid-template-columns:28px minmax(100px,1.4fr) minmax(78px,.8fr)
                                             minmax(92px,.9fr) minmax(86px,.8fr); }
-  .row__k, .row__d, .row__r, .row__nx{ display:none; }
+  .coll--table .row > .row__k, .coll--table .row > .row__d,
+  .coll--table .row > .row__r, .coll--table .row > .row__nx{ display:none; }
 }
+/* Мобильная карточка. Раньше оставались название, цена и состояние — то есть
+   ровно то, что нужно покупателю, и ничего из того, что нужно сотруднику.
+   Теперь строка превращается в карточку: состояние, кто ведёт, следующий шаг;
+   цена и документы уходят во вторую очередь. */
 @media (max-width:560px){
-  .coll--table .row{ grid-template-columns:1fr auto; gap:4px var(--sp-3); padding:10px var(--sp-2); }
+  .coll--table .row{ grid-template-columns:1fr auto; gap:5px var(--sp-3);
+    padding:var(--sp-4) var(--sp-2); align-items:start; }
   .coll--table .row--head{ display:none; }
-  .row__i, .row__k, .row__loc{ display:none; }
-  .row__nm{ font-size:15px; }
-  .row__st{ justify-self:end; font-size:12px; }
+  .coll--table .row > .row__i, .coll--table .row > .row__k{ display:none; }
+  .row__nm{ font-size:16px; grid-column:1; align-self:center; }
+  .row__st{ grid-column:2; grid-row:1; justify-self:end; font-size:11.5px; align-self:center; }
+  .row__loc{ grid-column:1 / -1; font-family:var(--mono); font-size:11px;
+    color:var(--ink-500); }
+  .row__r{ grid-column:1 / -1; display:block !important; }
+  .row__nx{ grid-column:1 / -1; display:block !important;
+    white-space:normal; color:var(--ink-900); font-size:13.5px; }
+  /* пока поле не заполнено, строка из одного прочерка бесполезна */
+  .coll--table .row > .row__r.is-empty,
+  .coll--table .row > .row__nx.is-empty,
+  .coll--table .row > .row__d.is-empty{ display:none !important; }
+  .row__p, .row__d{ display:block !important; font-family:var(--mono); font-size:11.5px;
+    color:var(--ink-500); }
   .row__p{ grid-column:1; }
+  .row__d{ grid-column:2; justify-self:end; }
+  /* подписи, которых на мобильном нет в шапке */
+  .row__r::before{ content:attr(data-lb) " "; font-family:var(--mono); font-size:10px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink-decor); }
+  .row__nx::before{ content:attr(data-lb) " "; font-family:var(--mono); font-size:10px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink-decor); }
 }
 
 /* density: the page was paced like a brochure */
@@ -790,7 +814,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 .team__row{ display:grid;
   grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr)
-                        88px minmax(124px,.8fr) 24px;
+                        78px 56px minmax(192px,.7fr) 24px;
   align-items:center; gap:var(--sp-4); width:100%; text-align:left;
   padding:13px var(--sp-2); background:none; border:none;
   border-bottom:1px solid var(--hairline); font-size:13.5px; color:var(--ink-500);
@@ -868,18 +892,33 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   .ho__row{ grid-template-columns:1fr; gap:5px; }
 }
 
-@media (max-width:1200px){
-  .team__row{ grid-template-columns:16px minmax(150px,1.1fr) minmax(140px,1fr) minmax(180px,1.3fr) 88px 24px; }
-  .team__contact{ display:none; }
+/* Адаптив таблицы команды. Термин «требует подтверждения» длиннее прежнего
+   «под вопросом», поэтому колонка состояния уходит последней, а не первой:
+   без неё строка перестаёт отвечать на главный вопрос раздела.
+   Правила скрытия — через `.team .team__X`, иначе их перебивает
+   `.team__row{display:grid}` и шапка расходится с телом. */
+@media (max-width:1160px){
+  .team__row{ grid-template-columns:16px minmax(140px,1fr) minmax(120px,.9fr) 78px 56px 192px 24px; }
+  .team .team__scope{ display:none; }
 }
-@media (max-width:1000px){
-  .team__row{ grid-template-columns:16px minmax(140px,1.2fr) minmax(130px,1fr) 88px 24px; }
-  .team__scope{ display:none; }
+@media (max-width:900px){
+  .team__row{ grid-template-columns:16px minmax(130px,1fr) minmax(110px,.9fr) 78px 192px 24px; }
+  .team .team__tasks{ display:none; }
 }
-@media (max-width:620px){
-  .team__row{ grid-template-columns:16px 1fr auto 24px; gap:var(--sp-3); }
-  .team__role{ display:none; }
+@media (max-width:720px){
+  .team__row{ grid-template-columns:16px minmax(120px,1fr) 78px 192px 24px; }
+  .team .team__role{ display:none; }
+}
+@media (max-width:520px){
+  .team__row{ grid-template-columns:16px 1fr 24px; gap:var(--sp-3); }
+  .team .team__n, .team .team__contact{ display:none; }
   .team .team__row--head{ display:none; }
+  /* состояние переезжает под имя: колонки для него уже нет, а смысл нужен */
+  .team__nm{ white-space:normal; }
+  .team__nm::after{ content:attr(data-state-label); display:block;
+    white-space:normal;                 /* иначе унаследует nowrap и обрежется */
+    font-family:var(--mono); font-size:10px; letter-spacing:.06em; line-height:1.4;
+    text-transform:uppercase; color:var(--ink-500); margin-top:3px; }
 }
 
 /* ============================================================================
@@ -942,7 +981,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   padding-bottom:var(--sp-3); border-bottom:1px solid var(--hairline); margin-bottom:var(--sp-6); }
 .fig__n{ color:var(--bronze-text); flex:none; }
 .fig__body{ overflow-x:auto; }
-.fig__body svg{ width:100%; height:auto; min-width:640px; display:block; }
+.fig__body > svg{ width:100%; height:auto; min-width:640px; display:block; }
 
 /* ══ FIG.02 · КАРТА ОТВЕТСТВЕННОСТИ ════════════════════════════════════════ */
 .rz{ font-family:var(--sans); }
@@ -1024,8 +1063,202 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   font-family:var(--mono); font-size:11.5px; line-height:1.5; color:var(--ink-900); }
 
 @media (max-width:640px){
-  .fig__body svg{ min-width:560px; }
+  .fig__body > svg{ min-width:560px; }
   .team__open{ grid-template-columns:1fr; }
+}
+
+/* ══ ПЕРВЫЙ ЭКРАН · портал раньше не называл себя ══════════════════════════ */
+.intro{ padding:var(--sp-7) 0 var(--sp-5); }
+.intro__h{ margin:0 0 var(--sp-3); font-family:var(--serif); font-weight:400;
+  font-size:clamp(26px,3.4vw,38px); line-height:1.12; color:var(--ink-900);
+  letter-spacing:-.01em; }
+.intro__p{ margin:0 0 var(--sp-4); max-width:62ch; font-size:clamp(15px,1.5vw,17px);
+  line-height:1.55; color:var(--ink-700); }
+.intro__meta{ display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-5); margin:0;
+  padding-top:var(--sp-4); border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.intro__upd{ color:var(--ink-900); }
+
+/* ══ ИЕРАРХИЯ СВОДКИ ═══════════════════════════════════════════════════════
+   Раньше все числа весили одинаково, и «11 с блокерами» читалось так же
+   спокойно, как «11 объектов». Цвет — только там, где есть проблема. */
+.sum__n--warn b{ color:var(--signal); }
+.sum__n--warn{ box-shadow:inset 0 0 0 1px rgba(192,85,43,.28); }
+.sum__n--ok b{ color:var(--st-ready); }
+.sum__n--zero b{ color:var(--ink-500); }
+
+/* ══ ВНУТРЕННЯЯ НАВИГАЦИЯ РАЗДЕЛА ══════════════════════════════════════════ */
+.tnav{ display:flex; flex-wrap:wrap; gap:2px; margin:var(--sp-5) 0 var(--sp-6);
+  border-bottom:1px solid var(--hairline); }
+.tnav__b{ appearance:none; background:none; border:0; cursor:pointer;
+  padding:10px var(--sp-4); margin-bottom:-1px;
+  border-bottom:2px solid transparent;
+  font-family:var(--mono); font-size:11px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-500);
+  transition:color var(--t-1) var(--ease), border-color var(--t-1) var(--ease); }
+.tnav__b sup{ margin-left:5px; font-size:9.5px; color:var(--ink-decor); }
+.tnav__b:hover{ color:var(--ink-900); }
+.tnav__b[aria-pressed="true"]{ color:var(--ink-900); border-bottom-color:var(--bronze); }
+.tnav__b[aria-pressed="true"] sup{ color:var(--bronze-text); }
+.tnav__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+
+.tpane[hidden]{ display:none; }
+.tpane > h3{ margin:0 0 var(--sp-3); }
+
+/* ══ ПАНЕЛЬ УПРАВЛЕНИЯ СПИСКОМ ЛЮДЕЙ ═══════════════════════════════════════ */
+.tbar{ display:flex; flex-wrap:wrap; gap:var(--sp-4); align-items:center;
+  justify-content:space-between; margin-bottom:var(--sp-5); }
+.tbar__r{ display:flex; flex-wrap:wrap; gap:var(--sp-2); }
+.seg{ display:inline-flex; border:1px solid var(--hairline); border-radius:var(--r-sm);
+  overflow:hidden; }
+.seg__b{ appearance:none; background:none; border:0; cursor:pointer;
+  padding:7px var(--sp-4); font-family:var(--mono); font-size:11px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-500);
+  transition:background var(--t-1) var(--ease), color var(--t-1) var(--ease); }
+.seg__b + .seg__b{ border-left:1px solid var(--hairline); }
+.seg__b:hover{ color:var(--ink-900); }
+.seg__b[aria-pressed="true"]{ background:var(--ink-900); color:var(--bg-page); }
+.seg__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+
+/* ══ СХЕМА КОМПАКТНЕЕ ══════════════════════════════════════════════════════ */
+.fig--compact .fig__body > svg{ max-width:760px; margin-inline:auto; }
+.fig--list .fig__body{ overflow:visible; }
+.rz__n[data-person]{ cursor:pointer; }
+.rz__n[data-person]:hover .rz__ring{ stroke-width:2.25; }
+.rz__n[data-person]:focus{ outline:none; }
+.rz__n[data-person]:focus-visible .rz__ring{ stroke:var(--bronze-focus); stroke-width:2.5; }
+
+/* ══ СПИСОК ВМЕСТО СХЕМЫ ═══════════════════════════════════════════════════ */
+.rlist{ list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1px;
+  background:var(--hairline); border:1px solid var(--hairline); }
+.rlist__b{ display:flex; gap:var(--sp-3); align-items:flex-start; width:100%;
+  padding:var(--sp-4); background:var(--bg-page); border:0; cursor:pointer;
+  text-align:left; transition:background var(--t-1) var(--ease); }
+.rlist__b:hover{ background:var(--bg-surface); }
+.rlist__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+.rlist__gl{ color:var(--ink-500); padding-top:2px; }
+.rlist__i.is-vacant .rlist__gl{ color:var(--ink-decor); }
+.rlist__t{ flex:1; min-width:0; display:block; }
+.rlist__t b{ display:block; font-family:var(--mono); font-size:10px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500);
+  font-weight:400; margin-bottom:3px; }
+.rlist__t > span{ display:block; font-family:var(--serif); font-size:15px;
+  color:var(--ink-900); line-height:1.25; }
+.rlist__i.is-vacant .rlist__t > span{ font-style:italic; color:var(--ink-500); font-size:14px; }
+.rlist__m{ display:flex; flex-direction:column; align-items:flex-end; gap:3px;
+  flex:none; font-family:var(--mono); font-size:10.5px; color:var(--ink-700); }
+.rlist__m em{ font-style:normal; color:var(--ink-decor); font-size:10px; }
+
+/* ══ КОЛОНКА ОТКРЫТЫХ ЗАДАЧ ════════════════════════════════════════════════ */
+.team__tasks{ font-family:var(--mono); font-size:13px; text-align:right;
+  color:var(--ink-900); font-variant-numeric:tabular-nums; }
+.team__row--head .team__tasks{ font:inherit; text-align:right; }
+.team__n .tbd{ font-style:normal; color:var(--ink-decor); }
+.team__zone{ margin:0 0 var(--sp-4); font-size:14px; line-height:1.55; color:var(--ink-700); }
+.team__zone b{ font-family:var(--mono); font-size:10.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); font-weight:400; }
+
+/* ══ ЛЕГЕНДА RACI ══════════════════════════════════════════════════════════ */
+.legend{ display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-5);
+  margin:0 0 var(--sp-5); padding:var(--sp-4);
+  background:var(--bg-sunken); border-left:2px solid var(--bronze);
+  font-size:13px; line-height:1.5; color:var(--ink-700); }
+.legend b{ flex-basis:100%; font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500);
+  font-weight:400; }
+
+@media (max-width:820px){
+  .tbar{ flex-direction:column; align-items:stretch; }
+  .tbar__r{ justify-content:flex-start; }
+  .rlist{ grid-template-columns:1fr; }
+}
+
+/* ══ ТАБЛИЦА: сортировка и явная строка ════════════════════════════════════ */
+.row--head .th{ appearance:none; overflow:hidden; background:none; border:0; padding:0; cursor:pointer;
+  display:flex; align-items:center; gap:4px; min-width:0;
+  font:inherit; color:inherit; letter-spacing:inherit; text-transform:inherit;
+  text-align:left; transition:color var(--t-1) var(--ease); }
+.row--head .th:hover{ color:var(--ink-900); }
+.row--head .th:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+.th__a{ width:0; height:0; flex:none; opacity:0;
+  border-left:3.5px solid transparent; border-right:3.5px solid transparent;
+  border-bottom:4px solid currentColor; transition:opacity var(--t-1) var(--ease); }
+.row--head .th:hover .th__a{ opacity:.35; }
+.th[aria-sort="ascending"]{ color:var(--ink-900); }
+.th[aria-sort="descending"]{ color:var(--ink-900); }
+.th[aria-sort="ascending"] .th__a{ opacity:1; color:var(--bronze-text); }
+.th[aria-sort="descending"] .th__a{ opacity:1; color:var(--bronze-text);
+  transform:rotate(180deg); }
+
+/* строка кликабельна — это должно быть видно, а не угадываться */
+.coll--table .row[data-id]{ position:relative; cursor:pointer; }
+.coll--table .row[data-id]::before{ content:""; position:absolute; left:0; top:0; bottom:0;
+  width:2px; background:var(--bronze); opacity:0;
+  transition:opacity var(--t-1) var(--ease); }
+.coll--table .row[data-id]:hover::before,
+.coll--table .row[data-id]:focus-visible::before{ opacity:1; }
+.coll--table .row[data-id]:hover .row__nm{ text-decoration:underline;
+  text-decoration-color:var(--hairline); text-underline-offset:3px; }
+
+/* «нет данных» — серый; всё остальное серым быть не должно */
+.row__nx, .row__r{ color:var(--ink-700); }
+
+/* Девять колонок не помещаются ниже ~1080px. Убираем «Тип» — по нему решение
+   не принимают, а название объекта его и так подразумевает. Состояние и
+   следующий шаг остаются всегда: аудит справедливо назвал их ключевыми. */
+@media (max-width:1080px) and (min-width:861px){
+  .coll--table .row{ grid-template-columns:30px minmax(132px,1.2fr) minmax(78px,.6fr)
+    minmax(112px,.85fr) minmax(96px,.7fr) 60px minmax(86px,.65fr) minmax(130px,1.2fr); }
+  .coll--table .row > .row__k{ display:none; }
+}
+
+/* ══ МОБИЛЬНАЯ ШАПКА ═══════════════════════════════════════════════════════
+   Логотип, поиск, три языка и бургер в одной строке не помещались.
+   Поиск и языки живут в меню, в шапке остаётся марка и бургер. */
+.mnav__search{ display:block; margin-bottom:var(--sp-5); }
+.mnav__search input{ width:100%; padding:11px var(--sp-4);
+  background:var(--bg-page); border:1px solid var(--hairline); border-radius:var(--r-sm);
+  font:inherit; font-size:16px; color:var(--ink-900); }
+.mnav__search input:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:1px; }
+.mnav__lang{ margin-top:var(--sp-5); padding-top:var(--sp-4);
+  border-top:1px solid var(--hairline); }
+@media (max-width:900px){
+  .head .search{ display:none; }
+  .head__right > .lang{ display:none; }
+}
+@media (min-width:901px){
+  .mnav__search, .mnav__lang{ display:none; }
+}
+
+/* ══ ОПРЕДЕЛЕНИЯ СТАТУСОВ ══════════════════════════════════════════════════
+   «7 готовы» и «11 без документов» противоречили друг другу ровно потому,
+   что слово «готов» не было определено. Определение стоит рядом с числом. */
+.defs{ margin-top:var(--sp-4); }
+.defs > summary{ display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  list-style:none; font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500);
+  transition:color var(--t-1) var(--ease); }
+.defs > summary::-webkit-details-marker{ display:none; }
+.defs > summary::after{ content:""; width:0; height:0;
+  border-left:3.5px solid transparent; border-right:3.5px solid transparent;
+  border-top:4px solid currentColor; transition:transform var(--t-1) var(--ease); }
+.defs[open] > summary{ color:var(--ink-900); }
+.defs[open] > summary::after{ transform:rotate(180deg); }
+.defs > summary:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:3px; }
+.defs__in{ margin-top:var(--sp-4); padding-left:var(--sp-4);
+  border-left:2px solid var(--bronze); max-width:76ch; }
+.defs__in p{ margin:0 0 var(--sp-3); font-size:13.5px; line-height:1.55; color:var(--ink-700); }
+.defs__in p:last-child{ margin-bottom:0; }
+.defs__in b{ color:var(--ink-900); font-weight:600; }
+
+/* На узком экране правая колонка списка («вакантно · объекты не назначены»)
+   не помещалась рядом с именем — она переезжает под него. */
+@media (max-width:560px){
+  .rlist__b{ flex-wrap:wrap; }
+  .rlist__m{ flex-direction:row; align-items:center; gap:var(--sp-3);
+    width:100%; padding-left:calc(14px + var(--sp-3)); }
+  .rlist__m em{ min-width:0; }
 }
 
 </style>
@@ -1077,23 +1310,52 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 <!-- mobile navigation — everything the narrow header cannot hold -->
 <div class="mnav" id="mnav" hidden>
+  <!-- поиск и языки переехали сюда: в мобильной шапке они соревновались
+       с логотипом и бургером за одну строку -->
+  <label class="mnav__search">
+    <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
+    <input type="search" id="qm" autocomplete="off" placeholder="Поиск" data-i18n-ph="search.ph">
+  </label>
   <nav aria-label="Основная навигация" data-i18n-aria="a11y.nav">
     <a href="#kolekcja" data-i18n="nav.collection">Объекты</a>
     <a href="#plate-sec" data-i18n="nav.map">Карта</a>
     <a href="#team-sec" data-i18n="nav.team">Команда</a>
     <a href="#kontakt" data-i18n="nav.enquire">Запрос</a>
   </nav>
+  <div class="mnav__lang lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
+    <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+    <span aria-hidden="true">/</span>
+    <button type="button" data-lang="pl" aria-pressed="false">PL</button>
+    <span aria-hidden="true">/</span>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
 </div>
 
 <main id="main">
   <h1 class="sr-only" data-i18n="a11y.h1">Недвижимость в районе Ханьи — карта и каталог объектов</h1>
 
 
+<!-- ═══ ЧТО ЭТО ТАКОЕ — портал раньше не объяснял свою роль ═════════════ -->
+<section class="intro" id="intro">
+  <div class="wrap">
+    <h2 class="intro__h" data-i18n="intro.title">Управление объектами Iron Invest Group</h2>
+    <p class="intro__p" data-i18n="intro.lead">Готовность к продаже, документы, экономика, ответственные и следующие действия по объектам в регионе Ханьи.</p>
+    <p class="intro__meta">
+      <span data-i18n="intro.src">Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.</span>
+      <span class="intro__upd" id="introUpd"></span>
+    </p>
+  </div>
+</section>
+
 <!-- ═══ SUMMARY — the state of the portfolio, not a pitch ═════════════ -->
 <section class="sum" id="sum">
   <div class="wrap sum__in">
     <div class="sum__nums" id="sumNums"><!-- filled by app.js --></div>
     <div class="sum__quick" id="sumQuick" role="group" aria-label="Быстрые фильтры"><!-- filled by app.js --></div>
+    <details class="defs" id="defs">
+      <summary data-i18n="team.defTitle">Что означают статусы</summary>
+      <div class="defs__in" id="defsIn"><!-- filled by app.js --></div>
+    </details>
   </div>
 </section>
 
@@ -1131,42 +1393,64 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 <section class="sec" id="team-sec" hidden>
   <div class="wrap">
     <div class="team__head">
-      <h2 data-i18n="team.title">Команда проекта</h2>
-      <p data-i18n="team.lead">Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.</p>
-    </div>
-    <figure class="fig" id="teamFig1">
-      <figcaption><span class="fig__n">Fig. 02</span>
-        <span data-i18n="team.fig1">Карта ответственности: что вокруг объекта и кто это держит</span></figcaption>
-      <div class="fig__body"><!-- filled by app.js --></div>
-      <div class="fig__key" id="teamKey"><!-- filled by app.js --></div>
-    </figure>
-
-    <div class="team" id="team"><!-- filled by app.js --></div>
-
-    <div class="team__block">
-      <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
-      <p class="team__note" data-i18n="team.gapsLead">Проект их требует, но сейчас никто не держит целиком. Названная дыра полезнее умолчания.</p>
-      <div class="team" id="teamGaps"><!-- filled by app.js --></div>
+      <h2 data-i18n="team.title">Команда и роли</h2>
+      <p data-i18n="team.lead">Роли участников, их обязанности, ожидаемые результаты и необходимые входные данные.</p>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.decTitle">Кто что решает</h3>
-      <div class="dec" id="teamDec"><!-- filled by app.js --></div>
+    <!-- раздел был единым потоком выше 4000px; разбит на экраны -->
+    <nav class="tnav" id="teamNav" aria-label="Разделы" data-i18n-aria="team.nav"><!-- app.js --></nav>
+
+    <!-- 1 · СВОДКА — вопросы, требующие решения, подняты сюда -->
+    <div class="tpane" id="tp-sum" data-pane="sum">
+      <div class="cov" id="teamKey"><!-- app.js --></div>
+      <h3 data-i18n="team.openTitle">Вопросы, требующие решения</h3>
+      <ul class="team__open" id="teamOpen"><!-- app.js --></ul>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.hoTitle">Где поток рвётся чаще всего</h3>
-      <figure class="fig" id="teamFig2">
-        <figcaption><span class="fig__n">Fig. 03</span>
-          <span data-i18n="team.fig2">Путь объекта и стыки, на которых он останавливается</span></figcaption>
-        <div class="fig__body"><!-- filled by app.js --></div>
+    <!-- 2 · ЛЮДИ -->
+    <div class="tpane" id="tp-people" data-pane="people" hidden>
+      <div class="tbar">
+        <div class="seg" role="group" aria-label="Схема или список">
+          <button class="seg__b" type="button" data-tview="map" data-i18n="team.viewMap">Схема</button>
+          <button class="seg__b" type="button" data-tview="list" data-i18n="team.viewList">Список</button>
+        </div>
+        <div class="tbar__r">
+          <button class="qf" type="button" id="teamOnlyOpen" aria-pressed="false"
+            data-i18n="team.onlyOpen">Только незакрытые роли</button>
+          <button class="qf" type="button" id="teamToggleAll" data-i18n="team.expandAll">Развернуть все</button>
+        </div>
+      </div>
+      <figure class="fig fig--compact" id="teamFig1">
+        <figcaption><span class="fig__n">Fig. 02</span>
+          <span data-i18n="team.fig1">Ответственные за ключевые функции проекта</span></figcaption>
+        <div class="fig__body"><!-- app.js --></div>
       </figure>
-      <div class="ho" id="teamHo"><!-- filled by app.js --></div>
+      <div class="team" id="team"><!-- app.js --></div>
     </div>
 
-    <div class="team__block">
-      <h3 data-i18n="team.openTitle">Не определено — требует решения</h3>
-      <ul class="team__open" id="teamOpen"><!-- filled by app.js --></ul>
+    <!-- 3 · ФУНКЦИИ БЕЗ ИСПОЛНИТЕЛЯ -->
+    <div class="tpane" id="tp-gaps" data-pane="gaps" hidden>
+      <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
+      <p class="team__note" data-i18n="team.gapsLead">Ниже перечислены функции, для которых пока не назначены ответственные.</p>
+      <div class="team" id="teamGaps"><!-- app.js --></div>
+    </div>
+
+    <!-- 4 · РЕШЕНИЯ И ПОЛНОМОЧИЯ -->
+    <div class="tpane" id="tp-dec" data-pane="dec" hidden>
+      <h3 data-i18n="team.decTitle">Кто что решает</h3>
+      <div class="legend" id="teamRaci"><!-- app.js --></div>
+      <div class="dec" id="teamDec"><!-- app.js --></div>
+    </div>
+
+    <!-- 5 · БЛОКЕРЫ ПРОЦЕССА -->
+    <div class="tpane" id="tp-ho" data-pane="ho" hidden>
+      <h3 data-i18n="team.hoTitle">Основные блокеры на пути объекта к продаже</h3>
+      <figure class="fig fig--compact" id="teamFig2">
+        <figcaption><span class="fig__n">Fig. 03</span>
+          <span data-i18n="team.fig2">Этапы движения объекта и точки, в которых работа останавливается</span></figcaption>
+        <div class="fig__body"><!-- app.js --></div>
+      </figure>
+      <div class="ho" id="teamHo"><!-- app.js --></div>
     </div>
   </div>
 </section>
@@ -1249,6 +1533,10 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   }, o);
 
   window.IronData = {
+    /* дата последнего изменения реестра — показывается на первом экране,
+       чтобы «обновлено» было фактом, а не ощущением */
+    registryUpdated: '2026-08-25',
+
     region: { name: 'Chania · Apokoronas', center: [35.44, 24.10], zoom: 11 },
 
     OBJECTS: [
@@ -1460,7 +1748,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       P({
         id: 'owner', name: 'Пётр Леонидович', role: 'Владелец', icon: 'owner',
         scope: 'Стратегия, финансирование, договоры с партнёрами',
-        owns: 'Конечное решение по деньгам, партнёрам и стратегии проекта.',
+        owns: 'Пётр Леонидович принимает окончательные решения по деньгам, партнёрам и стратегии проекта.',
         responsibilities: [
           'Утверждает годовой бюджет по направлению',
           'Подписывает партнёрские договоры',
@@ -1484,13 +1772,13 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           'Вопрос, вынесенный на слот, получает да или нет в тот же слот',
           'По любому объекту видно, кто и когда утвердил текущую цену'
         ],
-        note: 'Все денежные решения проходят через владельца. Это принятое правило проекта, а не пробел.'
+        note: 'Владелец утверждает все финансовые обязательства. Лимит самостоятельного согласования для других ролей пока не установлен.'
       }),
 
       P({
         id: 'ops', name: 'Алекс Гончаревский', role: 'Операционный директор', icon: 'ops',
         scope: 'Паспорта объектов, архив, портал, визуализации',
-        owns: 'Единый источник правды по всем объектам — архив, паспорта, портал.',
+        owns: 'Алекс отвечает за единый источник данных по всем объектам: архив, паспорта и этот портал.',
         responsibilities: [
           'Ведёт паспорт по каждому из 11 объектов',
           'Отвечает за архив документов, фото и видео',
@@ -1520,7 +1808,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       P({
         id: 'legal', name: 'Павел', role: 'Право и финансы направления', icon: 'legal',
         scope: 'Документы, структура сделки, экономика объекта',
-        owns: 'Юридическую чистоту, структуру сделки и экономику по каждому объекту.',
+        owns: 'Павел отвечает за юридическую проверку, структуру сделки и финансовую модель каждого объекта.',
         responsibilities: [
           'Собирает и хранит правоустанавливающие документы и статус собственности',
           'Готовит модель продажи отдельно по каждому объекту',
@@ -1555,7 +1843,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       P({
         id: 'cmo', name: 'Богдан', role: 'Директор маркетинга', icon: 'cmo',
         scope: 'Продвижение направления, распределение задач внутри маркетинга',
-        owns: 'Результат по продвижению и то, кто внутри маркетинга что делает.',
+        owns: 'Богдан отвечает за стратегию продвижения и распределение задач внутри маркетинговой команды.',
         responsibilities: [
           'Отвечает за продвижение направления в целом',
           'Распределяет маркетинговые задачи внутри своей команды',
@@ -1581,7 +1869,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         id: 'web', name: 'Костя', role: 'Маркетинг: сайт и подрядчики', icon: 'web',
         state: 'tentative',
         scope: 'Сайт, подрядчики по сайту, продвижение',
-        owns: 'Сайт проекта и работу подрядчиков по нему.',
+        owns: 'Костя отвечает за сайт проекта и работу подрядчиков, которые его делают.',
         responsibilities: [
           'Делает сайт или ведёт подрядчика, который его делает',
           'Контролирует сроки и качество работ по сайту',
@@ -1599,13 +1887,13 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         checks: [
           'По сайту известны срок, подрядчик и текущая стадия'
         ],
-        note: 'Точный объём зоны не зафиксирован. Границы определяет директор маркетинга.'
+        note: 'Границы зоны пока не зафиксированы. Их определяет директор маркетинга.'
       }),
 
       P({
         id: 'estimates', name: 'Алина', role: 'Сметы', icon: 'estimates',
         scope: 'Сметы на работы по объектам, проверка объёмов',
-        owns: 'Стоимость работ по объекту в цифрах, которые можно проверить.',
+        owns: 'Алина отвечает за расчёт стоимости работ по объектам и проверку объёмов, заявленных подрядчиками.',
         responsibilities: [
           'Считает сметы на подготовку объекта к продаже',
           'Проверяет объёмы работ, заявленные подрядчиком',
@@ -1630,7 +1918,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         id: 'onsite', name: 'Лариса', role: 'Работа на месте и сделки', icon: 'deal',
         state: 'tentative',
         scope: 'Доступ на объекты, ведение сделки, передача покупателю',
-        owns: 'Контакт с объектом и покупателем на территории Греции.',
+        owns: 'Лариса отвечает за доступ к объектам, ведение сделки и передачу объекта покупателю на территории Греции.',
         responsibilities: [
           'Обеспечивает доступ на объекты для осмотра и показа',
           'Ведёт переговоры с покупателем по цене и условиям',
@@ -1660,7 +1948,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         id: 'greece-ops', name: null, role: 'Операции в Греции', icon: 'onsite',
         state: 'vacant', vacant: true,
         scope: 'Отель, инвентаризация на месте, коммуникации',
-        owns: 'Физическое состояние и готовность объектов на месте.',
+        owns: 'Функция отвечает за физическое состояние и готовность объектов на месте. Ответственный не назначен.',
         responsibilities: [
           'Ведёт отель до конца сезона и готовит к передаче',
           'Проводит инвентаризацию имущества на объектах',
@@ -1681,7 +1969,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         checks: [
           'По любому объекту видно, когда в последний раз проверялись коммуникации'
         ],
-        note: 'Человек не закреплён.'
+        note: 'Ответственный не назначен.'
       })
     ],
 
@@ -1691,7 +1979,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       P({
         id: 'tech', vacant: true, state: 'vacant', role: 'Технический надзор', icon: 'tech',
         scope: 'Состояние объектов, подрядчики, контроль работ',
-        owns: 'Техническое состояние объектов и качество выполненных работ.',
+        owns: 'Функция отвечает за техническое заключение по объектам и приёмку выполненных работ. Ответственный не назначен.',
         responsibilities: [
           'Даёт техническое заключение по объекту',
           'Определяет объём работ, который потом считает сметчик',
@@ -1710,7 +1998,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         checks: [
           'Работы принимаются по заранее описанному объёму, а не по факту'
         ],
-        note: 'Ответственный не определён. Сметную часть закрывает Алина, техническую — никто.'
+        note: 'Ответственный не назначен. Сметную часть закрывает Алина, техническую приёмку не выполняет никто.'
       })
     ],
 
@@ -1757,20 +2045,20 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         risk: 'Объект начинают продвигать раньше, чем подтверждён титул',
         rule: 'Статус выше «в подготовке» — только после закрытого чек-листа документов' },
       { from: 'Документы', to: 'Экономика',
-        risk: 'Цена ставится на глаз: нет себестоимости и бюджета работ',
+        risk: 'Цена определяется без подтверждённого расчёта себестоимости, расходов и целевой маржи',
         rule: 'Цена не публикуется без письменной экономики на одну страницу' },
       { from: 'Экономика', to: 'Материалы',
         risk: 'Маркетинг работает по устаревшим данным',
         rule: 'Факты берутся только из паспорта; изменение факта — перепроверка материалов' },
       { from: 'Материалы', to: 'Публикация',
-        risk: 'Внутренняя кухня попадает в публичные материалы',
+        risk: 'Внутренние сведения попадают в публичные материалы',
         rule: 'Проверка по чувствительным словам перед каждой публикацией' },
       { from: 'Выставлен', to: 'Продан',
         risk: 'Появился покупатель — никто формально не ведёт сделку',
         rule: 'Ответственный за сделку назначается письменно при появлении покупателя' },
       { from: 'Продан', to: 'Передан',
-        risk: 'Передача срывается: ключи недоступны, готовность не проверена',
-        rule: 'Дата закрытия назначается только при готовом чек-листе и доступном держателе ключей' }
+        risk: 'Передача срывается: доступ к объекту не обеспечен, готовность не проверена',
+        rule: 'Дата закрытия назначается только при закрытом чек-листе готовности и подтверждённом доступе на объект' }
     ],
 
     /* Путь объекта — этапы для схемы FIG.03 */
@@ -1848,20 +2136,20 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     ru: {
       'nav.collection': 'Объекты', 'nav.map': 'Карта', 'nav.team': 'Команда',
       'team.title': 'Команда проекта',
-      'team.lead': 'Кто за что отвечает, что обязан дать проекту и что ему для этого нужно. Заполняется по мере готовности архива.',
+      'team.lead': 'Роли участников, их обязанности, ожидаемые результаты и необходимые входные данные. Данные дополняются по мере проверки документов и паспортов объектов.',
       'team.thName': 'Имя', 'team.thRole': 'Функция', 'team.thScope': 'Зона', 'team.thN': 'Объектов', 'team.thContact': 'Контакт',
       'team.thState': 'Состояние',
-      'st.fixed': 'закреплено', 'st.tentative': 'под вопросом', 'st.vacant': 'не закреплено',
-      'team.fig1': 'Карта ответственности: что вокруг объекта и кто это держит',
-      'team.fig2': 'Путь объекта и стыки, на которых он останавливается',
+      'st.fixed': 'подтверждено', 'st.tentative': 'требует подтверждения', 'st.vacant': 'вакантно',
+      'team.fig1': 'Ответственные за ключевые функции проекта',
+      'team.fig2': 'Этапы движения объекта и точки, в которых работа останавливается',
       'team.hub': 'Объектов', 'team.cov': 'Покрытие функций',
       'team.duties': 'Обязанности', 'team.owes': 'Обязан дать проекту', 'team.needs': 'Нужно от других', 'team.check': 'Как понять, что работает',
-      'team.vacant': 'не назначен', 'team.unassigned': 'исполнитель не закреплён',
+      'team.vacant': 'Ответственный не назначен', 'team.unassigned': 'Ответственный не назначен',
       'team.gapsTitle': 'Функции без исполнителя',
-      'team.gapsLead': 'Проект их требует, но сейчас никто не держит целиком. Названная дыра полезнее умолчания.',
+      'team.gapsLead': 'Ниже перечислены функции, для которых пока не назначены ответственные.',
       'team.decTitle': 'Кто что решает', 'team.decWhat': 'Решение', 'team.decWho': 'Решает', 'team.decCons': 'Консультирует', 'team.decInf': 'Информируется',
-      'team.hoTitle': 'Где поток рвётся чаще всего',
-      'team.openTitle': 'Не определено — требует решения',
+      'team.hoTitle': 'Основные блокеры на пути объекта к продаже',
+      'team.openTitle': 'Вопросы, требующие решения',
       'st.open': 'в работе', 'st.done': 'готово', 'nav.about': 'О нас', 'nav.enquire': 'Запрос',
 
       'hero.kick': 'Крит · Ханья · Апокоронас',
@@ -1889,10 +2177,30 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'shown': 'Показано', 'of': 'из',
       'view.label': 'Вид', 'view.table': 'Таблица', 'view.grid': 'Плитка', 'view.list': 'Список',
       'search.label': 'Поиск по объектам', 'search.ph': 'Поиск',
-      'sum.total': 'всего', 'sum.ready': 'готовы', 'sum.nodocs': 'без документов', 'sum.noprice': 'без цены',
-      'sum.nostage': 'Без стадии', 'sum.noowner': 'Без ответственного', 'sum.all': 'Показать все',
-      'th.no': '№', 'th.name': 'Объект', 'th.kind': 'Тип', 'th.loc': 'Локация', 'th.stage': 'Статус',
-      'th.price': 'Цена', 'th.docs': 'Документы', 'th.owner': 'Ответственный', 'th.next': 'Следующий шаг',
+      'sum.total': 'объектов', 'sum.ready': 'готовы', 'sum.nodocs': 'без документов', 'sum.noprice': 'без цены',
+      'sum.techReady': 'технически готовы', 'sum.publishable': 'готовы к публикации', 'sum.blocked': 'с блокерами',
+      'intro.title': 'Управление объектами Iron Invest Group',
+      'intro.lead': 'Готовность к продаже, документы, экономика, ответственные и следующие действия по объектам в регионе Ханьи.',
+      'intro.src': 'Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.',
+      'intro.upd': 'Обновлено:',
+      'raci.title': 'Как читать таблицу',
+      'def.condT': 'Состояние объекта', 'def.condD': 'Физическое состояние стен: его видно при осмотре. Не означает, что объект можно выставлять.',
+      'def.pubT': 'Готов к публикации', 'def.pubD': 'Закрыты все четыре условия: документы, цена, стадия процесса и ответственный. Считается автоматически.',
+      'def.blkT': 'С блокерами', 'def.blkD': 'Хотя бы одно из четырёх условий не закрыто. Именно поэтому технически готовый объект может быть не готов к продаже.',
+      'raci.d': 'Решает — принимает окончательное решение.',
+      'raci.c': 'Консультирует — предоставляет данные до решения.',
+      'raci.i': 'Информируется — получает итог после принятия решения.',
+      'team.nav': 'Разделы', 'team.sumTitle': 'Сводка',
+      'team.viewMap': 'Схема', 'team.viewList': 'Список',
+      'team.expandAll': 'Развернуть все', 'team.collapseAll': 'Свернуть все',
+      'team.onlyOpen': 'Только незакрытые роли',
+      'team.thTasks': 'Задач', 'team.noObjects': 'объекты не назначены',
+      'team.defTitle': 'Что означают статусы',
+      'sum.nostage': 'без стадии', 'sum.noowner': 'без ответственного', 'sum.all': 'показать все',
+      'tab.sum': 'Сводка', 'tab.people': 'Люди', 'tab.gaps': 'Вакантные роли',
+      'tab.dec': 'Решения', 'tab.ho': 'Блокеры',
+      'th.no': '№', 'th.name': 'Объект', 'th.kind': 'Тип', 'th.loc': 'Район', 'th.stage': 'Состояние',
+      'th.price': 'Цена', 'th.docs': 'Док.', 'th.owner': 'Ведёт', 'th.next': 'Следующий шаг',
       'stage.watch': 'Наблюдаем', 'stage.talks': 'Переговоры', 'stage.docs': 'Проверка документов',
       'stage.ready': 'Готов к сделке', 'stage.deal': 'В сделке', 'stage.closed': 'Закрыт',
       'foot.note2': 'Внутренний портал · данные предварительные',
@@ -1941,18 +2249,18 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'fa.fireplace': 'камин', 'fa.bbq': 'барбекю', 'fa.wifi': 'Wi-Fi', 'fa.ac': 'кондиционер',
       'fa.carhire': 'аренда авто', 't.stone': 'каменная постройка', 't.nextto': 'рядом с Eudora 1',
 
-      'cond.ready': 'Готов', 'cond.renovation': 'Под ремонт', 'cond.shell': 'Черновое состояние', 'cond.land': 'Участок',
+      'cond.ready': 'Готов', 'cond.renovation': 'Под ремонт', 'cond.shell': 'Черновая', 'cond.land': 'Участок',
       'docs.ready': 'Полный комплект', 'docs.partial': 'Частично', 'docs.pending': 'В процессе',
 
       'greece.residency': 'ВНЖ (Golden Visa)', 'greece.residency.d': 'Порог покупки для вида на жительство',
       'greece.ota': 'Краткосрочная аренда', 'greece.ota.yes': 'Объект сдаётся', 'greece.ota.no': 'Не сдаётся',
 
-      'price.request': 'Цена по запросу', 'per.month': '/ мес.', 'unit.ha': 'га', 'unit.m2': 'м²',
+      'price.request': 'Цена по запросу', 'price.requestShort': 'по запросу', 'per.month': '/ мес.', 'unit.ha': 'га', 'unit.m2': 'м²',
       'photo.soon': 'Фотографии готовятся', 'coord.draft': 'положение приблизительное',
       'tbd': 'уточняется', 'yes': 'Да', 'no': 'Нет', 'none': 'нет', 'draft': 'в работе',
 
       'k.house2': 'Двухэтажный дом', 'k.renov': 'Дом под полный ремонт', 'k.taverna': 'Таверна',
-      'k.smallhouse': 'Малый дом', 'k.apartment': 'Квартира', 'k.shop': 'Торговое помещение',
+      'k.smallhouse': 'Малый дом', 'k.renov.s': 'Дом', 'k.plot.s': 'Участок', 'k.partnerplot.s': 'Участок', 'k.hotel.s': 'Отель', 'k.shop.s': 'Магазин', 'k.house2.s': 'Дом, 2 эт.', 'k.apartment': 'Квартира', 'k.shop': 'Торговое помещение',
       'k.house': 'Дом', 'k.villa': 'Вилла', 'k.plot': 'Участок под застройку',
       'k.partnerplot': 'Партнёрский участок', 'k.hotel': 'Гостиничный проект',
 
@@ -1969,20 +2277,20 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     pl: {
       'nav.collection': 'Obiekty', 'nav.map': 'Mapa', 'nav.team': 'Zespół',
       'team.title': 'Zespół projektu',
-      'team.lead': 'Kto za co odpowiada, co ma dostarczyć i czego do tego potrzebuje.',
+      'team.lead': 'Role uczestników, ich obowiązki, oczekiwane rezultaty i potrzebne dane wejściowe. Dane są uzupełniane w miarę weryfikacji dokumentów i kart obiektów.',
       'team.thName': 'Imię', 'team.thRole': 'Funkcja', 'team.thScope': 'Obszar', 'team.thN': 'Obiektów', 'team.thContact': 'Kontakt',
       'team.thState': 'Stan',
-      'st.fixed': 'przypisane', 'st.tentative': 'do potwierdzenia', 'st.vacant': 'nieprzypisane',
-      'team.fig1': 'Mapa odpowiedzialności: co otacza obiekt i kto to prowadzi',
-      'team.fig2': 'Droga obiektu i styki, na których się zatrzymuje',
+      'st.fixed': 'potwierdzone', 'st.tentative': 'wymaga potwierdzenia', 'st.vacant': 'wakat',
+      'team.fig1': 'Osoby odpowiedzialne za kluczowe funkcje projektu',
+      'team.fig2': 'Etapy obiegu obiektu i punkty, w których praca się zatrzymuje',
       'team.hub': 'Obiektów', 'team.cov': 'Pokrycie funkcji',
       'team.duties': 'Obowiązki', 'team.owes': 'Ma dostarczyć', 'team.needs': 'Potrzebuje od innych', 'team.check': 'Jak sprawdzić, że działa',
-      'team.vacant': 'nieobsadzona', 'team.unassigned': 'brak przypisania',
+      'team.vacant': 'Brak osoby odpowiedzialnej', 'team.unassigned': 'Brak osoby odpowiedzialnej',
       'team.gapsTitle': 'Funkcje bez obsady',
-      'team.gapsLead': 'Projekt ich wymaga, ale nikt ich obecnie nie prowadzi w całości.',
+      'team.gapsLead': 'Poniżej wymieniono funkcje, do których nie przypisano jeszcze osób odpowiedzialnych.',
       'team.decTitle': 'Kto co decyduje', 'team.decWhat': 'Decyzja', 'team.decWho': 'Decyduje', 'team.decCons': 'Konsultuje', 'team.decInf': 'Informowany',
-      'team.hoTitle': 'Gdzie przepływ najczęściej się rwie',
-      'team.openTitle': 'Nieokreślone — wymaga decyzji',
+      'team.hoTitle': 'Główne blokery na drodze obiektu do sprzedaży',
+      'team.openTitle': 'Kwestie wymagające decyzji',
       'st.open': 'w toku', 'st.done': 'gotowe', 'nav.about': 'O nas', 'nav.enquire': 'Zapytanie',
 
       'hero.kick': 'Kreta · Chania · Apokoronas',
@@ -2010,10 +2318,30 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'shown': 'Pokazano', 'of': 'z',
       'view.label': 'Widok', 'view.table': 'Tabela', 'view.grid': 'Płytki', 'view.list': 'Lista',
       'search.label': 'Szukaj obiektów', 'search.ph': 'Szukaj',
-      'sum.total': 'łącznie', 'sum.ready': 'gotowe', 'sum.nodocs': 'bez dokumentów', 'sum.noprice': 'bez ceny',
-      'sum.nostage': 'Bez etapu', 'sum.noowner': 'Bez odpowiedzialnego', 'sum.all': 'Pokaż wszystkie',
-      'th.no': 'Nr', 'th.name': 'Obiekt', 'th.kind': 'Typ', 'th.loc': 'Lokalizacja', 'th.stage': 'Status',
-      'th.price': 'Cena', 'th.docs': 'Dokumenty', 'th.owner': 'Odpowiedzialny', 'th.next': 'Następny krok',
+      'sum.total': 'obiektów', 'sum.ready': 'gotowe', 'sum.nodocs': 'bez dokumentów', 'sum.noprice': 'bez ceny',
+      'sum.techReady': 'gotowe technicznie', 'sum.publishable': 'gotowe do publikacji', 'sum.blocked': 'z blokerami',
+      'intro.title': 'Zarządzanie obiektami Iron Invest Group',
+      'intro.lead': 'Gotowość do sprzedaży, dokumenty, ekonomika, osoby odpowiedzialne i kolejne kroki dla obiektów w regionie Chanii.',
+      'intro.src': 'Portal pokazuje dane z rejestru. Zmiany wprowadza się w rejestrze — portal aktualizuje się w ślad za nim.',
+      'intro.upd': 'Aktualizacja:',
+      'raci.title': 'Jak czytać tabelę',
+      'def.condT': 'Stan obiektu', 'def.condD': 'Stan fizyczny budynku, widoczny podczas oględzin. Nie oznacza, że obiekt można wystawić.',
+      'def.pubT': 'Gotowy do publikacji', 'def.pubD': 'Spełnione wszystkie cztery warunki: dokumenty, cena, etap procesu i osoba odpowiedzialna. Liczone automatycznie.',
+      'def.blkT': 'Z blokerami', 'def.blkD': 'Co najmniej jeden z czterech warunków nie jest spełniony. Dlatego obiekt gotowy technicznie może nie być gotowy do sprzedaży.',
+      'raci.d': 'Decyduje — podejmuje ostateczną decyzję.',
+      'raci.c': 'Konsultuje — dostarcza dane przed decyzją.',
+      'raci.i': 'Informowany — otrzymuje wynik po podjęciu decyzji.',
+      'team.nav': 'Sekcje', 'team.sumTitle': 'Podsumowanie',
+      'team.viewMap': 'Schemat', 'team.viewList': 'Lista',
+      'team.expandAll': 'Rozwiń wszystko', 'team.collapseAll': 'Zwiń wszystko',
+      'team.onlyOpen': 'Tylko nieobsadzone',
+      'team.thTasks': 'Zadań', 'team.noObjects': 'brak przypisanych obiektów',
+      'team.defTitle': 'Co oznaczają statusy',
+      'sum.nostage': 'bez etapu', 'sum.noowner': 'bez odpowiedzialnego', 'sum.all': 'pokaż wszystkie',
+      'tab.sum': 'Podsumowanie', 'tab.people': 'Ludzie', 'tab.gaps': 'Wakaty',
+      'tab.dec': 'Decyzje', 'tab.ho': 'Blokery',
+      'th.no': 'Nr', 'th.name': 'Obiekt', 'th.kind': 'Typ', 'th.loc': 'Rejon', 'th.stage': 'Stan',
+      'th.price': 'Cena', 'th.docs': 'Dok.', 'th.owner': 'Prowadzi', 'th.next': 'Następny krok',
       'stage.watch': 'Obserwujemy', 'stage.talks': 'Negocjacje', 'stage.docs': 'Weryfikacja dokumentów',
       'stage.ready': 'Gotowy do transakcji', 'stage.deal': 'W transakcji', 'stage.closed': 'Zamknięty',
       'foot.note2': 'Portal wewnętrzny · dane wstępne',
@@ -2068,12 +2396,12 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'greece.residency': 'Pobyt (Golden Visa)', 'greece.residency.d': 'Próg zakupu dla pozwolenia na pobyt',
       'greece.ota': 'Najem krótkoterminowy', 'greece.ota.yes': 'Obiekt wynajmowany', 'greece.ota.no': 'Nie wynajmowany',
 
-      'price.request': 'Cena na zapytanie', 'per.month': '/ mies.', 'unit.ha': 'ha', 'unit.m2': 'm²',
+      'price.request': 'Cena na zapytanie', 'price.requestShort': 'na zapytanie', 'per.month': '/ mies.', 'unit.ha': 'ha', 'unit.m2': 'm²',
       'photo.soon': 'Fotografie wkrótce', 'coord.draft': 'lokalizacja przybliżona',
       'tbd': 'do ustalenia', 'yes': 'Tak', 'no': 'Nie', 'none': 'brak', 'draft': 'w opracowaniu',
 
       'k.house2': 'Dom dwupiętrowy', 'k.renov': 'Dom do pełnego remontu', 'k.taverna': 'Taverna',
-      'k.smallhouse': 'Mały dom', 'k.apartment': 'Apartament', 'k.shop': 'Lokal handlowy',
+      'k.smallhouse': 'Mały dom', 'k.renov.s': 'Dom', 'k.plot.s': 'Działka', 'k.partnerplot.s': 'Działka', 'k.hotel.s': 'Hotel', 'k.shop.s': 'Sklep', 'k.house2.s': 'Dom, 2 kond.', 'k.apartment': 'Apartament', 'k.shop': 'Lokal handlowy',
       'k.house': 'Dom', 'k.villa': 'Willa', 'k.plot': 'Działka budowlana',
       'k.partnerplot': 'Działka partnerska', 'k.hotel': 'Projekt hotelowy',
 
@@ -2090,20 +2418,20 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     en: {
       'nav.collection': 'Properties', 'nav.map': 'Map', 'nav.team': 'Team',
       'team.title': 'Project team',
-      'team.lead': 'Who is responsible for what, what they owe the project, and what they need to deliver it.',
+      'team.lead': 'Each role, its duties, the results expected from it, and the inputs it needs. The record is extended as documents and property files are verified.',
       'team.thName': 'Name', 'team.thRole': 'Function', 'team.thScope': 'Scope', 'team.thN': 'Properties', 'team.thContact': 'Contact',
       'team.thState': 'Status',
-      'st.fixed': 'assigned', 'st.tentative': 'to confirm', 'st.vacant': 'unassigned',
-      'team.fig1': 'Responsibility map: what surrounds a property and who holds it',
-      'team.fig2': 'The path of a property and the joints where it stalls',
+      'st.fixed': 'confirmed', 'st.tentative': 'needs confirmation', 'st.vacant': 'vacant',
+      'team.fig1': 'Owners of the project\u2019s key functions',
+      'team.fig2': 'Stages a property moves through and the points where work stalls',
       'team.hub': 'Properties', 'team.cov': 'Function coverage',
       'team.duties': 'Responsibilities', 'team.owes': 'Owes the project', 'team.needs': 'Needs from others', 'team.check': 'How to tell it works',
-      'team.vacant': 'unstaffed', 'team.unassigned': 'no one assigned',
+      'team.vacant': 'No one assigned', 'team.unassigned': 'No one assigned',
       'team.gapsTitle': 'Functions with no one assigned',
-      'team.gapsLead': 'The project needs them, but no one currently owns them end to end.',
+      'team.gapsLead': 'The functions below have no one assigned to them yet.',
       'team.decTitle': 'Who decides what', 'team.decWhat': 'Decision', 'team.decWho': 'Decides', 'team.decCons': 'Consulted', 'team.decInf': 'Informed',
-      'team.hoTitle': 'Where the flow breaks most often',
-      'team.openTitle': 'Undecided — needs a call',
+      'team.hoTitle': 'The main blockers on a property\u2019s way to sale',
+      'team.openTitle': 'Matters awaiting a decision',
       'st.open': 'in progress', 'st.done': 'done', 'nav.about': 'About', 'nav.enquire': 'Enquire',
 
       'hero.kick': 'Crete · Chania · Apokoronas',
@@ -2131,10 +2459,30 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'shown': 'Showing', 'of': 'of',
       'view.label': 'View', 'view.table': 'Table', 'view.grid': 'Grid', 'view.list': 'List',
       'search.label': 'Search properties', 'search.ph': 'Search',
-      'sum.total': 'total', 'sum.ready': 'ready', 'sum.nodocs': 'no documents', 'sum.noprice': 'no price',
-      'sum.nostage': 'No stage', 'sum.noowner': 'No owner', 'sum.all': 'Show all',
-      'th.no': 'No', 'th.name': 'Property', 'th.kind': 'Type', 'th.loc': 'Location', 'th.stage': 'Status',
-      'th.price': 'Price', 'th.docs': 'Documents', 'th.owner': 'Responsible', 'th.next': 'Next step',
+      'sum.total': 'properties', 'sum.ready': 'ready', 'sum.nodocs': 'no documents', 'sum.noprice': 'no price',
+      'sum.techReady': 'structurally ready', 'sum.publishable': 'ready to publish', 'sum.blocked': 'with blockers',
+      'intro.title': 'Iron Invest Group property management',
+      'intro.lead': 'Sale readiness, documents, economics, owners and next actions for the properties in the Chania region.',
+      'intro.src': 'This portal displays the registry. Changes are made in the registry and appear here afterwards.',
+      'intro.upd': 'Updated:',
+      'raci.title': 'How to read this table',
+      'def.condT': 'Property condition', 'def.condD': 'The physical state of the building, visible on inspection. It does not mean the property can be listed.',
+      'def.pubT': 'Ready to publish', 'def.pubD': 'All four conditions are met: documents, price, process stage and an assigned owner. Derived automatically.',
+      'def.blkT': 'With blockers', 'def.blkD': 'At least one of the four is missing. This is why a structurally ready property may still not be ready to sell.',
+      'raci.d': 'Decides — makes the final call.',
+      'raci.c': 'Consulted — supplies data before the decision.',
+      'raci.i': 'Informed — receives the outcome after the decision.',
+      'team.nav': 'Sections', 'team.sumTitle': 'Summary',
+      'team.viewMap': 'Diagram', 'team.viewList': 'List',
+      'team.expandAll': 'Expand all', 'team.collapseAll': 'Collapse all',
+      'team.onlyOpen': 'Unfilled roles only',
+      'team.thTasks': 'Open', 'team.noObjects': 'no properties assigned',
+      'team.defTitle': 'What the statuses mean',
+      'sum.nostage': 'no stage', 'sum.noowner': 'no owner', 'sum.all': 'show all',
+      'tab.sum': 'Summary', 'tab.people': 'People', 'tab.gaps': 'Vacant roles',
+      'tab.dec': 'Decisions', 'tab.ho': 'Blockers',
+      'th.no': 'No', 'th.name': 'Property', 'th.kind': 'Type', 'th.loc': 'Area', 'th.stage': 'Condition',
+      'th.price': 'Price', 'th.docs': 'Docs', 'th.owner': 'Owner', 'th.next': 'Next step',
       'stage.watch': 'Watching', 'stage.talks': 'In talks', 'stage.docs': 'Document check',
       'stage.ready': 'Ready to deal', 'stage.deal': 'In deal', 'stage.closed': 'Closed',
       'foot.note2': 'Internal portal · provisional data',
@@ -2183,18 +2531,18 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'fa.fireplace': 'fireplace', 'fa.bbq': 'BBQ', 'fa.wifi': 'Wi-Fi', 'fa.ac': 'air conditioning',
       'fa.carhire': 'car hire', 't.stone': 'stone building', 't.nextto': 'adjacent to Eudora 1',
 
-      'cond.ready': 'Ready', 'cond.renovation': 'Needs renovation', 'cond.shell': 'Shell condition', 'cond.land': 'Land',
+      'cond.ready': 'Ready', 'cond.renovation': 'Needs renovation', 'cond.shell': 'Shell', 'cond.land': 'Land',
       'docs.ready': 'Complete', 'docs.partial': 'Partial', 'docs.pending': 'Pending',
 
       'greece.residency': 'Residency (Golden Visa)', 'greece.residency.d': 'Purchase threshold for a residence permit',
       'greece.ota': 'Short-term letting', 'greece.ota.yes': 'Currently let', 'greece.ota.no': 'Not let',
 
-      'price.request': 'Price on request', 'per.month': '/ mo', 'unit.ha': 'ha', 'unit.m2': 'm²',
+      'price.request': 'Price on request', 'price.requestShort': 'on request', 'per.month': '/ mo', 'unit.ha': 'ha', 'unit.m2': 'm²',
       'photo.soon': 'Photography to follow', 'coord.draft': 'approximate location',
       'tbd': 'to be confirmed', 'yes': 'Yes', 'no': 'No', 'none': 'none', 'draft': 'in preparation',
 
       'k.house2': 'Two-storey house', 'k.renov': 'House for full renovation', 'k.taverna': 'Taverna',
-      'k.smallhouse': 'Small house', 'k.apartment': 'Apartment', 'k.shop': 'Retail unit',
+      'k.smallhouse': 'Small house', 'k.renov.s': 'House', 'k.plot.s': 'Plot', 'k.partnerplot.s': 'Plot', 'k.hotel.s': 'Hotel', 'k.shop.s': 'Shop', 'k.house2.s': 'House, 2 fl.', 'k.apartment': 'Apartment', 'k.shop': 'Retail unit',
       'k.house': 'House', 'k.villa': 'Villa', 'k.plot': 'Building plot',
       'k.partnerplot': 'Partner plot', 'k.hotel': 'Hotel project',
 
@@ -2297,10 +2645,19 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   };
   const nameOf = (o) => pick(o, 'name');
   const areaOf = (o) => pick(o.location, 'area');
+  /* В таблице «Тип» — это типология, а не описание: «Дом под полный ремонт»
+     дублировал соседнюю колонку состояния и не влезал. Полная формулировка
+     остаётся в карточке объекта и в подсказке. */
   const kindOf = (o) => (o.kindKey ? t(o.kindKey) : '');
+  const kindShort = (o) => {
+    if (!o.kindKey) return '';
+    const sh = t(o.kindKey + '.s');            // t() возвращает сам ключ, если его нет
+    return sh === o.kindKey + '.s' ? t(o.kindKey) : sh;
+  };
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
+    tpane: 'sum', tview: 'map', sort: null, sortDir: 1,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -2374,11 +2731,36 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
   /* quick filters answer "what needs attention", not "what is pretty" */
   const QUICK = {
+    blocked: (o) => Iron.blockersOf(o).length > 0,
     nodocs:  (o) => !o.docs || o.docs.have == null || (o.docs.total && o.docs.have < o.docs.total),
     noprice: (o) => o.price.sale == null && o.price.rentMonthly == null,
     nostage: (o) => !o.stage,
-    noowner: (o) => !o.responsible || !o.responsible.name
+    noowner: (o) => !o.responsible || !o.responsible.personId
   };
+
+  /* ── ТРИ РАЗНЫЕ ВЕЩИ, КОТОРЫЕ РАНЬШЕ НАЗЫВАЛИСЬ ОДНИМ СЛОВОМ «ГОТОВ» ──────
+     1. condition  — физическое состояние стен: его видно глазами;
+     2. stage      — где объект в процессе: это управленческий факт;
+     3. readiness  — можно ли его выставлять: это ВЫВОД из первых двух плюс
+                     документы, цена и ответственный.
+     Портал раньше показывал «7 готовы», имея в виду (1), а читалось это как
+     (3) — при том что по всем 11 не было ни документов, ни цены. Поэтому
+     readiness не хранится в данных: он вычисляется, и разойтись с фактами
+     физически не может. */
+  const BLOCKERS = [
+    { k: 'docs',  test: QUICK.nodocs },
+    { k: 'price', test: QUICK.noprice },
+    { k: 'stage', test: QUICK.nostage },
+    { k: 'owner', test: QUICK.noowner }
+  ];
+  const blockersOf = (o) => BLOCKERS.filter((b) => b.test(o)).map((b) => b.k);
+  const readinessOf = (o) => {
+    const n = blockersOf(o).length;
+    if (n === 0) return o.stage === 'ready' || o.stage === 'deal' ? 'deal' : 'publish';
+    return 'blocked';
+  };
+  Iron.blockersOf = blockersOf;
+  Iron.readinessOf = readinessOf;
   function matchesQuery(o) {
     const q = state.q.trim().toLowerCase();
     if (!q) return true;
@@ -2550,25 +2932,45 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   }
 
   /* ── working summary: counts that are also filters ──────────────────────── */
+  /* дата в локали страницы: реестр хранит ISO, читатель видит своё */
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    const loc = { ru: 'ru-RU', pl: 'pl-PL', en: 'en-GB' }[lang()] || 'ru-RU';
+    return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
   function renderSummary() {
     const all = Iron.list();
+    const upd = $('#introUpd');
+    if (upd) {
+      const d = (window.IronData && window.IronData.registryUpdated) || null;
+      upd.textContent = d ? t('intro.upd') + ' ' + fmtDate(d) : '';
+    }
     const box = $('#sumNums'), qbox = $('#sumQuick');
     if (!box) return;
-    const ready = all.filter((o) => o.condition === 'ready').length;
+    const techReady = all.filter((o) => o.condition === 'ready').length;
+    const publishable = all.filter((o) => readinessOf(o) !== 'blocked').length;
+    const blocked = all.filter((o) => readinessOf(o) === 'blocked').length;
     const nums = [
-      [all.length, t('sum.total'), null],
-      [ready, t('sum.ready'), null],
-      [all.filter(QUICK.nodocs).length, t('sum.nodocs'), 'nodocs'],
-      [all.filter(QUICK.noprice).length, t('sum.noprice'), 'noprice']
+      [all.length, t('sum.total'), null, null],
+      [techReady, t('sum.techReady'), null, 'flat'],
+      [publishable, t('sum.publishable'), null, publishable ? 'ok' : 'zero'],
+      [blocked, t('sum.blocked'), 'blocked', blocked ? 'warn' : 'ok']
     ];
-    box.innerHTML = nums.map(([n, label, q]) =>
-      q ? `<button class="sum__n" type="button" data-quick="${q}" aria-pressed="${state.quick === q}">
-             <b>${n}</b><span>${esc(label)}</span></button>`
-        : `<span class="sum__n sum__n--flat"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
-    const quicks = [['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
+    box.innerHTML = nums.map(([n, label, q, tone]) =>
+      q ? `<button class="sum__n sum__n--${tone || 'flat'}" type="button" data-quick="${q}"
+             aria-pressed="${state.quick === q}"><b>${n}</b><span>${esc(label)}</span></button>`
+        : `<span class="sum__n sum__n--${tone || 'flat'}"><b>${n}</b><span>${esc(label)}</span></span>`).join('');
+    const quicks = [['nodocs', t('sum.nodocs')], ['noprice', t('sum.noprice')],
+                    ['nostage', t('sum.nostage')], ['noowner', t('sum.noowner')]];
     qbox.innerHTML = quicks.map(([k, label]) =>
       `<button class="qf" type="button" data-quick="${k}" aria-pressed="${state.quick === k}">${esc(label)}<sup>${all.filter(QUICK[k]).length}</sup></button>`).join('')
       + (state.quick ? `<button class="qf qf--clear" type="button" data-quick="">${esc(t('sum.all'))}</button>` : '');
+    const defs = $('#defsIn');
+    if (defs) defs.innerHTML = ['cond', 'pub', 'blk'].map((k) =>
+      `<p><b>${esc(t('def.' + k + 'T'))}</b> ${esc(t('def.' + k + 'D'))}</p>`).join('');
+
     [box, qbox].forEach((el) => el.querySelectorAll('[data-quick]').forEach((b) =>
       b.addEventListener('click', () => { state.quick = b.dataset.quick || null; applyFilters(); })));
   }
@@ -2630,33 +3032,75 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     : (o.price.rentMonthly != null ? money(o.price.rentMonthly, o.price.currency) + ' ' + t('per.month') : t('price.request')));
 
   /* the register: eleven properties should fit on one screen */
+  /* Каждая ячейка, которую может обрезать, несёт полный текст в title:
+     решение принимают по этим колонкам, и «Ответстве…» его не поддерживает. */
+  const cell = (cls, text, extra) => {
+    // часть источников уже возвращает прочерк — он тоже означает «нет данных»
+    const empty = text == null || text === '' || text === dash;
+    const v = empty ? dash : String(text);
+    // пустое поле помечается: на мобильном карточка не должна состоять из прочерков
+    return `<span class="${cls}${empty ? ' is-empty' : ''}${extra || ''}"
+      title="${esc(v)}">${esc(v)}</span>`;
+  };
   function tableRow(o, i) {
     const st = statusOf(o);
+    const price = o.price.sale != null || o.price.rentMonthly != null
+      ? priceOf(o) : t('price.requestShort');
     return `<button class="row" data-id="${esc(o.id)}" role="row">
       <span class="row__i">${no(i)}</span>
-      <span class="row__nm">${esc(nameOf(o))}</span>
-      <span class="row__k">${esc(kindOf(o))}</span>
-      <span class="row__loc">${esc(areaOf(o).split(',')[0])}</span>
-      <span class="row__st${st ? ' ' + st.cls : ''}">${st ? '<i></i>' + esc(st.label) : dash}</span>
-      <span class="row__p">${esc(priceOf(o))}</span>
-      <span class="row__d">${esc(docsOf(o))}</span>
-      <span class="row__r">${esc((o.responsible && o.responsible.name) || dash)}</span>
-      <span class="row__nx">${esc(o.nextStep || dash)}</span>
+      ${cell('row__nm', nameOf(o))}
+      <span class="row__k" title="${esc(kindOf(o))}">${esc(kindShort(o))}</span>
+      ${cell('row__loc', areaOf(o).split(',')[0])}
+      <span class="row__st${st ? ' ' + st.cls : ''}" title="${esc(st ? st.label : dash)}">${st ? '<i></i>' + esc(st.label) : dash}</span>
+      ${cell('row__p', price)}
+      ${cell('row__d', docsOf(o))}
+      ${cell('row__r', (o.responsible && o.responsible.name) || null, '" data-lb="' + esc(t('th.owner')))}
+      ${cell('row__nx', o.nextStep || null, '" data-lb="' + esc(t('th.next')))}
     </button>`;
   }
   function tableHead() {
     // head cells carry the same column classes as the body, otherwise the
     // responsive rules hide body cells while the header keeps all nine and wraps
-    const cols = [['row__i','th.no'], ['row__nm','th.name'], ['row__k','th.kind'],
-                  ['row__loc','th.loc'], ['row__st','th.stage'], ['row__p','th.price'],
-                  ['row__d','th.docs'], ['row__r','th.owner'], ['row__nx','th.next']];
-    return `<div class="row row--head" role="row">${cols.map(([c, k]) =>
-      `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+    const cols = [['row__i','th.no',null], ['row__nm','th.name','name'], ['row__k','th.kind','kind'],
+                  ['row__loc','th.loc','loc'], ['row__st','th.stage','cond'], ['row__p','th.price','price'],
+                  ['row__d','th.docs','docs'], ['row__r','th.owner','owner'], ['row__nx','th.next','next']];
+    return `<div class="row row--head" role="row">${cols.map(([c, k, sortKey]) => sortKey
+      ? `<button class="${c} th" type="button" data-sort="${sortKey}"
+           aria-sort="${state.sort === sortKey ? (state.sortDir > 0 ? 'ascending' : 'descending') : 'none'}"
+           >${esc(t(k))}<i class="th__a" aria-hidden="true"></i></button>`
+      : `<span class="${c}">${esc(t(k))}</span>`).join('')}</div>`;
+  }
+
+  /* Сортировка. Ключ считается один раз на строку, пустые значения всегда
+     уезжают вниз независимо от направления: «нет данных» — это не «меньше». */
+  const SORTV = {
+    name: (o) => nameOf(o).toLowerCase(),
+    kind: (o) => kindOf(o).toLowerCase(),
+    loc:  (o) => areaOf(o).toLowerCase(),
+    cond: (o) => o.condition || '',
+    price:(o) => (o.price.sale != null ? o.price.sale
+                 : (o.price.rentMonthly != null ? o.price.rentMonthly : null)),
+    docs: (o) => (o.docs && o.docs.have != null ? o.docs.have : null),
+    owner:(o) => (o.responsible && o.responsible.name) || '',
+    next: (o) => o.nextStep || ''
+  };
+  function sortItems(items) {
+    const k = state.sort; if (!k || !SORTV[k]) return items;
+    const dir = state.sortDir || 1;
+    return items.slice().sort((a, b) => {
+      const x = SORTV[k](a.o), y = SORTV[k](b.o);
+      const ex = x == null || x === '', ey = y == null || y === '';
+      if (ex && ey) return a.i - b.i;
+      if (ex) return 1;              // пустое — всегда внизу
+      if (ey) return -1;
+      if (typeof x === 'number' && typeof y === 'number') return (x - y) * dir;
+      return String(x).localeCompare(String(y), lang()) * dir;
+    });
   }
 
   function renderColl() {
     const all = Iron.list();
-    const items = all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o));
+    const items = sortItems(all.map((o, i) => ({ o, i })).filter(({ o }) => visible(o)));
     const coll = $('#coll');
     coll.className = 'coll coll--' + state.view;
     coll.innerHTML = state.view === 'table'
@@ -2665,10 +3109,26 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     coll.querySelectorAll('.ent, .row[data-id]').forEach((b) => {
       b.addEventListener('click', () => Iron.openObject(b.dataset.id));
     });
+    coll.querySelectorAll('[data-sort]').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.sort;
+      state.sortDir = state.sort === k ? -(state.sortDir || 1) : 1;
+      state.sort = k;
+      renderColl();
+    }));
     // a private collection states its range, it does not announce a result count
     const cc = $('#collCount');
     if (cc) cc.textContent = `${t('nav.collection')} · ${all.length}`;
     renderChips();
+
+    /* Разошедшиеся колонки шапки и тела ломали таблицу уже трижды и каждый раз
+       молча. Пусть теперь кричит: проверка стоит один проход по девяти узлам. */
+    if (state.view === 'table') {
+      const vis = (r) => r ? [].filter.call(r.children,
+        (c) => getComputedStyle(c).display !== 'none').length : 0;
+      const h = vis(coll.querySelector('.row--head'));
+      const b = vis(coll.querySelector('.row[data-id]'));
+      if (h && b && h !== b) console.warn(`[iron] колонки разошлись: шапка ${h}, строка ${b}`);
+    }
 
     // nothing matched — say so plainly and offer the one recovery action
     const emptyBox = $('#empty');
@@ -2964,22 +3424,29 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
   /* search */
   (function () {
-    const q = $('#q'); if (!q) return;
+    const inputs = [$('#q'), $('#qm')].filter(Boolean);
+    if (!inputs.length) return;
     let tmr;
-    q.addEventListener('input', () => {
+    inputs.forEach((el) => el.addEventListener('input', () => {
       clearTimeout(tmr);
-      tmr = setTimeout(() => { state.q = q.value; renderColl(); }, 120);
-    });
+      tmr = setTimeout(() => {
+        state.q = el.value;
+        inputs.forEach((o) => { if (o !== el) o.value = el.value; });  // два поля, один запрос
+        renderColl();
+      }, 120);
+    }));
   })();
 
   /* Objects / Map are modes, not sections — the map no longer sits between
      the header and the work. */
   function setMode(m) {
     state.mode = m;
-    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum'), team = $('#team-sec');
+    const plate = $('#plate-sec'), objects = $('#kolekcja'), sum = $('#sum'), team = $('#team-sec'),
+          intro = $('#intro');
     if (plate) plate.hidden = m !== 'map';
     if (objects) objects.hidden = m !== 'objects';
     if (sum) sum.hidden = m !== 'objects';
+    if (intro) intro.hidden = m === 'team';
     if (team) team.hidden = m !== 'team';
     document.querySelectorAll('.nav__t').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
@@ -3057,7 +3524,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       const lx = vert ? d.x : d.x + side * 26;
       const ly = vert ? (d.si < 0 ? d.y - 34 : d.y + 40) : d.y - 4;
       const nm = d.p.name || t(d.p.vacant ? 'team.vacant' : 'team.unassigned');
-      return `<g class="rz__n rz__n--${d.st}">
+      return `<g class="rz__n rz__n--${d.st}" data-person="${esc(d.p.id)}"
+        tabindex="0" role="button" aria-label="${esc(d.p.role)}">
         <circle class="rz__ring" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="17"/>
         <svg x="${(d.x - 8).toFixed(1)}" y="${(d.y - 8).toFixed(1)}" width="16" height="16"
              viewBox="0 0 16 16" class="rz__gl">${PATHS[d.p.icon] || PATHS.dot}</svg>
@@ -3140,13 +3608,18 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       ['team.needs', p.dependencies.length ? p.dependencies.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`],
       ['team.check', p.checks.length ? p.checks.map((x) => `<li>${esc(x)}</li>`).join('') : `<li class="tbd">${dash}</li>`]
     ];
+    const openTasks = p.deliverables.filter((d) => d.status === 'open').length;
     return `<button class="team__row is-${st}${n ? ' is-loaded' : ''}" type="button"
-        aria-expanded="false" data-person="${esc(p.id)}">
+        aria-expanded="false" data-person="${esc(p.id)}" data-state="${st}"
+        aria-controls="tp-${esc(p.id)}">
         <i class="team__gl" aria-hidden="true">${glyph(p.icon)}</i>
-        <span class="team__nm">${p.name ? esc(p.name) : `<em>${esc(t(p.vacant ? 'team.vacant' : 'team.unassigned'))}</em>`}</span>
-        <span class="team__role">${esc(p.role)}</span>
+        <span class="team__nm" data-state-label="${esc(p.role + ' · ' + t(STATE[st]))}"
+          title="${esc(p.name || t('team.unassigned'))}"
+          >${p.name ? esc(p.name) : `<em>${esc(t('team.unassigned'))}</em>`}</span>
+        <span class="team__role" title="${esc(p.role)}">${esc(p.role)}</span>
         <span class="team__scope" title="${esc(p.scope)}">${esc(p.scope)}</span>
-        <span class="team__n">${n}</span>
+        <span class="team__n">${n ? n : `<i class="tbd" title="${esc(t('team.noObjects'))}">${dash}</i>`}</span>
+        <span class="team__tasks">${openTasks || dash}</span>
         <span class="team__contact"><i class="team__st2 team__st2--${st}"
           aria-hidden="true"></i>${esc(t(STATE[st]))}</span>
         <span class="team__chev" aria-hidden="true"></span>
@@ -3154,11 +3627,42 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       <div class="fpanel team__panel" data-open="false" id="tp-${esc(p.id)}">
         <div class="fpanel__clip"><div class="fpanel__in team__in">
           <p class="team__owns">${esc(p.owns)}</p>
+          <p class="team__zone"><b>${esc(t('team.thScope'))}:</b> ${esc(p.scope)}</p>
           ${p.note ? `<p class="team__fact">${esc(p.note)}</p>` : ''}
           ${groups.map(([k, html]) => `<div class="fgrp"><legend>${esc(t(k))}</legend>
              <ul class="team__list">${html}</ul></div>`).join('')}
         </div></div>
       </div>`;
+  }
+
+  /* Список вместо схемы: на узком экране радиальная карта нечитаема, а на
+     широком её иногда просто не хочется рассматривать. Одни и те же данные. */
+  function respList() {
+    return `<ul class="rlist">` + everyone().map((p) => {
+      const st = stateOf(p);
+      const n = loadOf(p);
+      return `<li class="rlist__i is-${st}">
+        <button class="rlist__b" type="button" data-goto="${esc(p.id)}">
+          <i class="rlist__gl" aria-hidden="true">${glyph(p.icon)}</i>
+          <span class="rlist__t">
+            <b>${esc(p.role)}</b>
+            <span>${p.name ? esc(p.name) : t('team.unassigned')}</span>
+          </span>
+          <span class="rlist__m">
+            <i class="team__st2 team__st2--${st}" aria-hidden="true"></i>${esc(t(STATE[st]))}
+            <em>${n ? n + ' ' + t('team.thN').toLowerCase() : t('team.noObjects')}</em>
+          </span>
+        </button></li>`;
+    }).join('') + `</ul>`;
+  }
+
+  /* переход со схемы или списка к строке человека — и сразу раскрыть её */
+  function gotoPerson(id) {
+    const btn = document.querySelector(`.team__row[data-person="${id}"]`);
+    if (!btn) return;
+    if (btn.getAttribute('aria-expanded') !== 'true') btn.click();
+    btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    btn.focus({ preventScroll: true });
   }
 
   function renderTeam() {
@@ -3171,14 +3675,34 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       <span class="team__role">${esc(t('team.thRole'))}</span>
       <span class="team__scope">${esc(t('team.thScope'))}</span>
       <span class="team__n">${esc(t('team.thN'))}</span>
+      <span class="team__tasks">${esc(t('team.thTasks'))}</span>
       <span class="team__contact">${esc(t('team.thState'))}</span>
       <span class="team__chev"></span></div>`;
     box.innerHTML = head + TEAM.people.map(personRow).join('');
     const gaps = $('#teamGaps');
     if (gaps) gaps.innerHTML = TEAM.gaps.map(personRow).join('');
 
-    const f1 = $('#teamFig1'); if (f1) f1.querySelector('.fig__body').innerHTML = figResp();
+    const f1 = $('#teamFig1');
+    if (f1) {
+      // на узком экране радиальная схема нечитаема: список — не деградация,
+      // а единственная форма, в которой эти данные там работают
+      const forced = window.matchMedia('(max-width:720px)').matches;
+      const list = forced || state.tview === 'list';
+      const seg = document.querySelector('.tbar .seg');
+      if (seg) seg.hidden = forced;
+      f1.querySelector('.fig__body').innerHTML = list ? respList() : figResp();
+      f1.classList.toggle('fig--list', list);
+      f1.querySelectorAll('[data-goto], .rz__n').forEach((el) => {
+        const id = el.dataset.goto || el.dataset.person;
+        if (id) el.addEventListener('click', () => gotoPerson(id));
+      });
+    }
+    document.querySelectorAll('[data-tview]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.tview === state.tview)));
     const key = $('#teamKey'); if (key) key.innerHTML = figKey();
+    const raci = $('#teamRaci');
+    if (raci) raci.innerHTML = `<b>${esc(t('raci.title'))}</b>`
+      + ['d', 'c', 'i'].map((k) => `<span>${esc(t('raci.' + k))}</span>`).join('');
     const f2 = $('#teamFig2'); if (f2) f2.querySelector('.fig__body').innerHTML = figPipe();
 
     [box, gaps].forEach((host) => host && host.querySelectorAll('[data-person]').forEach((b) => {
@@ -3226,8 +3750,88 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     });
   }
 
+  /* Разделы «Команды». Раньше всё лежало одним потоком выше четырёх тысяч
+     пикселей, и вопросы, требующие решения, оказывались в самом низу —
+     то есть самое рабочее содержимое читалось последним. */
+  // у вкладки своё короткое имя: заголовок раздела в неё не помещается
+  const TPANES = [
+    ['sum', 'tab.sum'], ['people', 'tab.people'], ['gaps', 'tab.gaps'],
+    ['dec', 'tab.dec'], ['ho', 'tab.ho']
+  ];
+  function setPane(k) {
+    state.tpane = k;
+    document.querySelectorAll('.tpane').forEach((p) => { p.hidden = p.dataset.pane !== k; });
+    document.querySelectorAll('[data-tpane]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.tpane === k)));
+    if (k === 'people' || k === 'ho') renderTeam();
+  }
+  function renderTeamNav() {
+    const nav = $('#teamNav'); if (!nav) return;
+    const n = { gaps: (TEAM.gaps || []).length, ho: (TEAM.handoffs || []).length,
+                sum: (TEAM.open || []).length, people: (TEAM.people || []).length,
+                dec: (TEAM.decisions || []).length };
+    nav.innerHTML = TPANES.map(([k, key]) =>
+      `<button class="tnav__b" type="button" data-tpane="${k}"
+        aria-pressed="${state.tpane === k}">${esc(t(key))}<sup>${n[k]}</sup></button>`).join('');
+    nav.querySelectorAll('[data-tpane]').forEach((b) =>
+      b.addEventListener('click', () => setPane(b.dataset.tpane)));
+  }
+
+  (function teamControls() {
+    document.addEventListener('click', (e) => {
+      const v = e.target.closest('[data-tview]');
+      if (v) { state.tview = v.dataset.tview; renderTeam(); return; }
+
+      const all = e.target.closest('#teamToggleAll');
+      if (all) {
+        const rows = document.querySelectorAll('#team .team__row[data-person]');
+        const open = all.dataset.open !== 'true';
+        rows.forEach((r) => { if ((r.getAttribute('aria-expanded') === 'true') !== open) r.click(); });
+        all.dataset.open = String(open);
+        all.textContent = t(open ? 'team.collapseAll' : 'team.expandAll');
+        return;
+      }
+
+      const only = e.target.closest('#teamOnlyOpen');
+      if (only) {
+        const on = only.getAttribute('aria-pressed') !== 'true';
+        only.setAttribute('aria-pressed', String(on));
+        document.querySelectorAll('#team .team__row[data-person]').forEach((r) => {
+          const hide = on && r.dataset.state === 'fixed';
+          r.hidden = hide;
+          const panel = document.getElementById('tp-' + r.dataset.person);
+          if (panel && hide) { panel.dataset.open = 'false'; r.setAttribute('aria-expanded', 'false'); }
+          if (panel) panel.hidden = hide;
+        });
+      }
+    });
+    // схема доступна с клавиатуры: узел — это кнопка
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const nd = e.target.closest && e.target.closest('.rz__n[data-person]');
+      if (nd) { e.preventDefault(); gotoPerson(nd.dataset.person); }
+    });
+  })();
+
+  /* Свёрнутая панель схлопнута через grid-template-rows:0fr, но её содержимое
+     остаётся в дереве доступности: скринридер читает все группы фильтров, а Tab
+     уходит в невидимые чекбоксы. overflow:hidden от этого не спасает — нужен
+     inert. Тот же механизм используют карточки людей, поэтому правим оба. */
+  function syncInert() {
+    document.querySelectorAll('.fpanel').forEach((p) => {
+      const open = p.dataset.open === 'true';
+      const clip = p.querySelector('.fpanel__clip');
+      if (clip) clip.inert = !open;
+    });
+  }
+  Iron.syncInert = syncInert;
+  new MutationObserver(syncInert).observe(document.body,
+    { subtree: true, attributes: true, attributeFilter: ['data-open'] });
+
   function renderAll() {
-    renderSummary(); renderPlaces(); renderFilters(); renderColl(); renderTeam();
+    renderSummary(); renderPlaces(); renderFilters(); renderColl();
+    renderTeamNav(); renderTeam();
+    syncInert();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }
   document.addEventListener('iron:lang', renderAll);

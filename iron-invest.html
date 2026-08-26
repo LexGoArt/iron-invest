@@ -1404,15 +1404,8 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
     <!-- раздел был единым потоком выше 4000px; разбит на экраны -->
     <nav class="tnav" id="teamNav" aria-label="Разделы" data-i18n-aria="team.nav"><!-- app.js --></nav>
 
-    <!-- 1 · СВОДКА — вопросы, требующие решения, подняты сюда -->
-    <div class="tpane" id="tp-sum" data-pane="sum">
-      <div class="cov" id="teamKey"><!-- app.js --></div>
-      <h3 data-i18n="team.openTitle">Вопросы, требующие решения</h3>
-      <ul class="team__open" id="teamOpen"><!-- app.js --></ul>
-    </div>
-
-    <!-- 2 · ЛЮДИ -->
-    <div class="tpane" id="tp-people" data-pane="people" hidden>
+    <!-- 1 · ЛЮДИ -->
+    <div class="tpane" id="tp-people" data-pane="people">
       <div class="tbar">
         <div class="seg" role="group" aria-label="Схема или список">
           <button class="seg__b" type="button" data-tview="map" data-i18n="team.viewMap">Схема</button>
@@ -1432,18 +1425,25 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
       <div class="team" id="team"><!-- app.js --></div>
     </div>
 
-    <!-- 3 · ФУНКЦИИ БЕЗ ИСПОЛНИТЕЛЯ -->
+    <!-- 2 · ФУНКЦИИ БЕЗ ИСПОЛНИТЕЛЯ -->
     <div class="tpane" id="tp-gaps" data-pane="gaps" hidden>
       <h3 data-i18n="team.gapsTitle">Функции без исполнителя</h3>
       <p class="team__note" data-i18n="team.gapsLead">Ниже перечислены функции, для которых пока не назначены ответственные.</p>
       <div class="team" id="teamGaps"><!-- app.js --></div>
     </div>
 
-    <!-- 4 · РЕШЕНИЯ И ПОЛНОМОЧИЯ -->
+    <!-- 3 · РЕШЕНИЯ И ПОЛНОМОЧИЯ -->
     <div class="tpane" id="tp-dec" data-pane="dec" hidden>
       <h3 data-i18n="team.decTitle">Кто что решает</h3>
       <div class="legend" id="teamRaci"><!-- app.js --></div>
       <div class="dec" id="teamDec"><!-- app.js --></div>
+    </div>
+
+    <!-- 4 · СВОДКА — стоит вплотную к блокерам: это одна проблемная зона -->
+    <div class="tpane" id="tp-sum" data-pane="sum" hidden>
+      <div class="cov" id="teamKey"><!-- app.js --></div>
+      <h3 data-i18n="team.openTitle">Вопросы, требующие решения</h3>
+      <ul class="team__open" id="teamOpen"><!-- app.js --></ul>
     </div>
 
     <!-- 5 · БЛОКЕРЫ ПРОЦЕССА -->
@@ -2661,7 +2661,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
-    tpane: 'sum', tview: 'map', sort: null, sortDir: 1,
+    tpane: 'people', tview: 'map', sort: null, sortDir: 1,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -3757,10 +3757,12 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   /* Разделы «Команды». Раньше всё лежало одним потоком выше четырёх тысяч
      пикселей, и вопросы, требующие решения, оказывались в самом низу —
      то есть самое рабочее содержимое читалось последним. */
-  // у вкладки своё короткое имя: заголовок раздела в неё не помещается
+  // у вкладки своё короткое имя: заголовок раздела в неё не помещается.
+  // Сводка стоит перед блокерами: вопросы, требующие решения, и места,
+  // где рвётся поток, — это одна проблемная зона, читать их надо подряд.
   const TPANES = [
-    ['sum', 'tab.sum'], ['people', 'tab.people'], ['gaps', 'tab.gaps'],
-    ['dec', 'tab.dec'], ['ho', 'tab.ho']
+    ['people', 'tab.people'], ['gaps', 'tab.gaps'], ['dec', 'tab.dec'],
+    ['sum', 'tab.sum'], ['ho', 'tab.ho']
   ];
   function setPane(k) {
     state.tpane = k;

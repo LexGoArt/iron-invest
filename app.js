@@ -48,7 +48,7 @@
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
-    tpane: 'sum', tview: 'map', sort: null, sortDir: 1,
+    tpane: 'people', tview: 'map', sort: null, sortDir: 1,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -1144,10 +1144,12 @@
   /* Разделы «Команды». Раньше всё лежало одним потоком выше четырёх тысяч
      пикселей, и вопросы, требующие решения, оказывались в самом низу —
      то есть самое рабочее содержимое читалось последним. */
-  // у вкладки своё короткое имя: заголовок раздела в неё не помещается
+  // у вкладки своё короткое имя: заголовок раздела в неё не помещается.
+  // Сводка стоит перед блокерами: вопросы, требующие решения, и места,
+  // где рвётся поток, — это одна проблемная зона, читать их надо подряд.
   const TPANES = [
-    ['sum', 'tab.sum'], ['people', 'tab.people'], ['gaps', 'tab.gaps'],
-    ['dec', 'tab.dec'], ['ho', 'tab.ho']
+    ['people', 'tab.people'], ['gaps', 'tab.gaps'], ['dec', 'tab.dec'],
+    ['sum', 'tab.sum'], ['ho', 'tab.ho']
   ];
   function setPane(k) {
     state.tpane = k;

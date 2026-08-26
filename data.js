@@ -240,28 +240,85 @@
       /* ── AMOR RELAX HOTEL (flagship) ─────────────────────────────────────── */
       T({
         id: 'amor-relax',
-        // official listing spelling is "Amour"; address per the hotel's own
-        // listing is Almyrida, Apokoronas (the Georgioupoli in some URLs is wrong)
+        // Данные собраны 26.08.2026 с публичных страниц отеля: Booking,
+        // TripAdvisor, Facebook. Всё здесь опубликовано самим отелем.
         name: 'Amour Relax Hotel', nameEn: 'Amour Relax Hotel', nameRu: 'Amour Relax Hotel',
         op: 'business',
         kindKey: 'k.hotel',
-        location: { area: 'Almyrida, Apokoronas', areaEn: 'Almyrida, Apokoronas', areaRu: 'Альмирида, Апокоронас',
-          coords: [35.4486, 24.2032], seaView: true, _coordDraft: true },
-        land_m2: 20000, // ~2 ha across two plots — per Alex, TODO confirm exactly
+        // точка из карточки TripAdvisor — не черновая
+        location: { area: 'Almyrida, Apokoronas', areaEn: 'Almyrida, Apokoronas', areaRu: 'Алмирида, Апокоронас',
+          coords: [35.448112, 24.190527], seaView: true, _coordDraft: false },
+        address: {
+          ru: 'Epar.Od. Kalivon-Kefalas, Алмирида, Крит 730 08, Греция',
+          en: 'Epar.Od. Kalivon-Kefalas, Almyrida, Crete 730 08, Greece',
+          gr: 'Επαρ.Οδ. Καλυβών-Κεφαλά, Αλμυρίδα, Κρήτη 730 08'
+        },
+        land_m2: 20000, // ~2 га на двух участках — со слов Alex, требует подтверждения
         condition: 'ready',
         stars: 3,
         units: 9,
-        facilities: ['fa.pool', 'fa.tennis', 'fa.basketball', 'fa.parking', 'fa.garden', 'fa.shuttle'],
-        nearby: { beachMin: 2, airportKm: 11.5 },
-        greece: { residencyEligible: null, residencyThreshold: 250000, ota: { listed: true, incomeMonthly: null } },
+        facilities: ['fa.pool', 'fa.tennis', 'fa.badminton', 'fa.parking', 'fa.garden',
+                     'fa.shuttle', 'fa.wifi', 'fa.terrace', 'fa.roomservice', 'fa.concierge',
+                     'fa.adultsonly', 'fa.nonsmoking'],
+        rooms: { amenities: ['ra.ac', 'ra.safe', 'ra.tv', 'ra.balcony', 'ra.kitchenette',
+                             'ra.microwave', 'ra.fridge', 'ra.kettle', 'ra.wardrobe',
+                             'ra.shower', 'ra.toiletries'] },
+        nearby: { beachName: 'Keras', beachKm: 1.4, airportKm: 32, airportName: 'Souda',
+                  airport2Km: 90.9, airport2Name: 'Heraklion', restaurants500m: 28 },
+        greece: { residencyEligible: null, residencyThreshold: 250000,
+                  ota: { listed: true, bookable: false, incomeMonthly: null } },
+        ratings: [
+          { src: 'Booking', score: 9.3, max: 10, n: 22, label: 'Превосходно',
+            detail: [['r.comfort', 9.7], ['r.clean', 9.5], ['r.amenities', 9.2],
+                     ['r.value', 9.2], ['r.staff', 8.6], ['r.location', 8.6], ['r.wifi', 7.5]] },
+          { src: 'TripAdvisor', score: 5.0, max: 5, n: 4, label: null,
+            detail: [['r.rooms', 5.0], ['r.quality', 5.0], ['r.clean', 5.0],
+                     ['r.service', 5.0], ['r.sleep', 5.0], ['r.location', 4.3]] }
+        ],
+        links: [
+          { k: 'booking', url: 'https://www.booking.com/hotel/gr/amour-relax.html' },
+          { k: 'tripadvisor', url: 'https://www.tripadvisor.com.gr/Hotel_Review-g775923-d28077053-Reviews-Amour_Relax_Hotel-Almyrida_Chania_Prefecture_Crete.html' },
+          { k: 'facebook', url: 'https://www.facebook.com/profile.php?id=61561312883178' },
+          { k: 'instagram', url: 'https://www.instagram.com/amourrelax/' },
+          { k: 'tiktok', url: 'https://www.tiktok.com/@amourrelax' }
+        ],
+        contacts: { phone: '+30 697 333 8667', email: 'info.amourhotel@gmail.com' },
+        pitch: { ru: 'Отель для пар, только для взрослых. Девять номеров, бассейн, теннисный корт и оливковый сад.',
+                 en: 'An adults-only retreat for couples. Nine rooms, a pool, a tennis court and an olive grove.' },
+        languages: ['uk', 'ru', 'en', 'es', 'cs', 'sk', 'fr'],
+        stage: null,
         media: {
-          // drop the real files into photos/ and they appear automatically;
-          // a missing file degrades to the honest typographic placeholder
-          cover: 'photos/amour-relax-01.jpg',
-          photos: ['photos/amour-relax-01.jpg', 'photos/amour-relax-02.jpg', 'photos/amour-relax-03.jpg'],
+          cover: 'photos/amour-relax/01-aerial-day.jpg',
+          photos: [
+            'photos/amour-relax/01-aerial-day.jpg',
+            'photos/amour-relax/02-aerial-night.jpg',
+            'photos/amour-relax/03.jpg',
+            'photos/amour-relax/04.jpg',
+            'photos/amour-relax/05.jpg',
+            'photos/amour-relax/06.jpg',
+            'photos/amour-relax/07.jpg',
+            'photos/amour-relax/08.jpg',
+            'photos/amour-relax/09.jpg',
+            'photos/amour-relax/10.jpg',
+            'photos/amour-relax/11.jpg',
+            'photos/amour-relax/12.jpg',
+            'photos/amour-relax/13.jpg',
+            'photos/amour-relax/14.jpg',
+            'photos/amour-relax/15.jpg',
+            'photos/amour-relax/16.jpg',
+            'photos/amour-relax/17.jpg',
+            'photos/amour-relax/18.jpg',
+            'photos/amour-relax/19.jpg',
+            'photos/amour-relax/20.jpg',
+            'photos/amour-relax/21.jpg',
+            'photos/amour-relax/22.jpg',
+            'photos/amour-relax/23.jpg',
+            'photos/amour-relax/24.jpg',
+            'photos/amour-relax/25.jpg'
+          ],
           plan: null
         },
-        tags: ['t.hotel', 't.twoplots', 't.2ha', 't.ota'],
+        tags: ['t.hotel', 't.twoplots', 't.2ha', 't.ota', 't.adultsonly'],
         _flagship: true
       })
     ]

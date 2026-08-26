@@ -1365,6 +1365,41 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .dst--expiring, .dst--expired{ color:var(--signal); }
 .dst--na, .dst--none{ color:var(--ink-decor); }
 
+/* ══ КАРТОЧКА · ССЫЛКИ И ОЦЕНКИ ════════════════════════════════════════════ */
+.lnks{ display:flex; flex-wrap:wrap; gap:6px; }
+.lnk{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px;
+  border:1px solid var(--hairline); border-radius:999px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-900);
+  text-decoration:none; transition:border-color var(--t-1) var(--ease),
+    background var(--t-1) var(--ease); }
+.lnk:hover{ border-color:var(--bronze); background:var(--bronze-wash); }
+.lnk i{ font-style:normal; font-size:9px; color:var(--ink-decor); }
+.lnk:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+.mono{ font-family:var(--mono); font-size:12.5px; }
+
+/* Разные площадки — разные шкалы. Сводить их к одной было бы выдумкой,
+   поэтому у каждой свой блок со своим максимумом. */
+.rt{ display:grid; gap:var(--sp-5); margin-top:var(--sp-4); }
+.rt__b{ padding:var(--sp-4); background:var(--bg-sunken);
+  border-left:2px solid var(--bronze); }
+.rt__h{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  margin-bottom:var(--sp-4); }
+.rt__h b{ font-family:var(--serif); font-size:30px; line-height:1; color:var(--ink-900); }
+.rt__h span{ font-family:var(--mono); font-size:11px; color:var(--ink-500); }
+.rt__h em{ font-style:normal; font-family:var(--mono); font-size:11px;
+  color:var(--ink-700); margin-left:auto; }
+.rt__d{ display:grid; gap:5px; }
+.rt__i{ display:grid; grid-template-columns:1fr 42px; align-items:center;
+  gap:var(--sp-3); position:relative; padding:3px 0; }
+.rt__i u{ text-decoration:none; font-size:13px; color:var(--ink-700);
+  position:relative; z-index:1; }
+.rt__i b{ font-family:var(--mono); font-size:12px; font-weight:400;
+  text-align:right; color:var(--ink-900); position:relative; z-index:1; }
+.rt__i i{ position:absolute; left:0; bottom:0; height:2px; width:var(--w);
+  background:var(--bronze); opacity:.55; }
+
+@media (min-width:720px){ .rt{ grid-template-columns:repeat(2,1fr); } }
+
 </style>
 </head>
 <body>
@@ -1831,28 +1866,85 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
       /* ── AMOR RELAX HOTEL (flagship) ─────────────────────────────────────── */
       T({
         id: 'amor-relax',
-        // official listing spelling is "Amour"; address per the hotel's own
-        // listing is Almyrida, Apokoronas (the Georgioupoli in some URLs is wrong)
+        // Данные собраны 26.08.2026 с публичных страниц отеля: Booking,
+        // TripAdvisor, Facebook. Всё здесь опубликовано самим отелем.
         name: 'Amour Relax Hotel', nameEn: 'Amour Relax Hotel', nameRu: 'Amour Relax Hotel',
         op: 'business',
         kindKey: 'k.hotel',
-        location: { area: 'Almyrida, Apokoronas', areaEn: 'Almyrida, Apokoronas', areaRu: 'Альмирида, Апокоронас',
-          coords: [35.4486, 24.2032], seaView: true, _coordDraft: true },
-        land_m2: 20000, // ~2 ha across two plots — per Alex, TODO confirm exactly
+        // точка из карточки TripAdvisor — не черновая
+        location: { area: 'Almyrida, Apokoronas', areaEn: 'Almyrida, Apokoronas', areaRu: 'Алмирида, Апокоронас',
+          coords: [35.448112, 24.190527], seaView: true, _coordDraft: false },
+        address: {
+          ru: 'Epar.Od. Kalivon-Kefalas, Алмирида, Крит 730 08, Греция',
+          en: 'Epar.Od. Kalivon-Kefalas, Almyrida, Crete 730 08, Greece',
+          gr: 'Επαρ.Οδ. Καλυβών-Κεφαλά, Αλμυρίδα, Κρήτη 730 08'
+        },
+        land_m2: 20000, // ~2 га на двух участках — со слов Alex, требует подтверждения
         condition: 'ready',
         stars: 3,
         units: 9,
-        facilities: ['fa.pool', 'fa.tennis', 'fa.basketball', 'fa.parking', 'fa.garden', 'fa.shuttle'],
-        nearby: { beachMin: 2, airportKm: 11.5 },
-        greece: { residencyEligible: null, residencyThreshold: 250000, ota: { listed: true, incomeMonthly: null } },
+        facilities: ['fa.pool', 'fa.tennis', 'fa.badminton', 'fa.parking', 'fa.garden',
+                     'fa.shuttle', 'fa.wifi', 'fa.terrace', 'fa.roomservice', 'fa.concierge',
+                     'fa.adultsonly', 'fa.nonsmoking'],
+        rooms: { amenities: ['ra.ac', 'ra.safe', 'ra.tv', 'ra.balcony', 'ra.kitchenette',
+                             'ra.microwave', 'ra.fridge', 'ra.kettle', 'ra.wardrobe',
+                             'ra.shower', 'ra.toiletries'] },
+        nearby: { beachName: 'Keras', beachKm: 1.4, airportKm: 32, airportName: 'Souda',
+                  airport2Km: 90.9, airport2Name: 'Heraklion', restaurants500m: 28 },
+        greece: { residencyEligible: null, residencyThreshold: 250000,
+                  ota: { listed: true, bookable: false, incomeMonthly: null } },
+        ratings: [
+          { src: 'Booking', score: 9.3, max: 10, n: 22, label: 'Превосходно',
+            detail: [['r.comfort', 9.7], ['r.clean', 9.5], ['r.amenities', 9.2],
+                     ['r.value', 9.2], ['r.staff', 8.6], ['r.location', 8.6], ['r.wifi', 7.5]] },
+          { src: 'TripAdvisor', score: 5.0, max: 5, n: 4, label: null,
+            detail: [['r.rooms', 5.0], ['r.quality', 5.0], ['r.clean', 5.0],
+                     ['r.service', 5.0], ['r.sleep', 5.0], ['r.location', 4.3]] }
+        ],
+        links: [
+          { k: 'booking', url: 'https://www.booking.com/hotel/gr/amour-relax.html' },
+          { k: 'tripadvisor', url: 'https://www.tripadvisor.com.gr/Hotel_Review-g775923-d28077053-Reviews-Amour_Relax_Hotel-Almyrida_Chania_Prefecture_Crete.html' },
+          { k: 'facebook', url: 'https://www.facebook.com/profile.php?id=61561312883178' },
+          { k: 'instagram', url: 'https://www.instagram.com/amourrelax/' },
+          { k: 'tiktok', url: 'https://www.tiktok.com/@amourrelax' }
+        ],
+        contacts: { phone: '+30 697 333 8667', email: 'info.amourhotel@gmail.com' },
+        pitch: { ru: 'Отель для пар, только для взрослых. Девять номеров, бассейн, теннисный корт и оливковый сад.',
+                 en: 'An adults-only retreat for couples. Nine rooms, a pool, a tennis court and an olive grove.' },
+        languages: ['uk', 'ru', 'en', 'es', 'cs', 'sk', 'fr'],
+        stage: null,
         media: {
-          // drop the real files into photos/ and they appear automatically;
-          // a missing file degrades to the honest typographic placeholder
-          cover: 'photos/amour-relax-01.jpg',
-          photos: ['photos/amour-relax-01.jpg', 'photos/amour-relax-02.jpg', 'photos/amour-relax-03.jpg'],
+          cover: 'photos/amour-relax/01-aerial-day.jpg',
+          photos: [
+            'photos/amour-relax/01-aerial-day.jpg',
+            'photos/amour-relax/02-aerial-night.jpg',
+            'photos/amour-relax/03.jpg',
+            'photos/amour-relax/04.jpg',
+            'photos/amour-relax/05.jpg',
+            'photos/amour-relax/06.jpg',
+            'photos/amour-relax/07.jpg',
+            'photos/amour-relax/08.jpg',
+            'photos/amour-relax/09.jpg',
+            'photos/amour-relax/10.jpg',
+            'photos/amour-relax/11.jpg',
+            'photos/amour-relax/12.jpg',
+            'photos/amour-relax/13.jpg',
+            'photos/amour-relax/14.jpg',
+            'photos/amour-relax/15.jpg',
+            'photos/amour-relax/16.jpg',
+            'photos/amour-relax/17.jpg',
+            'photos/amour-relax/18.jpg',
+            'photos/amour-relax/19.jpg',
+            'photos/amour-relax/20.jpg',
+            'photos/amour-relax/21.jpg',
+            'photos/amour-relax/22.jpg',
+            'photos/amour-relax/23.jpg',
+            'photos/amour-relax/24.jpg',
+            'photos/amour-relax/25.jpg'
+          ],
           plan: null
         },
-        tags: ['t.hotel', 't.twoplots', 't.2ha', 't.ota'],
+        tags: ['t.hotel', 't.twoplots', 't.2ha', 't.ota', 't.adultsonly'],
         _flagship: true
       })
     ]
@@ -2629,6 +2721,22 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.',
       'intro.upd': 'Обновлено:',
       'raci.title': 'Как читать таблицу',
+      'dos.contact': 'Где и как связаться', 'dos.ratings': 'Оценки площадок',
+      'f.address': 'Адрес', 'f.addressGr': 'По-гречески', 'f.coords': 'Координаты',
+      'f.phone': 'Телефон', 'f.email': 'Почта', 'f.links': 'Ссылки',
+      'rt.reviews': 'отзывов',
+      'r.comfort': 'Комфорт', 'r.clean': 'Чистота', 'r.amenities': 'Удобства',
+      'r.value': 'Цена/качество', 'r.staff': 'Персонал', 'r.location': 'Расположение',
+      'r.wifi': 'Wi-Fi', 'r.rooms': 'Номера', 'r.quality': 'Качество',
+      'r.service': 'Обслуживание', 'r.sleep': 'Качество сна',
+      'fa.badminton': 'Бадминтон', 'fa.wifi': 'Wi-Fi', 'fa.terrace': 'Терраса',
+      'fa.roomservice': 'Доставка в номер', 'fa.concierge': 'Консьерж',
+      'fa.adultsonly': 'Только для взрослых', 'fa.nonsmoking': 'Для некурящих',
+      'ra.ac': 'Кондиционер', 'ra.safe': 'Сейф', 'ra.tv': 'ТВ', 'ra.balcony': 'Балкон',
+      'ra.kitchenette': 'Мини-кухня', 'ra.microwave': 'Микроволновка', 'ra.fridge': 'Холодильник',
+      'ra.kettle': 'Чайник', 'ra.wardrobe': 'Шкаф', 'ra.shower': 'Душ walk-in',
+      'ra.toiletries': 'Косметические принадлежности',
+      'f.roomAmenities': 'В номерах', 't.adultsonly': 'Только для взрослых',
       'am.garden': 'Сад', 'am.parking': 'Парковка', 'am.veranda': 'Крытые веранды',
       'am.solar': 'Солнечный бойлер', 'am.ac': 'Кондиционеры', 'am.kitchen': 'Кухни',
       'am.wardrobe': 'Встроенные шкафы', 'am.shutters': 'Электрические ставни',
@@ -2794,6 +2902,22 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Portal pokazuje dane z rejestru. Zmiany wprowadza się w rejestrze — portal aktualizuje się w ślad za nim.',
       'intro.upd': 'Aktualizacja:',
       'raci.title': 'Jak czytać tabelę',
+      'dos.contact': 'Kontakt i lokalizacja', 'dos.ratings': 'Oceny serwisów',
+      'f.address': 'Adres', 'f.addressGr': 'Po grecku', 'f.coords': 'Współrzędne',
+      'f.phone': 'Telefon', 'f.email': 'E-mail', 'f.links': 'Linki',
+      'rt.reviews': 'opinii',
+      'r.comfort': 'Komfort', 'r.clean': 'Czystość', 'r.amenities': 'Udogodnienia',
+      'r.value': 'Stosunek jakości do ceny', 'r.staff': 'Personel', 'r.location': 'Lokalizacja',
+      'r.wifi': 'Wi-Fi', 'r.rooms': 'Pokoje', 'r.quality': 'Jakość',
+      'r.service': 'Obsługa', 'r.sleep': 'Jakość snu',
+      'fa.badminton': 'Badminton', 'fa.wifi': 'Wi-Fi', 'fa.terrace': 'Taras',
+      'fa.roomservice': 'Room service', 'fa.concierge': 'Konsjerż',
+      'fa.adultsonly': 'Tylko dla dorosłych', 'fa.nonsmoking': 'Dla niepalących',
+      'ra.ac': 'Klimatyzacja', 'ra.safe': 'Sejf', 'ra.tv': 'TV', 'ra.balcony': 'Balkon',
+      'ra.kitchenette': 'Aneks kuchenny', 'ra.microwave': 'Mikrofalówka', 'ra.fridge': 'Lodówka',
+      'ra.kettle': 'Czajnik', 'ra.wardrobe': 'Szafa', 'ra.shower': 'Prysznic walk-in',
+      'ra.toiletries': 'Kosmetyki',
+      'f.roomAmenities': 'W pokojach', 't.adultsonly': 'Tylko dla dorosłych',
       'am.garden': 'Ogród', 'am.parking': 'Parking', 'am.veranda': 'Zadaszone werandy',
       'am.solar': 'Bojler solarny', 'am.ac': 'Klimatyzacja', 'am.kitchen': 'Kuchnie',
       'am.wardrobe': 'Szafy wnękowe', 'am.shutters': 'Rolety elektryczne',
@@ -2959,6 +3083,22 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'This portal displays the registry. Changes are made in the registry and appear here afterwards.',
       'intro.upd': 'Updated:',
       'raci.title': 'How to read this table',
+      'dos.contact': 'Where and how to reach it', 'dos.ratings': 'Platform ratings',
+      'f.address': 'Address', 'f.addressGr': 'In Greek', 'f.coords': 'Coordinates',
+      'f.phone': 'Phone', 'f.email': 'Email', 'f.links': 'Links',
+      'rt.reviews': 'reviews',
+      'r.comfort': 'Comfort', 'r.clean': 'Cleanliness', 'r.amenities': 'Facilities',
+      'r.value': 'Value for money', 'r.staff': 'Staff', 'r.location': 'Location',
+      'r.wifi': 'Wi-Fi', 'r.rooms': 'Rooms', 'r.quality': 'Quality',
+      'r.service': 'Service', 'r.sleep': 'Sleep quality',
+      'fa.badminton': 'Badminton', 'fa.wifi': 'Wi-Fi', 'fa.terrace': 'Terrace',
+      'fa.roomservice': 'Room service', 'fa.concierge': 'Concierge',
+      'fa.adultsonly': 'Adults only', 'fa.nonsmoking': 'Non-smoking',
+      'ra.ac': 'Air conditioning', 'ra.safe': 'Safe', 'ra.tv': 'TV', 'ra.balcony': 'Balcony',
+      'ra.kitchenette': 'Kitchenette', 'ra.microwave': 'Microwave', 'ra.fridge': 'Fridge',
+      'ra.kettle': 'Kettle', 'ra.wardrobe': 'Wardrobe', 'ra.shower': 'Walk-in shower',
+      'ra.toiletries': 'Toiletries',
+      'f.roomAmenities': 'In the rooms', 't.adultsonly': 'Adults only',
       'am.garden': 'Garden', 'am.parking': 'Parking', 'am.veranda': 'Covered verandas',
       'am.solar': 'Solar water heater', 'am.ac': 'Air conditioning', 'am.kitchen': 'Kitchens',
       'am.wardrobe': 'Fitted wardrobes', 'am.shutters': 'Electric shutters',
@@ -3715,6 +3855,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
             `<span class="parts__i"><b>${esc(t(x.key))}</b>
                <i>${esc(m2(x.m2))}${x.note ? ' · ' + esc(t(x.note)) : ''}</i></span>`).join('')}</span>`) : ''}
         ${(o.facilities && o.facilities.length) ? row(t('f.facilities'), o.facilities.map((f) => esc(t(f))).join(' · ')) : ''}
+        ${(o.rooms && o.rooms.amenities && o.rooms.amenities.length)
+          ? row(t('f.roomAmenities'), o.rooms.amenities.map((a) => esc(t(a))).join(' · ')) : ''}
         ${(o.nearby && o.nearby.beachMin) ? row(t('f.beach'), `${o.nearby.beachMin} ${esc(t('unit.minwalk'))}`, true) : ''}
         ${(o.nearby && o.nearby.beachM) ? row(t('f.beach'), `${o.nearby.beachM} ${esc(t('unit.m'))}`, true) : ''}
         ${(o.nearby && o.nearby.airportKm) ? row(t('f.airport'), `${String(o.nearby.airportKm).replace('.', ',')} ${esc(t('unit.km'))}`, true) : ''}
@@ -3722,6 +3864,48 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       </dl>
       ${g}
     </div>`;
+  }
+
+  /* Ссылки и контакты объекта. Всё, что здесь показывается, объект уже
+     опубликовал о себе сам — телефон и почта висят на его странице
+     в Booking и Facebook. Внутренних контактов тут нет и быть не может. */
+  const LINK_LABEL = { booking: 'Booking', tripadvisor: 'TripAdvisor',
+    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site' };
+
+  function viewContacts(o) {
+    const addr = o.address ? (o.address[lang()] || o.address.ru || o.address.en) : null;
+    const links = (o.links || []).map((l) =>
+      `<a class="lnk" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">
+         ${esc(LINK_LABEL[l.k] || l.k)}<i aria-hidden="true">↗</i></a>`).join('');
+    const c = o.contacts || {};
+    if (!addr && !links && !c.phone && !c.email) return '';
+    return `<div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span>
+        <span class="label">${esc(t('dos.contact'))}</span></div>
+      <dl>
+        ${addr ? row(t('f.address'), esc(addr)) : ''}
+        ${o.address && o.address.gr ? row(t('f.addressGr'), `<span lang="el">${esc(o.address.gr)}</span>`) : ''}
+        ${row(t('f.coords'), o.location._coordDraft ? null
+          : `<span class="mono">${o.location.coords[0].toFixed(6)}, ${o.location.coords[1].toFixed(6)}</span>`)}
+        ${c.phone ? row(t('f.phone'), `<a href="tel:${esc(c.phone.replace(/\s/g, ''))}">${esc(c.phone)}</a>`) : ''}
+        ${c.email ? row(t('f.email'), `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`) : ''}
+        ${links ? row(t('f.links'), `<span class="lnks">${links}</span>`) : ''}
+      </dl>`;
+  }
+
+  /* Оценки площадок. Разные шкалы у разных площадок — приводить их к одной
+     значило бы придумать число, которого никто не выставлял. */
+  function viewRatings(o) {
+    if (!o.ratings || !o.ratings.length) return '';
+    return `<div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span>
+        <span class="label">${esc(t('dos.ratings'))}</span></div>
+      <div class="rt">` + o.ratings.map((r) => `<div class="rt__b">
+        <div class="rt__h"><b>${String(r.score).replace('.', ',')}</b>
+          <span>${esc(t('of'))} ${r.max}</span>
+          <em>${esc(r.src)} · ${r.n} ${esc(t('rt.reviews'))}</em></div>
+        <div class="rt__d">${(r.detail || []).map(([k, v]) =>
+          `<span class="rt__i"><i style="--w:${(v / r.max * 100).toFixed(0)}%"></i>
+             <u>${esc(t(k))}</u><b>${String(v).replace('.', ',')}</b></span>`).join('')}</div>
+      </div>`).join('') + `</div>`;
   }
 
   function viewDetails(o) {
@@ -3744,6 +3928,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         ${row(t('f.encumbr'), enc)}
         ${row(t('f.docs'), o.legal.docsReady ? esc(docMap[o.legal.docsReady]) : null)}
       </dl>
+      ${viewContacts(o)}
+      ${viewRatings(o)}
       <div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span><span class="label">${esc(t('dos.greece'))}</span></div>
       <dl>
         ${row(t('greece.residency'), o.greece.residencyEligible == null ? null : esc(o.greece.residencyEligible ? t('yes') : t('no')))}

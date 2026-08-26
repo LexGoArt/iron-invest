@@ -1353,3 +1353,38 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .dst--requested{ color:var(--st-progress); }
 .dst--expiring, .dst--expired{ color:var(--signal); }
 .dst--na, .dst--none{ color:var(--ink-decor); }
+
+/* ══ КАРТОЧКА · ССЫЛКИ И ОЦЕНКИ ════════════════════════════════════════════ */
+.lnks{ display:flex; flex-wrap:wrap; gap:6px; }
+.lnk{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px;
+  border:1px solid var(--hairline); border-radius:999px;
+  font-family:var(--mono); font-size:11px; color:var(--ink-900);
+  text-decoration:none; transition:border-color var(--t-1) var(--ease),
+    background var(--t-1) var(--ease); }
+.lnk:hover{ border-color:var(--bronze); background:var(--bronze-wash); }
+.lnk i{ font-style:normal; font-size:9px; color:var(--ink-decor); }
+.lnk:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:2px; }
+.mono{ font-family:var(--mono); font-size:12.5px; }
+
+/* Разные площадки — разные шкалы. Сводить их к одной было бы выдумкой,
+   поэтому у каждой свой блок со своим максимумом. */
+.rt{ display:grid; gap:var(--sp-5); margin-top:var(--sp-4); }
+.rt__b{ padding:var(--sp-4); background:var(--bg-sunken);
+  border-left:2px solid var(--bronze); }
+.rt__h{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  margin-bottom:var(--sp-4); }
+.rt__h b{ font-family:var(--serif); font-size:30px; line-height:1; color:var(--ink-900); }
+.rt__h span{ font-family:var(--mono); font-size:11px; color:var(--ink-500); }
+.rt__h em{ font-style:normal; font-family:var(--mono); font-size:11px;
+  color:var(--ink-700); margin-left:auto; }
+.rt__d{ display:grid; gap:5px; }
+.rt__i{ display:grid; grid-template-columns:1fr 42px; align-items:center;
+  gap:var(--sp-3); position:relative; padding:3px 0; }
+.rt__i u{ text-decoration:none; font-size:13px; color:var(--ink-700);
+  position:relative; z-index:1; }
+.rt__i b{ font-family:var(--mono); font-size:12px; font-weight:400;
+  text-align:right; color:var(--ink-900); position:relative; z-index:1; }
+.rt__i i{ position:absolute; left:0; bottom:0; height:2px; width:var(--w);
+  background:var(--bronze); opacity:.55; }
+
+@media (min-width:720px){ .rt{ grid-template-columns:repeat(2,1fr); } }

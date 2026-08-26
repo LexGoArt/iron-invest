@@ -589,6 +589,8 @@
             `<span class="parts__i"><b>${esc(t(x.key))}</b>
                <i>${esc(m2(x.m2))}${x.note ? ' · ' + esc(t(x.note)) : ''}</i></span>`).join('')}</span>`) : ''}
         ${(o.facilities && o.facilities.length) ? row(t('f.facilities'), o.facilities.map((f) => esc(t(f))).join(' · ')) : ''}
+        ${(o.rooms && o.rooms.amenities && o.rooms.amenities.length)
+          ? row(t('f.roomAmenities'), o.rooms.amenities.map((a) => esc(t(a))).join(' · ')) : ''}
         ${(o.nearby && o.nearby.beachMin) ? row(t('f.beach'), `${o.nearby.beachMin} ${esc(t('unit.minwalk'))}`, true) : ''}
         ${(o.nearby && o.nearby.beachM) ? row(t('f.beach'), `${o.nearby.beachM} ${esc(t('unit.m'))}`, true) : ''}
         ${(o.nearby && o.nearby.airportKm) ? row(t('f.airport'), `${String(o.nearby.airportKm).replace('.', ',')} ${esc(t('unit.km'))}`, true) : ''}
@@ -596,6 +598,48 @@
       </dl>
       ${g}
     </div>`;
+  }
+
+  /* Ссылки и контакты объекта. Всё, что здесь показывается, объект уже
+     опубликовал о себе сам — телефон и почта висят на его странице
+     в Booking и Facebook. Внутренних контактов тут нет и быть не может. */
+  const LINK_LABEL = { booking: 'Booking', tripadvisor: 'TripAdvisor',
+    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site' };
+
+  function viewContacts(o) {
+    const addr = o.address ? (o.address[lang()] || o.address.ru || o.address.en) : null;
+    const links = (o.links || []).map((l) =>
+      `<a class="lnk" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">
+         ${esc(LINK_LABEL[l.k] || l.k)}<i aria-hidden="true">↗</i></a>`).join('');
+    const c = o.contacts || {};
+    if (!addr && !links && !c.phone && !c.email) return '';
+    return `<div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span>
+        <span class="label">${esc(t('dos.contact'))}</span></div>
+      <dl>
+        ${addr ? row(t('f.address'), esc(addr)) : ''}
+        ${o.address && o.address.gr ? row(t('f.addressGr'), `<span lang="el">${esc(o.address.gr)}</span>`) : ''}
+        ${row(t('f.coords'), o.location._coordDraft ? null
+          : `<span class="mono">${o.location.coords[0].toFixed(6)}, ${o.location.coords[1].toFixed(6)}</span>`)}
+        ${c.phone ? row(t('f.phone'), `<a href="tel:${esc(c.phone.replace(/\s/g, ''))}">${esc(c.phone)}</a>`) : ''}
+        ${c.email ? row(t('f.email'), `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`) : ''}
+        ${links ? row(t('f.links'), `<span class="lnks">${links}</span>`) : ''}
+      </dl>`;
+  }
+
+  /* Оценки площадок. Разные шкалы у разных площадок — приводить их к одной
+     значило бы придумать число, которого никто не выставлял. */
+  function viewRatings(o) {
+    if (!o.ratings || !o.ratings.length) return '';
+    return `<div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span>
+        <span class="label">${esc(t('dos.ratings'))}</span></div>
+      <div class="rt">` + o.ratings.map((r) => `<div class="rt__b">
+        <div class="rt__h"><b>${String(r.score).replace('.', ',')}</b>
+          <span>${esc(t('of'))} ${r.max}</span>
+          <em>${esc(r.src)} · ${r.n} ${esc(t('rt.reviews'))}</em></div>
+        <div class="rt__d">${(r.detail || []).map(([k, v]) =>
+          `<span class="rt__i"><i style="--w:${(v / r.max * 100).toFixed(0)}%"></i>
+             <u>${esc(t(k))}</u><b>${String(v).replace('.', ',')}</b></span>`).join('')}</div>
+      </div>`).join('') + `</div>`;
   }
 
   function viewDetails(o) {
@@ -618,6 +662,8 @@
         ${row(t('f.encumbr'), enc)}
         ${row(t('f.docs'), o.legal.docsReady ? esc(docMap[o.legal.docsReady]) : null)}
       </dl>
+      ${viewContacts(o)}
+      ${viewRatings(o)}
       <div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span><span class="label">${esc(t('dos.greece'))}</span></div>
       <dl>
         ${row(t('greece.residency'), o.greece.residencyEligible == null ? null : esc(o.greece.residencyEligible ? t('yes') : t('no')))}

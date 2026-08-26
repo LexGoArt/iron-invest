@@ -48,7 +48,7 @@
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
-    tpane: 'people', tview: 'map', sort: null, sortDir: 1,
+    tpane: 'people', tview: 'map', sort: null, sortDir: 1, docsObj: null,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -331,6 +331,13 @@
     return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  const fmtShort = (iso) => {
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    const loc = { ru: 'ru-RU', pl: 'pl-PL', en: 'en-GB' }[lang()] || 'ru-RU';
+    return d.toLocaleDateString(loc, { day: '2-digit', month: '2-digit', year: '2-digit' });
+  };
+
   function renderSummary() {
     const all = Iron.list();
     const upd = $('#introUpd');
@@ -576,6 +583,11 @@
         ${(o.rooms && o.rooms.sleeps) ? row(t('f.sleeps'), o.rooms.sleeps, true) : ''}
         ${row(t('f.area'), m2(o.area_m2), true)}
         ${row(t('f.land'), m2(o.land_m2), true)}
+        ${o._energy ? row(t('f.energy'), esc(o._energy), true) : ''}
+        ${(o._parts && o._parts.length) ? row(t('f.parts'),
+          `<span class="parts">${o._parts.map((x) =>
+            `<span class="parts__i"><b>${esc(t(x.key))}</b>
+               <i>${esc(m2(x.m2))}${x.note ? ' · ' + esc(t(x.note)) : ''}</i></span>`).join('')}</span>`) : ''}
         ${(o.facilities && o.facilities.length) ? row(t('f.facilities'), o.facilities.map((f) => esc(t(f))).join(' · ')) : ''}
         ${(o.nearby && o.nearby.beachMin) ? row(t('f.beach'), `${o.nearby.beachMin} ${esc(t('unit.minwalk'))}`, true) : ''}
         ${(o.nearby && o.nearby.beachM) ? row(t('f.beach'), `${o.nearby.beachM} ${esc(t('unit.m'))}`, true) : ''}
@@ -588,7 +600,8 @@
 
   function viewDetails(o) {
     const cur = o.price.currency;
-    const comm = (o.communications || []).length ? esc(o.communications.join(' · ')) : null;
+    const comm = (o.communications || []).length
+      ? o.communications.map((c) => esc(/^[a-z]+\.[a-z]/.test(c) ? t(c) : c)).join(' · ') : null;
     const docMap = { ready: t('docs.ready'), partial: t('docs.partial'), pending: t('docs.pending') };
     const enc = o.legal.encumbrances === null ? null : (o.legal.encumbrances ? esc(o.legal.encumbrances) : esc(t('none')));
     return `<div class="spec">
@@ -601,7 +614,7 @@
       </dl>
       <div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span><span class="label">${esc(t('dos.legal'))}</span></div>
       <dl>
-        ${row(t('f.legalstatus'), o.legal.status)}
+        ${row(t('f.legalstatus'), o.legal.status ? esc(/^[a-z]+\.[a-z]/.test(o.legal.status) ? t(o.legal.status) : o.legal.status) : null)}
         ${row(t('f.encumbr'), enc)}
         ${row(t('f.docs'), o.legal.docsReady ? esc(docMap[o.legal.docsReady]) : null)}
       </dl>
@@ -1230,6 +1243,18 @@
      177 позиций рендерятся по требованию: разворачиваем стадию — строим её.
      ══════════════════════════════════════════════════════════════════════ */
   const DOCS = window.IronDocs || { stages: [], items: [] };
+  const DSTAT = window.IronDocStatus || {};
+  /* статус позиции по выбранному объекту; без выбора — общий вид справочника */
+  const statOf = (docId) => {
+    const o = state.docsObj; if (!o || !DSTAT[o]) return null;
+    return DSTAT[o][docId] || null;
+  };
+  const closedIn = (stageN) => {
+    if (!state.docsObj) return null;
+    const list = docsOfStage(stageN).filter((d) => d.blocking === 'yes');
+    const done = list.filter((d) => { const st = statOf(d.id); return st && (st.s === 'received' || st.s === 'verified'); });
+    return { done: done.length, total: list.length };
+  };
   const docsOfStage = (n) => DOCS.items.filter((d) => String(d.stage) === String(n));
 
   function renderDocs() {
@@ -1266,6 +1291,9 @@
             ${st.hasBlockFlag
               ? `<i>${blk} ${esc(t('docs.blockShort'))}${cnd ? ' · ' + cnd + ' ' + esc(t('docs.condShort')) : ''}</i>`
               : `<i class="tbd">${esc(t('docs.noFlag'))}</i>`}
+            ${(function () { const c = closedIn(st.n);
+              return c && c.total ? `<i class="stg__done${c.done === c.total ? ' is-full' : ''}">${
+                esc(t('docs.closed'))} ${c.done}/${c.total}</i>` : ''; })()}
           </span>
           <span class="team__chev" aria-hidden="true"></span>
         </button>
@@ -1275,6 +1303,17 @@
         </div>
       </div>`;
     }).join('');
+
+    const sel = $('#docsObj');
+    if (sel && !sel.dataset.ready) {
+      sel.innerHTML = `<option value="">${esc(t('docs.allObjects'))}</option>`
+        + Iron.list().map((o) => `<option value="${esc(o.id)}"${
+          Object.keys(DSTAT[o.id] || {}).length ? '' : ' data-empty="1"'
+        }>${esc(nameOf(o))}${Object.keys(DSTAT[o.id] || {}).length ? '' : ' — ' + t('docs.nothing')}</option>`).join('');
+      sel.value = state.docsObj || '';
+      sel.addEventListener('change', () => { state.docsObj = sel.value || null; renderDocs(); });
+      sel.dataset.ready = '1';
+    }
 
     box.querySelectorAll('[data-stage]').forEach((b) => b.addEventListener('click', () => {
       const panel = document.getElementById('sg-' + b.dataset.stage);
@@ -1303,11 +1342,15 @@
         : (d.blocking === 'cond'
           ? `<i class="team__st2 team__st2--tentative" aria-hidden="true"></i>${esc(d.cond || t('docs.condShort'))}`
           : `<span class="tbd">${dash}</span>`);
-      return g + `<div class="dl__row">
+      const st = statOf(d.id);
+      return g + `<div class="dl__row${st ? ' has-st' : ''}">
         <span class="dl__id">${esc(d.id)}</span>
-        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}</span>
+        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}
+          ${st && st.note ? `<u>${esc(st.note)}</u>` : ''}</span>
         <span class="dl__i" title="${esc(d.issuer || d.period || dash)}">${esc(d.issuer || d.period || dash)}</span>
-        <span class="dl__b">${mark}</span></div>`;
+        <span class="dl__b">${st
+          ? `<span class="dst dst--${esc(st.s)}">${esc(t('dst.' + st.s))}${st.at ? ` <em>${esc(fmtShort(st.at))}</em>` : ''}</span>`
+          : mark}</span></div>`;
     }).join('');
   }
 

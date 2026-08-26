@@ -71,25 +71,48 @@
 
     OBJECTS: [
       /* ── PLAKA cluster (Apokoronas) ─────────────────────────────────────── */
+      /* Данные из инвест-разбора KH371 от 04.08.2026 и топоплана ЕГСА87.
+         Здесь только то, что и так опубликовано агентом в листинге.
+         Наша аналитика по этому объекту остаётся во внутренних файлах:
+         формат публичный, значит всё написанное здесь читается кем угодно. */
       T({
         id: 'plaka-1',
         name: 'Plaka 1', nameEn: 'Plaka 1',
         op: 'prep',
         kindKey: 'k.house2',
-        location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4506, 24.2098], seaView: true, _coordDraft: true },
+        // снято с топоплана в ЕГСА87 и пересчитано в WGS84; точность ~20 м
+        location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4498, 24.2091], seaView: true, _coordDraft: true },
         floors: 2,
+        area_m2: 119,          // две готовые квартиры: 73 + 46
+        land_m2: 1000,
         condition: 'renovation',
-        tags: ['t.twofloors', 't.inprep'],
-        marketKey: 'm.plscan'
-        // TODO: powierzchnia, działka, cena — czekamy na dane
+        price: { purchase: 580000, upgrade: null, sale: null, rentMonthly: null, currency: 'EUR' },
+        facilities: ['am.garden', 'am.parking', 'am.veranda', 'am.solar', 'am.ac', 'am.kitchen', 'am.wardrobe', 'am.shutters', 'am.mosquito'],
+        communications: ['c.power', 'c.water', 'c.solar'],
+        legal: { status: 'l.vertical', encumbrances: null, docsReady: false },
+        greece: { residencyEligible: false, residencyThreshold: 800000, ota: { listed: null, incomeMonthly: null } },
+        stage: 0,
+        tags: ['t.twofloors', 't.inprep', 't.rented', 't.unfinished'],
+        marketKey: 'm.plscan',
+        _energy: 'D',
+        _parts: [
+          { key: 'p.flat1', m2: 73, note: 'st.rented' },
+          { key: 'p.flat2', m2: 46, note: 'st.rented' },
+          { key: 'p.store', m2: 50, note: null },
+          { key: 'p.unfinished', m2: 158, note: 'st.shellbox' }
+        ]
       }),
+      /* По топоплану и поэтажным планам (цоколь + 1 этаж): двухуровневый дом
+         с балконами и наружной лестницей. Площади в документах не проставлены. */
       T({
         id: 'plaka-2',
         name: 'Plaka 2', nameEn: 'Plaka 2',
         op: 'prep',
         kindKey: 'k.renov',
         location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4516, 24.2124], seaView: false, _coordDraft: true },
+        floors: 2,
         condition: 'shell',
+        stage: 0,
         tags: ['t.fullrenov', 't.potential']
         // shown publicly as a shell-condition property awaiting full renovation
       }),

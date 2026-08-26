@@ -1332,6 +1332,39 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   .dl__row--head{ display:none; }
 }
 
+/* состав объекта: одна площадь ничего не говорит, когда объект из частей */
+.parts{ display:block; }
+.parts__i{ display:flex; justify-content:space-between; gap:var(--sp-4);
+  padding:5px 0; border-bottom:1px solid var(--hairline-soft); }
+.parts__i:last-child{ border-bottom:0; padding-bottom:0; }
+.parts__i b{ font-weight:400; color:var(--ink-900); }
+.parts__i i{ font-style:normal; font-family:var(--mono); font-size:12px;
+  color:var(--ink-500); text-align:right; flex:none; }
+
+/* ══ ДОКУМЕНТЫ · ВЫБОР ОБЪЕКТА И СТАТУСЫ ═══════════════════════════════════ */
+.objsel{ display:inline-flex; align-items:center; gap:var(--sp-3);
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); }
+.objsel select{ font-family:var(--sans); font-size:14px; text-transform:none;
+  letter-spacing:0; color:var(--ink-900); background:var(--bg-page);
+  border:1px solid var(--hairline); border-radius:var(--r-sm);
+  padding:7px var(--sp-3); cursor:pointer; }
+.objsel select:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:1px; }
+
+.stg__done{ display:block; margin-top:3px; font-style:normal; color:var(--ink-500); }
+.stg__done.is-full{ color:var(--st-ready); }
+
+.dl__row.has-st{ background:var(--bg-sunken); }
+.dl__d u{ display:block; margin-top:4px; text-decoration:none; font-size:12px;
+  line-height:1.45; color:var(--ink-500); }
+.dst{ display:inline-flex; align-items:baseline; gap:5px; white-space:nowrap; }
+.dst em{ font-style:normal; font-size:10px; color:var(--ink-decor); }
+.dst--received{ color:var(--st-ready); }
+.dst--verified{ color:var(--st-ready); font-weight:600; }
+.dst--requested{ color:var(--st-progress); }
+.dst--expiring, .dst--expired{ color:var(--signal); }
+.dst--na, .dst--none{ color:var(--ink-decor); }
+
 </style>
 </head>
 <body>
@@ -1468,6 +1501,10 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
     <div class="team__head">
       <h2 data-i18n="docs.title">Документы по объекту</h2>
       <p data-i18n="docs.lead">Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.</p>
+    </div>
+    <div class="tbar">
+      <label class="objsel"><span data-i18n="docs.byObject">По объекту</span>
+        <select id="docsObj"><!-- app.js --></select></label>
     </div>
     <div class="cov" id="docsKey"><!-- app.js --></div>
     <div class="stages" id="stages"><!-- app.js --></div>
@@ -1625,25 +1662,48 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
     OBJECTS: [
       /* ── PLAKA cluster (Apokoronas) ─────────────────────────────────────── */
+      /* Данные из инвест-разбора KH371 от 04.08.2026 и топоплана ЕГСА87.
+         Здесь только то, что и так опубликовано агентом в листинге.
+         Наша аналитика по этому объекту остаётся во внутренних файлах:
+         формат публичный, значит всё написанное здесь читается кем угодно. */
       T({
         id: 'plaka-1',
         name: 'Plaka 1', nameEn: 'Plaka 1',
         op: 'prep',
         kindKey: 'k.house2',
-        location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4506, 24.2098], seaView: true, _coordDraft: true },
+        // снято с топоплана в ЕГСА87 и пересчитано в WGS84; точность ~20 м
+        location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4498, 24.2091], seaView: true, _coordDraft: true },
         floors: 2,
+        area_m2: 119,          // две готовые квартиры: 73 + 46
+        land_m2: 1000,
         condition: 'renovation',
-        tags: ['t.twofloors', 't.inprep'],
-        marketKey: 'm.plscan'
-        // TODO: powierzchnia, działka, cena — czekamy na dane
+        price: { purchase: 580000, upgrade: null, sale: null, rentMonthly: null, currency: 'EUR' },
+        facilities: ['am.garden', 'am.parking', 'am.veranda', 'am.solar', 'am.ac', 'am.kitchen', 'am.wardrobe', 'am.shutters', 'am.mosquito'],
+        communications: ['c.power', 'c.water', 'c.solar'],
+        legal: { status: 'l.vertical', encumbrances: null, docsReady: false },
+        greece: { residencyEligible: false, residencyThreshold: 800000, ota: { listed: null, incomeMonthly: null } },
+        stage: 0,
+        tags: ['t.twofloors', 't.inprep', 't.rented', 't.unfinished'],
+        marketKey: 'm.plscan',
+        _energy: 'D',
+        _parts: [
+          { key: 'p.flat1', m2: 73, note: 'st.rented' },
+          { key: 'p.flat2', m2: 46, note: 'st.rented' },
+          { key: 'p.store', m2: 50, note: null },
+          { key: 'p.unfinished', m2: 158, note: 'st.shellbox' }
+        ]
       }),
+      /* По топоплану и поэтажным планам (цоколь + 1 этаж): двухуровневый дом
+         с балконами и наружной лестницей. Площади в документах не проставлены. */
       T({
         id: 'plaka-2',
         name: 'Plaka 2', nameEn: 'Plaka 2',
         op: 'prep',
         kindKey: 'k.renov',
         location: { area: 'Plaka, Apokoronas', areaEn: 'Plaka, Apokoronas', areaRu: 'Плака, Апокоронас', coords: [35.4516, 24.2124], seaView: false, _coordDraft: true },
+        floors: 2,
         condition: 'shell',
+        stage: 0,
         tags: ['t.fullrenov', 't.potential']
         // shown publicly as a shell-condition property awaiting full renovation
       }),
@@ -2176,6 +2236,44 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 </script>
 <script>
 /* ============================================================================
+   IRON INVEST — фактические статусы документов по объектам.
+
+   Заполняется только по тому, что физически есть в архиве. Пустой объект
+   означает «по объекту ничего не собрано» — это тоже факт, и он полезнее
+   отсутствия записи.
+
+   Статусы: none | requested | received | verified | expiring | expired | na
+   «received» — файл в архиве. «verified» ставит только юрист или инженер,
+   поэтому сам по себе появиться не может.
+
+   Даты — по дате файла в архиве.
+   ============================================================================ */
+(function () {
+  const D = (s, at, note) => ({ s: s, at: at || null, note: note || null });
+
+  window.IronDocStatus = {
+    'plaka-1': {
+      '0.4':  D('received', '2026-08-04', 'Топоплан с координатами ЕГСА87 и вертикальными долями Ε3, Ε41, Ε42'),
+      '0.5':  D('received', '2026-08-04', 'Видеофиксация объекта, шесть роликов'),
+      '0.7':  D('received', '2026-08-04', 'Инвест-разбор KH371: цена, площади, зона, ограничения'),
+      '0.8':  D('received', '2026-08-04', 'Предварительный расчёт вошёл в тот же разбор'),
+      '1.9':  D('received', '2026-08-04', 'Тот же топоплан: ЕГСА87, границы, ΤΜΗΜΑ ΑΑ 49,30 м²'),
+      '1.18': D('requested', '2026-08-04', 'Есть поэтажный план цоколя; самого разрешения на строительство нет')
+    },
+    'plaka-2': {
+      '0.4':  D('received', '2026-08-04', 'Топоплан с границами участка и контуром дома'),
+      '0.5':  D('received', '2026-08-04', 'Видеофиксация объекта, два ролика'),
+      '1.9':  D('received', '2026-08-04', 'Тот же топоплан'),
+      '1.18': D('requested', '2026-08-04', 'Есть планы цоколя и первого этажа; разрешения на строительство нет')
+    },
+    'plaka-3-taverna': {},
+    'plaka-4': {}
+  };
+})();
+
+</script>
+<script>
+/* ============================================================================
    IRON INVEST — реестр документов по объекту. Стадийная модель.
 
    Источник: greece-object-documents-checklist.md (ПЛ, 26.08.2026).
@@ -2515,6 +2613,17 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.',
       'intro.upd': 'Обновлено:',
       'raci.title': 'Как читать таблицу',
+      'am.garden': 'Сад', 'am.parking': 'Парковка', 'am.veranda': 'Крытые веранды',
+      'am.solar': 'Солнечный бойлер', 'am.ac': 'Кондиционеры', 'am.kitchen': 'Кухни',
+      'am.wardrobe': 'Встроенные шкафы', 'am.shutters': 'Электрические ставни',
+      'am.mosquito': 'Москитные сетки',
+      'c.power': 'Электричество', 'c.water': 'Вода', 'c.solar': 'Солнечный водонагрев',
+      'l.vertical': 'Вертикальный раздел (κάθετη ιδιοκτησία)',
+      't.rented': 'Сдаётся', 't.unfinished': 'Есть недострой',
+      'p.flat1': 'Квартира 1, первый этаж', 'p.flat2': 'Квартира 2, первый этаж',
+      'p.store': 'Склад', 'p.unfinished': 'Недострой, верхний этаж',
+      'st.rented': 'готова, сдаётся', 'st.shellbox': 'коробка без отделки',
+      'f.parts': 'Состав объекта', 'f.energy': 'Энергокласс',
       'nav.docs': 'Документы',
       'docs.title': 'Документы по объекту',
       'docs.lead': 'Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.',
@@ -2522,6 +2631,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'docs.stages': 'стадий', 'docs.stage': 'Стадия', 'docs.cross': 'Сквозные',
       'docs.docsN': 'док.', 'docs.blockShort': 'блок', 'docs.condShort': 'условно',
       'docs.noFlag': 'признак не задан',
+      'docs.byObject': 'По объекту', 'docs.allObjects': 'Все объекты — справочник',
+      'docs.nothing': 'ничего не собрано', 'docs.closed': 'закрыто',
+      'dst.none': 'не запрошен', 'dst.requested': 'запрошен', 'dst.received': 'получен',
+      'dst.verified': 'проверен', 'dst.expiring': 'истекает', 'dst.expired': 'просрочен',
+      'dst.na': 'неприменимо',
       'docs.thId': '№', 'docs.thDoc': 'Документ', 'docs.thIssuer': 'Кто выдаёт', 'docs.thBlock': 'Блокирует',
       'def.condT': 'Состояние объекта', 'def.condD': 'Физическое состояние стен: его видно при осмотре. Не означает, что объект можно выставлять.',
       'def.pubT': 'Готов к публикации', 'def.pubD': 'Закрыты все четыре условия: документы, цена, стадия процесса и ответственный. Считается автоматически.',
@@ -2664,6 +2778,17 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Portal pokazuje dane z rejestru. Zmiany wprowadza się w rejestrze — portal aktualizuje się w ślad za nim.',
       'intro.upd': 'Aktualizacja:',
       'raci.title': 'Jak czytać tabelę',
+      'am.garden': 'Ogród', 'am.parking': 'Parking', 'am.veranda': 'Zadaszone werandy',
+      'am.solar': 'Bojler solarny', 'am.ac': 'Klimatyzacja', 'am.kitchen': 'Kuchnie',
+      'am.wardrobe': 'Szafy wnękowe', 'am.shutters': 'Rolety elektryczne',
+      'am.mosquito': 'Moskitiery',
+      'c.power': 'Prąd', 'c.water': 'Woda', 'c.solar': 'Solarne podgrzewanie wody',
+      'l.vertical': 'Podział pionowy (κάθετη ιδιοκτησία)',
+      't.rented': 'Wynajmowane', 't.unfinished': 'Część w stanie surowym',
+      'p.flat1': 'Mieszkanie 1, parter', 'p.flat2': 'Mieszkanie 2, parter',
+      'p.store': 'Magazyn', 'p.unfinished': 'Stan surowy, górna kondygnacja',
+      'st.rented': 'gotowe, wynajmowane', 'st.shellbox': 'stan surowy',
+      'f.parts': 'Skład obiektu', 'f.energy': 'Klasa energetyczna',
       'nav.docs': 'Dokumenty',
       'docs.title': 'Dokumenty obiektu',
       'docs.lead': 'Model etapowy: obiekt nie przechodzi do kolejnego etapu, dopóki nie zamknięto wszystkich dokumentów blokujących z poprzedniego.',
@@ -2671,6 +2796,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'docs.stages': 'etapów', 'docs.stage': 'Etap', 'docs.cross': 'Przekrojowe',
       'docs.docsN': 'dok.', 'docs.blockShort': 'blok', 'docs.condShort': 'warunkowo',
       'docs.noFlag': 'brak oznaczenia',
+      'docs.byObject': 'Obiekt', 'docs.allObjects': 'Wszystkie obiekty — wykaz',
+      'docs.nothing': 'nic nie zebrano', 'docs.closed': 'zamknięto',
+      'dst.none': 'nie zamówiony', 'dst.requested': 'zamówiony', 'dst.received': 'otrzymany',
+      'dst.verified': 'zweryfikowany', 'dst.expiring': 'wygasa', 'dst.expired': 'przeterminowany',
+      'dst.na': 'nie dotyczy',
       'docs.thId': 'Nr', 'docs.thDoc': 'Dokument', 'docs.thIssuer': 'Wydaje', 'docs.thBlock': 'Blokuje',
       'def.condT': 'Stan obiektu', 'def.condD': 'Stan fizyczny budynku, widoczny podczas oględzin. Nie oznacza, że obiekt można wystawić.',
       'def.pubT': 'Gotowy do publikacji', 'def.pubD': 'Spełnione wszystkie cztery warunki: dokumenty, cena, etap procesu i osoba odpowiedzialna. Liczone automatycznie.',
@@ -2813,6 +2943,17 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'This portal displays the registry. Changes are made in the registry and appear here afterwards.',
       'intro.upd': 'Updated:',
       'raci.title': 'How to read this table',
+      'am.garden': 'Garden', 'am.parking': 'Parking', 'am.veranda': 'Covered verandas',
+      'am.solar': 'Solar water heater', 'am.ac': 'Air conditioning', 'am.kitchen': 'Kitchens',
+      'am.wardrobe': 'Fitted wardrobes', 'am.shutters': 'Electric shutters',
+      'am.mosquito': 'Insect screens',
+      'c.power': 'Electricity', 'c.water': 'Water', 'c.solar': 'Solar water heating',
+      'l.vertical': 'Vertical division (κάθετη ιδιοκτησία)',
+      't.rented': 'Let', 't.unfinished': 'Unfinished part',
+      'p.flat1': 'Flat 1, ground floor', 'p.flat2': 'Flat 2, ground floor',
+      'p.store': 'Storage', 'p.unfinished': 'Unfinished upper floor',
+      'st.rented': 'ready, let', 'st.shellbox': 'shell, unfinished',
+      'f.parts': 'Property breakdown', 'f.energy': 'Energy class',
       'nav.docs': 'Documents',
       'docs.title': 'Property documents',
       'docs.lead': 'A staged model: a property does not advance until every blocking document of the previous stage is closed.',
@@ -2820,6 +2961,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'docs.stages': 'stages', 'docs.stage': 'Stage', 'docs.cross': 'Ongoing',
       'docs.docsN': 'docs', 'docs.blockShort': 'blocks', 'docs.condShort': 'conditional',
       'docs.noFlag': 'not flagged',
+      'docs.byObject': 'Property', 'docs.allObjects': 'All properties — reference',
+      'docs.nothing': 'nothing collected', 'docs.closed': 'closed',
+      'dst.none': 'not requested', 'dst.requested': 'requested', 'dst.received': 'received',
+      'dst.verified': 'verified', 'dst.expiring': 'expiring', 'dst.expired': 'expired',
+      'dst.na': 'not applicable',
       'docs.thId': 'No', 'docs.thDoc': 'Document', 'docs.thIssuer': 'Issued by', 'docs.thBlock': 'Blocks',
       'def.condT': 'Property condition', 'def.condD': 'The physical state of the building, visible on inspection. It does not mean the property can be listed.',
       'def.pubT': 'Ready to publish', 'def.pubD': 'All four conditions are met: documents, price, process stage and an assigned owner. Derived automatically.',
@@ -3012,7 +3158,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   const no = (i) => String(i + 1).padStart(2, '0');
 
   const state = { cat: 'all', selected: null, view: 'table', area: null, open: false,
-    tpane: 'people', tview: 'map', sort: null, sortDir: 1,
+    tpane: 'people', tview: 'map', sort: null, sortDir: 1, docsObj: null,
     f: { loc: [], use: [], cond: [], op: [], m2: [], land: [], sea: false },
     q: '', quick: null, mode: 'objects' };
   const Iron = { state,
@@ -3295,6 +3441,13 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  const fmtShort = (iso) => {
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    const loc = { ru: 'ru-RU', pl: 'pl-PL', en: 'en-GB' }[lang()] || 'ru-RU';
+    return d.toLocaleDateString(loc, { day: '2-digit', month: '2-digit', year: '2-digit' });
+  };
+
   function renderSummary() {
     const all = Iron.list();
     const upd = $('#introUpd');
@@ -3540,6 +3693,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         ${(o.rooms && o.rooms.sleeps) ? row(t('f.sleeps'), o.rooms.sleeps, true) : ''}
         ${row(t('f.area'), m2(o.area_m2), true)}
         ${row(t('f.land'), m2(o.land_m2), true)}
+        ${o._energy ? row(t('f.energy'), esc(o._energy), true) : ''}
+        ${(o._parts && o._parts.length) ? row(t('f.parts'),
+          `<span class="parts">${o._parts.map((x) =>
+            `<span class="parts__i"><b>${esc(t(x.key))}</b>
+               <i>${esc(m2(x.m2))}${x.note ? ' · ' + esc(t(x.note)) : ''}</i></span>`).join('')}</span>`) : ''}
         ${(o.facilities && o.facilities.length) ? row(t('f.facilities'), o.facilities.map((f) => esc(t(f))).join(' · ')) : ''}
         ${(o.nearby && o.nearby.beachMin) ? row(t('f.beach'), `${o.nearby.beachMin} ${esc(t('unit.minwalk'))}`, true) : ''}
         ${(o.nearby && o.nearby.beachM) ? row(t('f.beach'), `${o.nearby.beachM} ${esc(t('unit.m'))}`, true) : ''}
@@ -3552,7 +3710,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
   function viewDetails(o) {
     const cur = o.price.currency;
-    const comm = (o.communications || []).length ? esc(o.communications.join(' · ')) : null;
+    const comm = (o.communications || []).length
+      ? o.communications.map((c) => esc(/^[a-z]+\.[a-z]/.test(c) ? t(c) : c)).join(' · ') : null;
     const docMap = { ready: t('docs.ready'), partial: t('docs.partial'), pending: t('docs.pending') };
     const enc = o.legal.encumbrances === null ? null : (o.legal.encumbrances ? esc(o.legal.encumbrances) : esc(t('none')));
     return `<div class="spec">
@@ -3565,7 +3724,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       </dl>
       <div class="spec__h" style="margin-top:var(--sp-7)"><span class="rule" aria-hidden="true"></span><span class="label">${esc(t('dos.legal'))}</span></div>
       <dl>
-        ${row(t('f.legalstatus'), o.legal.status)}
+        ${row(t('f.legalstatus'), o.legal.status ? esc(/^[a-z]+\.[a-z]/.test(o.legal.status) ? t(o.legal.status) : o.legal.status) : null)}
         ${row(t('f.encumbr'), enc)}
         ${row(t('f.docs'), o.legal.docsReady ? esc(docMap[o.legal.docsReady]) : null)}
       </dl>
@@ -4194,6 +4353,18 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
      177 позиций рендерятся по требованию: разворачиваем стадию — строим её.
      ══════════════════════════════════════════════════════════════════════ */
   const DOCS = window.IronDocs || { stages: [], items: [] };
+  const DSTAT = window.IronDocStatus || {};
+  /* статус позиции по выбранному объекту; без выбора — общий вид справочника */
+  const statOf = (docId) => {
+    const o = state.docsObj; if (!o || !DSTAT[o]) return null;
+    return DSTAT[o][docId] || null;
+  };
+  const closedIn = (stageN) => {
+    if (!state.docsObj) return null;
+    const list = docsOfStage(stageN).filter((d) => d.blocking === 'yes');
+    const done = list.filter((d) => { const st = statOf(d.id); return st && (st.s === 'received' || st.s === 'verified'); });
+    return { done: done.length, total: list.length };
+  };
   const docsOfStage = (n) => DOCS.items.filter((d) => String(d.stage) === String(n));
 
   function renderDocs() {
@@ -4230,6 +4401,9 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
             ${st.hasBlockFlag
               ? `<i>${blk} ${esc(t('docs.blockShort'))}${cnd ? ' · ' + cnd + ' ' + esc(t('docs.condShort')) : ''}</i>`
               : `<i class="tbd">${esc(t('docs.noFlag'))}</i>`}
+            ${(function () { const c = closedIn(st.n);
+              return c && c.total ? `<i class="stg__done${c.done === c.total ? ' is-full' : ''}">${
+                esc(t('docs.closed'))} ${c.done}/${c.total}</i>` : ''; })()}
           </span>
           <span class="team__chev" aria-hidden="true"></span>
         </button>
@@ -4239,6 +4413,17 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         </div>
       </div>`;
     }).join('');
+
+    const sel = $('#docsObj');
+    if (sel && !sel.dataset.ready) {
+      sel.innerHTML = `<option value="">${esc(t('docs.allObjects'))}</option>`
+        + Iron.list().map((o) => `<option value="${esc(o.id)}"${
+          Object.keys(DSTAT[o.id] || {}).length ? '' : ' data-empty="1"'
+        }>${esc(nameOf(o))}${Object.keys(DSTAT[o.id] || {}).length ? '' : ' — ' + t('docs.nothing')}</option>`).join('');
+      sel.value = state.docsObj || '';
+      sel.addEventListener('change', () => { state.docsObj = sel.value || null; renderDocs(); });
+      sel.dataset.ready = '1';
+    }
 
     box.querySelectorAll('[data-stage]').forEach((b) => b.addEventListener('click', () => {
       const panel = document.getElementById('sg-' + b.dataset.stage);
@@ -4267,11 +4452,15 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         : (d.blocking === 'cond'
           ? `<i class="team__st2 team__st2--tentative" aria-hidden="true"></i>${esc(d.cond || t('docs.condShort'))}`
           : `<span class="tbd">${dash}</span>`);
-      return g + `<div class="dl__row">
+      const st = statOf(d.id);
+      return g + `<div class="dl__row${st ? ' has-st' : ''}">
         <span class="dl__id">${esc(d.id)}</span>
-        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}</span>
+        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}
+          ${st && st.note ? `<u>${esc(st.note)}</u>` : ''}</span>
         <span class="dl__i" title="${esc(d.issuer || d.period || dash)}">${esc(d.issuer || d.period || dash)}</span>
-        <span class="dl__b">${mark}</span></div>`;
+        <span class="dl__b">${st
+          ? `<span class="dst dst--${esc(st.s)}">${esc(t('dst.' + st.s))}${st.at ? ` <em>${esc(fmtShort(st.at))}</em>` : ''}</span>`
+          : mark}</span></div>`;
     }).join('');
   }
 

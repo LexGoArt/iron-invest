@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1787730574">
+<link rel="stylesheet" href="styles.css?v=1787731636">
 </head>
 <body>
 <svg class="logo-defs" aria-hidden="true" focusable="false">
@@ -146,6 +146,10 @@
       <h2 data-i18n="docs.title">Документы по объекту</h2>
       <p data-i18n="docs.lead">Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.</p>
     </div>
+    <div class="tbar">
+      <label class="objsel"><span data-i18n="docs.byObject">По объекту</span>
+        <select id="docsObj"><!-- app.js --></select></label>
+    </div>
     <div class="cov" id="docsKey"><!-- app.js --></div>
     <div class="stages" id="stages"><!-- app.js --></div>
   </div>
@@ -228,13 +232,14 @@
 <div class="scrim" id="scrim"></div>
 <aside class="dossier" id="dossier" role="dialog" aria-modal="true" aria-labelledby="dosName" aria-hidden="true"></aside>
 
-<script src="data.js?v=1787730574"></script>
-<script src="geo.js?v=1787730574"></script>
-<script src="team.js?v=1787730574"></script>
-<script src="docs.js?v=1787730574"></script>
-<script src="store.js?v=1787730574"></script>
-<script src="i18n.js?v=1787730574"></script>
-<script src="app.js?v=1787730574"></script>
-<script src="figure.js?v=1787730574"></script>
+<script src="data.js?v=1787731636"></script>
+<script src="geo.js?v=1787731636"></script>
+<script src="team.js?v=1787731636"></script>
+<script src="docstatus.js?v=1787731636"></script>
+<script src="docs.js?v=1787731636"></script>
+<script src="store.js?v=1787731636"></script>
+<script src="i18n.js?v=1787731636"></script>
+<script src="app.js?v=1787731636"></script>
+<script src="figure.js?v=1787731636"></script>
 </body>
 </html>

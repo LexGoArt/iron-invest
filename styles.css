@@ -1320,3 +1320,36 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
   .dl__row > .dl__b{ grid-column:2; }
   .dl__row--head{ display:none; }
 }
+
+/* состав объекта: одна площадь ничего не говорит, когда объект из частей */
+.parts{ display:block; }
+.parts__i{ display:flex; justify-content:space-between; gap:var(--sp-4);
+  padding:5px 0; border-bottom:1px solid var(--hairline-soft); }
+.parts__i:last-child{ border-bottom:0; padding-bottom:0; }
+.parts__i b{ font-weight:400; color:var(--ink-900); }
+.parts__i i{ font-style:normal; font-family:var(--mono); font-size:12px;
+  color:var(--ink-500); text-align:right; flex:none; }
+
+/* ══ ДОКУМЕНТЫ · ВЫБОР ОБЪЕКТА И СТАТУСЫ ═══════════════════════════════════ */
+.objsel{ display:inline-flex; align-items:center; gap:var(--sp-3);
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); }
+.objsel select{ font-family:var(--sans); font-size:14px; text-transform:none;
+  letter-spacing:0; color:var(--ink-900); background:var(--bg-page);
+  border:1px solid var(--hairline); border-radius:var(--r-sm);
+  padding:7px var(--sp-3); cursor:pointer; }
+.objsel select:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:1px; }
+
+.stg__done{ display:block; margin-top:3px; font-style:normal; color:var(--ink-500); }
+.stg__done.is-full{ color:var(--st-ready); }
+
+.dl__row.has-st{ background:var(--bg-sunken); }
+.dl__d u{ display:block; margin-top:4px; text-decoration:none; font-size:12px;
+  line-height:1.45; color:var(--ink-500); }
+.dst{ display:inline-flex; align-items:baseline; gap:5px; white-space:nowrap; }
+.dst em{ font-style:normal; font-size:10px; color:var(--ink-decor); }
+.dst--received{ color:var(--st-ready); }
+.dst--verified{ color:var(--st-ready); font-weight:600; }
+.dst--requested{ color:var(--st-progress); }
+.dst--expiring, .dst--expired{ color:var(--signal); }
+.dst--na, .dst--none{ color:var(--ink-decor); }

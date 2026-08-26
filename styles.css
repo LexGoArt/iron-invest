@@ -1253,3 +1253,70 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .defs__in p:last-child{ margin-bottom:0; }
 .defs__in b{ color:var(--ink-900); font-weight:600; }
 
+
+/* ══ ДОКУМЕНТЫ · ЛЕСТНИЦА СТАДИЙ ═══════════════════════════════════════════
+   Тринадцать стадий и сто семьдесят семь позиций. Горизонтальный рельс
+   такого не выдерживает: лестница идёт вниз, содержимое стадии строится
+   при первом раскрытии. */
+.stages{ margin-top:var(--sp-6); }
+.stg + .stg{ margin-top:1px; }
+.stg__b{ display:grid; grid-template-columns:96px minmax(200px,1fr) 190px 24px;
+  align-items:start; gap:var(--sp-4); width:100%; text-align:left;
+  padding:var(--sp-4) var(--sp-2); background:none; border:0;
+  border-bottom:1px solid var(--hairline); cursor:pointer;
+  transition:background var(--t-1) var(--ease); }
+.stg__b:hover{ background:var(--bg-surface); }
+.stg__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+.stg__b[aria-expanded="true"]{ border-bottom-color:transparent; }
+.stg__n{ font-family:var(--mono); font-size:10.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--bronze-text); padding-top:4px; }
+.stg__t{ font-family:var(--serif); font-size:17px; line-height:1.3; color:var(--ink-900);
+  min-width:0; }
+.stg__t em{ display:block; margin-top:5px; font-family:var(--sans); font-style:normal;
+  font-size:13px; line-height:1.5; color:var(--ink-500); }
+.stg__m{ font-family:var(--mono); font-size:11px; color:var(--ink-700);
+  text-align:right; padding-top:4px; }
+.stg__m b{ color:var(--ink-900); font-weight:400; font-size:13px; }
+.stg__m i{ display:block; margin-top:4px; font-style:normal; color:var(--bronze-text); }
+.stg__m i.tbd{ color:var(--ink-decor); }
+.stg__b .team__chev{ margin-top:8px; }
+/* .fpanel__in — это сетка групп фильтров в две-три колонки. Список документов
+   в неё попадать не должен: он сам таблица и раскладывается по своим правилам. */
+.stg__in{ display:block !important; padding-block:var(--sp-5); }
+
+/* список документов внутри стадии */
+.dl__grp{ margin:var(--sp-5) 0 var(--sp-3); font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500); }
+.dl__grp:first-child{ margin-top:0; }
+.dl__row{ display:grid; grid-template-columns:46px minmax(180px,1fr) minmax(120px,.6fr) 108px;
+  gap:var(--sp-3); align-items:start; padding:9px 0;
+  border-bottom:1px solid var(--hairline-soft); font-size:13.5px; color:var(--ink-700); }
+.dl__row--head{ border-bottom:1px solid var(--ink-900); padding-bottom:7px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); }
+.dl__id{ font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.dl__d{ min-width:0; color:var(--ink-900); line-height:1.45; }
+.dl__d em{ display:block; margin-top:3px; font-style:normal; font-size:12px;
+  color:var(--ink-500); line-height:1.4; }
+.dl__i{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:12.5px; color:var(--ink-500); }
+.dl__b{ font-family:var(--mono); font-size:11px; display:flex; align-items:center;
+  color:var(--ink-700); }
+.dl__b .tbd{ color:var(--ink-decor); }
+
+@media (max-width:900px){
+  .stg__b{ grid-template-columns:78px 1fr 24px; }
+  .stg__m{ grid-column:2; grid-row:2; text-align:left; padding-top:0; }
+  .dl__row{ grid-template-columns:40px 1fr 96px; }
+  .dl__row > .dl__i{ display:none; }
+  .dl__row--head > span:nth-child(3){ display:none; }
+}
+@media (max-width:560px){
+  .stg__b{ grid-template-columns:1fr 24px; }
+  .stg__n{ grid-column:1; padding-top:0; }
+  .stg__t{ grid-column:1; }
+  .stg__m{ grid-column:1; grid-row:auto; }
+  .dl__row{ grid-template-columns:38px 1fr; }
+  .dl__row > .dl__b{ grid-column:2; }
+  .dl__row--head{ display:none; }
+}

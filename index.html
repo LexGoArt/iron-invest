@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="styles.css?v=1787728808">
+<link rel="stylesheet" href="styles.css?v=1787729721">
 </head>
 <body>
 <svg class="logo-defs" aria-hidden="true" focusable="false">
@@ -36,6 +36,7 @@
       <button type="button" class="nav__t" data-mode="objects" aria-pressed="true" data-i18n="nav.collection">Объекты</button>
       <button type="button" class="nav__t" data-mode="map" aria-pressed="false" data-i18n="nav.map">Карта</button>
       <button type="button" class="nav__t" data-mode="team" aria-pressed="false" data-i18n="nav.team">Команда</button>
+      <button type="button" class="nav__t" data-mode="docs" aria-pressed="false" data-i18n="nav.docs">Документы</button>
     </nav>
     <label class="search">
       <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
@@ -68,6 +69,7 @@
     <a href="#kolekcja" data-i18n="nav.collection">Объекты</a>
     <a href="#plate-sec" data-i18n="nav.map">Карта</a>
     <a href="#team-sec" data-i18n="nav.team">Команда</a>
+    <a href="#docs-sec" data-i18n="nav.docs">Документы</a>
     <a href="#kontakt" data-i18n="nav.enquire">Запрос</a>
   </nav>
   <div class="mnav__lang lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
@@ -138,6 +140,17 @@
 
 
 <!-- ═══ TEAM — функции, ответственность, права на решения ══════════════ -->
+<section class="sec" id="docs-sec" hidden>
+  <div class="wrap">
+    <div class="team__head">
+      <h2 data-i18n="docs.title">Документы по объекту</h2>
+      <p data-i18n="docs.lead">Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.</p>
+    </div>
+    <div class="cov" id="docsKey"><!-- app.js --></div>
+    <div class="stages" id="stages"><!-- app.js --></div>
+  </div>
+</section>
+
 <section class="sec" id="team-sec" hidden>
   <div class="wrap">
     <div class="team__head">
@@ -215,12 +228,13 @@
 <div class="scrim" id="scrim"></div>
 <aside class="dossier" id="dossier" role="dialog" aria-modal="true" aria-labelledby="dosName" aria-hidden="true"></aside>
 
-<script src="data.js?v=1787728808"></script>
-<script src="geo.js?v=1787728808"></script>
-<script src="team.js?v=1787728808"></script>
-<script src="store.js?v=1787728808"></script>
-<script src="i18n.js?v=1787728808"></script>
-<script src="app.js?v=1787728808"></script>
-<script src="figure.js?v=1787728808"></script>
+<script src="data.js?v=1787729721"></script>
+<script src="geo.js?v=1787729721"></script>
+<script src="team.js?v=1787729721"></script>
+<script src="docs.js?v=1787729721"></script>
+<script src="store.js?v=1787729721"></script>
+<script src="i18n.js?v=1787729721"></script>
+<script src="app.js?v=1787729721"></script>
+<script src="figure.js?v=1787729721"></script>
 </body>
 </html>

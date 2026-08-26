@@ -837,8 +837,10 @@
     if (plate) plate.hidden = m !== 'map';
     if (objects) objects.hidden = m !== 'objects';
     if (sum) sum.hidden = m !== 'objects';
-    if (intro) intro.hidden = m === 'team';
+    if (intro) intro.hidden = m === 'team' || m === 'docs';
     if (team) team.hidden = m !== 'team';
+    const docs = $('#docs-sec');
+    if (docs) docs.hidden = m !== 'docs';
     document.querySelectorAll('.nav__t').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
     if (m === 'map' && window.IronPlate) window.IronPlate.render();
@@ -1221,9 +1223,97 @@
   new MutationObserver(syncInert).observe(document.body,
     { subtree: true, attributes: true, attributeFilter: ['data-open'] });
 
+  /* ══ ДОКУМЕНТЫ ПО ОБЪЕКТУ ═══════════════════════════════════════════════
+     Стадийная модель из чеклиста ПЛ. Раньше портал знал про «стадию» только
+     то, что её нет; теперь стадия — это позиция в понятной лестнице, а
+     готовность — закрытые блокирующие документы, а не ощущение.
+     177 позиций рендерятся по требованию: разворачиваем стадию — строим её.
+     ══════════════════════════════════════════════════════════════════════ */
+  const DOCS = window.IronDocs || { stages: [], items: [] };
+  const docsOfStage = (n) => DOCS.items.filter((d) => String(d.stage) === String(n));
+
+  function renderDocs() {
+    const box = $('#stages'); if (!box) return;
+
+    const key = $('#docsKey');
+    if (key) {
+      const total = DOCS.items.length;
+      const blk = DOCS.items.filter((d) => d.blocking === 'yes').length;
+      const cnd = DOCS.items.filter((d) => d.blocking === 'cond').length;
+      key.innerHTML = `<div class="cov__legend">
+        <span class="cov__lg">${esc(t('docs.total'))} <b>${total}</b></span>
+        <span class="cov__lg"><i class="cov__sw cov__sw--fixed" aria-hidden="true"></i>
+          ${esc(t('docs.blocking'))} <b>${blk}</b></span>
+        <span class="cov__lg"><i class="cov__sw cov__sw--tentative" aria-hidden="true"></i>
+          ${esc(t('docs.cond'))} <b>${cnd}</b></span>
+        <span class="cov__lg">${esc(t('docs.stages'))} <b>${DOCS.stages.length}</b></span>
+      </div>`;
+    }
+
+    box.innerHTML = DOCS.stages.map((st) => {
+      const list = docsOfStage(st.n);
+      const blk = list.filter((d) => d.blocking === 'yes').length;
+      const cnd = list.filter((d) => d.blocking === 'cond').length;
+      const label = st.n === 'S' ? t('docs.cross') : t('docs.stage') + ' ' + st.n;
+      return `<div class="stg">
+        <button class="stg__b" type="button" aria-expanded="false" data-stage="${esc(String(st.n))}"
+            aria-controls="sg-${esc(String(st.n))}">
+          <span class="stg__n">${esc(label)}</span>
+          <span class="stg__t">${esc(st.title)}
+            ${st.goal ? `<em>${esc(st.goal)}</em>` : ''}</span>
+          <span class="stg__m">
+            <b>${list.length}</b> ${esc(t('docs.docsN'))}
+            ${st.hasBlockFlag
+              ? `<i>${blk} ${esc(t('docs.blockShort'))}${cnd ? ' · ' + cnd + ' ' + esc(t('docs.condShort')) : ''}</i>`
+              : `<i class="tbd">${esc(t('docs.noFlag'))}</i>`}
+          </span>
+          <span class="team__chev" aria-hidden="true"></span>
+        </button>
+        <div class="fpanel" data-open="false" id="sg-${esc(String(st.n))}">
+          <div class="fpanel__clip"><div class="fpanel__in stg__in"
+            data-fill="${esc(String(st.n))}"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    box.querySelectorAll('[data-stage]').forEach((b) => b.addEventListener('click', () => {
+      const panel = document.getElementById('sg-' + b.dataset.stage);
+      const open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(open));
+      if (!panel) return;
+      const host = panel.querySelector('[data-fill]');
+      if (open && !host.dataset.done) { host.innerHTML = stageTable(b.dataset.stage); host.dataset.done = '1'; }
+      panel.dataset.open = String(open);
+      syncInert();
+    }));
+  }
+
+  function stageTable(n) {
+    const list = docsOfStage(n);
+    let lastGroup = null;
+    const head = `<div class="dl__row dl__row--head">
+      <span>${esc(t('docs.thId'))}</span><span>${esc(t('docs.thDoc'))}</span>
+      <span>${esc(t('docs.thIssuer'))}</span><span>${esc(t('docs.thBlock'))}</span></div>`;
+    return head + list.map((d) => {
+      const g = d.group && d.group !== lastGroup
+        ? `<div class="dl__grp">${esc(d.group)}</div>` : '';
+      lastGroup = d.group || lastGroup;
+      const mark = d.blocking === 'yes'
+        ? `<i class="team__st2 team__st2--fixed" aria-hidden="true"></i>${esc(t('docs.blockShort'))}`
+        : (d.blocking === 'cond'
+          ? `<i class="team__st2 team__st2--tentative" aria-hidden="true"></i>${esc(d.cond || t('docs.condShort'))}`
+          : `<span class="tbd">${dash}</span>`);
+      return g + `<div class="dl__row">
+        <span class="dl__id">${esc(d.id)}</span>
+        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}</span>
+        <span class="dl__i" title="${esc(d.issuer || d.period || dash)}">${esc(d.issuer || d.period || dash)}</span>
+        <span class="dl__b">${mark}</span></div>`;
+    }).join('');
+  }
+
   function renderAll() {
     renderSummary(); renderPlaces(); renderFilters(); renderColl();
-    renderTeamNav(); renderTeam();
+    renderTeamNav(); renderTeam(); renderDocs();
     syncInert();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }

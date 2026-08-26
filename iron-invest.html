@@ -1265,6 +1265,73 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 .defs__in b{ color:var(--ink-900); font-weight:600; }
 
 
+/* ══ ДОКУМЕНТЫ · ЛЕСТНИЦА СТАДИЙ ═══════════════════════════════════════════
+   Тринадцать стадий и сто семьдесят семь позиций. Горизонтальный рельс
+   такого не выдерживает: лестница идёт вниз, содержимое стадии строится
+   при первом раскрытии. */
+.stages{ margin-top:var(--sp-6); }
+.stg + .stg{ margin-top:1px; }
+.stg__b{ display:grid; grid-template-columns:96px minmax(200px,1fr) 190px 24px;
+  align-items:start; gap:var(--sp-4); width:100%; text-align:left;
+  padding:var(--sp-4) var(--sp-2); background:none; border:0;
+  border-bottom:1px solid var(--hairline); cursor:pointer;
+  transition:background var(--t-1) var(--ease); }
+.stg__b:hover{ background:var(--bg-surface); }
+.stg__b:focus-visible{ outline:2px solid var(--bronze-focus); outline-offset:-2px; }
+.stg__b[aria-expanded="true"]{ border-bottom-color:transparent; }
+.stg__n{ font-family:var(--mono); font-size:10.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--bronze-text); padding-top:4px; }
+.stg__t{ font-family:var(--serif); font-size:17px; line-height:1.3; color:var(--ink-900);
+  min-width:0; }
+.stg__t em{ display:block; margin-top:5px; font-family:var(--sans); font-style:normal;
+  font-size:13px; line-height:1.5; color:var(--ink-500); }
+.stg__m{ font-family:var(--mono); font-size:11px; color:var(--ink-700);
+  text-align:right; padding-top:4px; }
+.stg__m b{ color:var(--ink-900); font-weight:400; font-size:13px; }
+.stg__m i{ display:block; margin-top:4px; font-style:normal; color:var(--bronze-text); }
+.stg__m i.tbd{ color:var(--ink-decor); }
+.stg__b .team__chev{ margin-top:8px; }
+/* .fpanel__in — это сетка групп фильтров в две-три колонки. Список документов
+   в неё попадать не должен: он сам таблица и раскладывается по своим правилам. */
+.stg__in{ display:block !important; padding-block:var(--sp-5); }
+
+/* список документов внутри стадии */
+.dl__grp{ margin:var(--sp-5) 0 var(--sp-3); font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-500); }
+.dl__grp:first-child{ margin-top:0; }
+.dl__row{ display:grid; grid-template-columns:46px minmax(180px,1fr) minmax(120px,.6fr) 108px;
+  gap:var(--sp-3); align-items:start; padding:9px 0;
+  border-bottom:1px solid var(--hairline-soft); font-size:13.5px; color:var(--ink-700); }
+.dl__row--head{ border-bottom:1px solid var(--ink-900); padding-bottom:7px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-500); }
+.dl__id{ font-family:var(--mono); font-size:11.5px; color:var(--ink-500); }
+.dl__d{ min-width:0; color:var(--ink-900); line-height:1.45; }
+.dl__d em{ display:block; margin-top:3px; font-style:normal; font-size:12px;
+  color:var(--ink-500); line-height:1.4; }
+.dl__i{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:12.5px; color:var(--ink-500); }
+.dl__b{ font-family:var(--mono); font-size:11px; display:flex; align-items:center;
+  color:var(--ink-700); }
+.dl__b .tbd{ color:var(--ink-decor); }
+
+@media (max-width:900px){
+  .stg__b{ grid-template-columns:78px 1fr 24px; }
+  .stg__m{ grid-column:2; grid-row:2; text-align:left; padding-top:0; }
+  .dl__row{ grid-template-columns:40px 1fr 96px; }
+  .dl__row > .dl__i{ display:none; }
+  .dl__row--head > span:nth-child(3){ display:none; }
+}
+@media (max-width:560px){
+  .stg__b{ grid-template-columns:1fr 24px; }
+  .stg__n{ grid-column:1; padding-top:0; }
+  .stg__t{ grid-column:1; }
+  .stg__m{ grid-column:1; grid-row:auto; }
+  .dl__row{ grid-template-columns:38px 1fr; }
+  .dl__row > .dl__b{ grid-column:2; }
+  .dl__row--head{ display:none; }
+}
+
 </style>
 </head>
 <body>
@@ -1292,6 +1359,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
       <button type="button" class="nav__t" data-mode="objects" aria-pressed="true" data-i18n="nav.collection">Объекты</button>
       <button type="button" class="nav__t" data-mode="map" aria-pressed="false" data-i18n="nav.map">Карта</button>
       <button type="button" class="nav__t" data-mode="team" aria-pressed="false" data-i18n="nav.team">Команда</button>
+      <button type="button" class="nav__t" data-mode="docs" aria-pressed="false" data-i18n="nav.docs">Документы</button>
     </nav>
     <label class="search">
       <span class="sr-only" data-i18n="search.label">Поиск по объектам</span>
@@ -1324,6 +1392,7 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
     <a href="#kolekcja" data-i18n="nav.collection">Объекты</a>
     <a href="#plate-sec" data-i18n="nav.map">Карта</a>
     <a href="#team-sec" data-i18n="nav.team">Команда</a>
+    <a href="#docs-sec" data-i18n="nav.docs">Документы</a>
     <a href="#kontakt" data-i18n="nav.enquire">Запрос</a>
   </nav>
   <div class="mnav__lang lang" role="group" aria-label="Язык интерфейса" data-i18n-aria="a11y.lang">
@@ -1394,6 +1463,17 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
 
 
 <!-- ═══ TEAM — функции, ответственность, права на решения ══════════════ -->
+<section class="sec" id="docs-sec" hidden>
+  <div class="wrap">
+    <div class="team__head">
+      <h2 data-i18n="docs.title">Документы по объекту</h2>
+      <p data-i18n="docs.lead">Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.</p>
+    </div>
+    <div class="cov" id="docsKey"><!-- app.js --></div>
+    <div class="stages" id="stages"><!-- app.js --></div>
+  </div>
+</section>
+
 <section class="sec" id="team-sec" hidden>
   <div class="wrap">
     <div class="team__head">
@@ -1742,6 +1822,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     deliverables: [],       // что обязан дать проекту: [{ text, status:'open'|'done'|null }]
     dependencies: [],       // что ему нужно от других, чтобы это было возможно
     checks: [],             // как понять, что функция работает
+    external: false,        // функция закрывается внешним исполнителем
     note: null,             // факт о состоянии функции, не оценка человека
     vacant: false
   }, o);
@@ -1811,7 +1892,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
       P({
         id: 'legal', name: 'Павел', role: 'Право и финансы направления', icon: 'legal',
-        scope: 'Документы, структура сделки, экономика объекта',
+        scope: 'Документы, структура сделки, экономика, приём контроля по партнёрским объектам',
         owns: 'Павел отвечает за юридическую проверку, структуру сделки и финансовую модель каждого объекта.',
         responsibilities: [
           'Собирает и хранит правоустанавливающие документы и статус собственности',
@@ -1821,6 +1902,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           'Собирает фактическую стоимость владения по объекту',
           'Готовит экономику объекта до того, как ему присвоена цена',
           'Сводит бюджет направления и следит за исполнением факт/план',
+          'Принимает операционный контроль по объектам партнёрской структуры: счета, доступы, ключи, документы, акты приёма-передачи',
           'Проверяет материалы перед публикацией на утечку внутренних сведений',
           'Сигнализирует, если объект нельзя считать готовым к продаже'
         ],
@@ -1829,7 +1911,9 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           { text: 'Модель продажи по объекту', status: 'open' },
           { text: 'Схема владения по объекту', status: 'open' },
           { text: 'Экономика объекта: себестоимость, цена, маржа', status: 'open' },
-          { text: 'Сводный бюджет направления', status: 'open' }
+          { text: 'Сводный бюджет направления', status: 'open' },
+          { text: 'Акты приёма-передачи по объектам партнёрской структуры', status: 'open' },
+          { text: 'Реестр счетов, доступов и ключей', status: 'open' }
         ],
         dependencies: [
           'Физический доступ к документам и объектам',
@@ -1846,52 +1930,34 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
       P({
         id: 'cmo', name: 'Богдан', role: 'Директор маркетинга', icon: 'cmo',
-        scope: 'Продвижение направления, распределение задач внутри маркетинга',
-        owns: 'Богдан отвечает за стратегию продвижения и распределение задач внутри маркетинговой команды.',
+        scope: 'Продвижение направления, сайт, подрядчики, пакет объекта к продаже',
+        owns: 'Богдан отвечает за стратегию продвижения, сайт проекта и распределение задач внутри маркетинговой команды.',
         responsibilities: [
           'Отвечает за продвижение направления в целом',
           'Распределяет маркетинговые задачи внутри своей команды',
-          'Определяет, что именно закрывает сайт, а что — другие каналы',
+          'Отвечает за сайт проекта и работу подрядчиков по нему',
+          'Контролирует сроки и качество работ по сайту',
+          'Собирает пакет объекта к продаже: визуализации, съёмка, брошюры, карточка на сайте',
           'Согласует материалы с фактами из паспорта объекта'
         ],
         deliverables: [
           { text: 'План продвижения направления', status: 'open' },
+          { text: 'Работающий сайт проекта', status: 'open' },
+          { text: 'Реестр подрядчиков по сайту с условиями', status: 'open' },
+          { text: 'Пакет объекта к продаже: визуализации, съёмка, брошюры', status: 'open' },
           { text: 'Распределение зон внутри маркетинга', status: 'open' }
         ],
         dependencies: [
           'Проверенные факты и одобренные фото',
           'Ясность, какие объекты готовы к продвижению',
-          'Утверждённая ценовая позиция и бюджет на кампании'
+          'Утверждённая ценовая позиция и бюджет на кампании',
+          'Спецификация отделки и планировки от проектной команды'
         ],
         checks: [
           'По каждой маркетинговой задаче известен исполнитель',
+          'По сайту известны срок, подрядчик и текущая стадия',
           'Ни один факт в материалах не расходится с паспортом объекта'
         ]
-      }),
-
-      P({
-        id: 'web', name: 'Костя', role: 'Маркетинг: сайт и подрядчики', icon: 'web',
-        state: 'tentative',
-        scope: 'Сайт, подрядчики по сайту, продвижение',
-        owns: 'Костя отвечает за сайт проекта и работу подрядчиков, которые его делают.',
-        responsibilities: [
-          'Делает сайт или ведёт подрядчика, который его делает',
-          'Контролирует сроки и качество работ по сайту',
-          'Участвует в продвижении по задачам от директора маркетинга'
-        ],
-        deliverables: [
-          { text: 'Работающий сайт проекта', status: 'open' },
-          { text: 'Реестр подрядчиков по сайту с условиями', status: 'open' }
-        ],
-        dependencies: [
-          'Постановка задачи от директора маркетинга',
-          'Утверждённые факты и фото по объектам',
-          'Бюджет на подрядчиков'
-        ],
-        checks: [
-          'По сайту известны срок, подрядчик и текущая стадия'
-        ],
-        note: 'Границы зоны пока не зафиксированы. Их определяет директор маркетинга.'
       }),
 
       P({
@@ -1921,9 +1987,11 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       P({
         id: 'onsite', name: 'Лариса', role: 'Работа на месте и сделки', icon: 'deal',
         state: 'tentative',
-        scope: 'Доступ на объекты, ведение сделки, передача покупателю',
-        owns: 'Лариса отвечает за доступ к объектам, ведение сделки и передачу объекта покупателю на территории Греции.',
+        scope: 'Новые объекты, доступ, ведение сделки, передача покупателю',
+        owns: 'Лариса ведёт новые объекты совместно с греческим адвокатом: доступ, переговоры, сделку и передачу покупателю на территории Греции.',
         responsibilities: [
+          'Ведёт новые объекты совместно с греческим адвокатом',
+          'Собирает документы по объекту у продавца и в органах',
           'Обеспечивает доступ на объекты для осмотра и показа',
           'Ведёт переговоры с покупателем по цене и условиям',
           'Согласует с юристом условия конкретной сделки',
@@ -1938,6 +2006,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
         dependencies: [
           'Письменно закреплённая зона ответственности',
           'Границы полномочий по цене и скидке',
+          'Юридическое заключение адвоката по объекту',
           'Модель продажи от юриста',
           'Заблаговременное уведомление о визитах покупателей'
         ],
@@ -1946,6 +2015,34 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
           'Запрос на доступ выполняется в согласованный срок'
         ],
         note: 'Зона закреплена фактически, но не оформлена письменно. Объём полномочий требует подтверждения владельца.'
+      }),
+
+      P({
+        id: 'lawyer', name: null, role: 'Греческий адвокат', icon: 'legal',
+        state: 'vacant', vacant: true, external: true,
+        scope: 'Юридическая проверка объектов и сопровождение сделок в Греции',
+        owns: 'Функция отвечает за то, что объект юридически чист и сделка проходит по греческому праву. Исполнитель не выбран.',
+        responsibilities: [
+          'Проверяет цепочку титулов минимум за двадцать лет',
+          'Заказывает справки об обременениях, арестах и претензиях третьих лиц',
+          'Даёт письменное юридическое заключение по титулу до внесения задатка',
+          'Оформляет налоговый номер, доверенности и сопровождает нотариальную сделку',
+          'Подтверждает соответствие объекта порогу вида на жительство до того, как порог назван в рекламе'
+        ],
+        deliverables: [
+          { text: 'Юридическое заключение по объекту', status: null },
+          { text: 'Комплект справок кадастра и ипотечного бюро', status: null },
+          { text: 'Сопровождение нотариальной сделки', status: null }
+        ],
+        dependencies: [
+          'Доступ к документам продавца',
+          'Доверенность с апостилем и переводом',
+          'Бюджет на пошлины и справки'
+        ],
+        checks: [
+          'Ни один задаток не вносится без письменного заключения по титулу'
+        ],
+        note: 'Адвокат должен представлять покупателя, а не продавца. Исполнитель не выбран.'
       }),
 
       P({
@@ -2023,6 +2120,9 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       { q: 'Срок, в который владелец отвечает по вынесенному вопросу',
         why: 'При отъезде владельца работа по спорным объектам останавливается: решить некому.',
         need: 'Нужен предельный срок ответа и тот, кто решает вместо владельца, пока его нет.' },
+      { q: 'Греческий адвокат не выбран',
+        why: 'Юридическую проверку объекта и сопровождение сделки некому вести; без заключения по титулу нельзя вносить задаток.',
+        need: 'Выбрать адвоката, представляющего покупателя, и закрепить его за новыми объектами.' },
       { q: 'Кто закрывает технический надзор',
         why: 'Сметы считает Алина, но объём работ и приёмку никто не подписывает.',
         need: 'Назначить ответственного или вынести функцию на подряд.' },
@@ -2067,6 +2167,230 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
 
     /* Путь объекта — этапы для схемы FIG.03 */
     pipeline: ['Найден', 'Документы', 'Экономика', 'Материалы', 'Выставлен', 'Продан', 'Передан']
+  };
+})();
+
+</script>
+<script>
+/* ============================================================================
+   IRON INVEST — реестр документов по объекту. Стадийная модель.
+
+   Источник: greece-object-documents-checklist.md (ПЛ, 26.08.2026).
+   Файл сгенерирован из него, правки вносить в источник и перегенерировать.
+
+   Принцип: объект не переходит на следующую стадию, пока не закрыты все
+   блокирующие документы предыдущей. Это заменяет доверие к посредникам
+   проверяемым признаком.
+
+   ── ЧТО СЮДА НЕ ПОПАЛО ────────────────────────────────────────────────────
+   В источнике есть строки, объясняющие требования через конкретных людей.
+   Портал публичный: требование переносится, объяснение через человека — нет.
+   ============================================================================ */
+(function () {
+  window.IronDocs = {
+    /* стадии: n, название, цель, задан ли признак блокировки */
+    stages: [
+      { n: 0, title: 'Скрининг (до задатка, до любых денег)', goal: 'за 3-5 дней понять, стоит ли объект расходов на полноценный due diligence.', hasBlockFlag: true },
+      { n: 1, title: 'Юридический due diligence (до подписания предварительного)', goal: 'подтвердить, что продавец действительно собственник, объект чист и на нем можно строить то, что мы планируем.', hasBlockFlag: true },
+      { n: 2, title: 'Сделка покупки', goal: null, hasBlockFlag: true },
+      { n: 3, title: 'Проектирование и разрешения (до начала работ)', goal: null, hasBlockFlag: true },
+      { n: 4, title: 'Подрядчики и договорная база', goal: null, hasBlockFlag: true },
+      { n: 5, title: 'Строительство (текущее ведение)', goal: null, hasBlockFlag: false },
+      { n: 6, title: 'Завершение и ввод', goal: null, hasBlockFlag: true },
+      { n: 7, title: 'Пакет к продаже (маркетинг)', goal: null, hasBlockFlag: false },
+      { n: 8, title: 'Юридический пакет продавца (что должно быть на руках до первого показа)', goal: null, hasBlockFlag: false },
+      { n: 9, title: 'Сделка продажи покупателю', goal: null, hasBlockFlag: false },
+      { n: 10, title: 'Пакет Golden Visa (если объект продается под ВНЖ)', goal: null, hasBlockFlag: false },
+      { n: 11, title: 'Эксплуатация и аренда (если объект остается в портфеле)', goal: null, hasBlockFlag: false },
+      { n: 'S', title: 'Сквозные документы', goal: null, hasBlockFlag: false },
+    ],
+
+    /* статусы документа — единственный допустимый словарь */
+    statuses: ['none', 'requested', 'received', 'verified', 'expiring', 'expired', 'na'],
+
+    /* типы объектов: набор документов зависит от типа */
+    types: ['plot', 'house', 'houseUnfinished', 'commercialConversion', 'apartment', 'shop', 'hotel'],
+
+    /* 177 позиций. status/dates заполняются по факту, здесь их нет. */
+    items: [
+      { id: '0.1', stage: 0, group: null, ru: 'Копия титула текущего собственника', gr: 'Τίτλος ιδιοκτησίας (συμβόλαιο)', issuer: 'Продавец', blocking: 'yes', cond: null, period: null },
+      { id: '0.2', stage: 0, group: null, ru: 'Выписка из Кадастра, номер КАЕК', gr: 'Απόσπασμα κτηματολογικού φύλλου / ΚΑΕΚ', issuer: 'Κτηματολόγιο', blocking: 'yes', cond: null, period: null },
+      { id: '0.3', stage: 0, group: null, ru: 'Кадастровая схема участка', gr: 'Απόσπασμα κτηματολογικού διαγράμματος', issuer: 'Κτηματολόγιο', blocking: 'yes', cond: null, period: null },
+      { id: '0.4', stage: 0, group: null, ru: 'Топосъемка (если есть у продавца)', gr: 'Τοπογραφικό διάγραμμα', issuer: 'Инженер продавца', blocking: 'no', cond: null, period: null },
+      { id: '0.5', stage: 0, group: null, ru: 'Фото и видеофиксация объекта на дату осмотра', gr: '-', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '0.6', stage: 0, group: null, ru: 'Акт первичного осмотра с координатами GPS', gr: '-', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '0.7', stage: 0, group: null, ru: 'Скрининг-справка: цена, площадь, зона, ограничения', gr: '-', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '0.8', stage: 0, group: null, ru: 'Предварительный расчет экономики (вход, capex, выход)', gr: '-', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '0.9', stage: 0, group: null, ru: 'Решение по объекту: идем / не идем / условно', gr: '-', issuer: 'ПЛ', blocking: 'yes', cond: null, period: null },
+      { id: '1.1', stage: 1, group: 'Титул и обременения', ru: 'Цепочка титулов минимум за 20 лет', gr: 'Ιστορικό τίτλων 20ετίας', issuer: 'Адвокат / Υποθηκοφυλακείο', blocking: 'yes', cond: null, period: null },
+      { id: '1.2', stage: 1, group: 'Титул и обременения', ru: 'Справка об обременениях', gr: 'Πιστοποιητικό βαρών', issuer: 'Υποθηκοφυλακείο / Κτηματολόγιο', blocking: 'yes', cond: null, period: null },
+      { id: '1.3', stage: 1, group: 'Титул и обременения', ru: 'Справка об отсутствии претензий третьих лиц', gr: 'Πιστοποιητικό μη διεκδικήσεων', issuer: 'Υποθηκοφυλακείο', blocking: 'yes', cond: null, period: null },
+      { id: '1.4', stage: 1, group: 'Титул и обременения', ru: 'Справка об отсутствии арестов', gr: 'Πιστοποιητικό μη κατασχέσεων', issuer: 'Υποθηκοφυλακείο', blocking: 'yes', cond: null, period: null },
+      { id: '1.5', stage: 1, group: 'Титул и обременения', ru: 'Справка о регистрации права', gr: 'Πιστοποιητικό μεταγραφής / ιδιοκτησίας', issuer: 'Κτηματολόγιο', blocking: 'yes', cond: null, period: null },
+      { id: '1.6', stage: 1, group: 'Титул и обременения', ru: 'Свидетельство о наследстве, если титул наследственный', gr: 'Πιστοποιητικό κληρονομιάς, αποδοχή κληρονομιάς', issuer: 'Нотариус', blocking: 'yes', cond: null, period: null },
+      { id: '1.7', stage: 1, group: 'Титул и обременения', ru: 'Согласия сособственников и супругов', gr: '-', issuer: 'Продавец', blocking: 'yes', cond: null, period: null },
+      { id: '1.8', stage: 1, group: 'Титул и обременения', ru: 'Юридическое заключение адвоката по титулу', gr: 'Νομικός έλεγχος', issuer: 'Наш адвокат (не продавца)', blocking: 'yes', cond: null, period: null },
+      { id: '1.9', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Топосъемка с координатами ЕГСА87 и декларациями', gr: 'Τοπογραφικό διάγραμμα (ΕΓΣΑ87, Ν.651/1977, Ν.4178/2013)', issuer: 'Наш инженер', blocking: 'yes', cond: null, period: null },
+      { id: '1.10', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Справка о пригодности и застраиваемости участка', gr: 'Βεβαίωση αρτιότητας και οικοδομησιμότητας', issuer: 'Υπηρεσία Δόμησης (ΥΔΟΜ)', blocking: 'yes', cond: null, period: null },
+      { id: '1.11', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Справка о показателях застройки: коэффициенты, этажность, отступы', gr: 'Όροι δόμησης', issuer: 'ΥΔΟΜ', blocking: 'yes', cond: null, period: null },
+      { id: '1.12', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Лесной статус участка', gr: 'Δασικός χάρτης, πράξη χαρακτηρισμού', issuer: 'Δασαρχείο', blocking: 'yes', cond: null, period: null },
+      { id: '1.13', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Береговая линия и зона пляжа', gr: 'Οριοθέτηση αιγιαλού και παραλίας', issuer: 'Κτηματική Υπηρεσία', blocking: 'cond', cond: 'да, для прибрежных', period: null },
+      { id: '1.14', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Археологические ограничения', gr: 'Έγκριση Εφορείας Αρχαιοτήτων', issuer: 'Εφορεία Αρχαιοτήτων', blocking: 'yes', cond: null, period: null },
+      { id: '1.15', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Природоохранные ограничения (Natura, зоны)', gr: 'Natura 2000, περιβαλλοντικοί όροι', issuer: 'Περιφέρεια', blocking: 'cond', cond: 'по объекту', period: null },
+      { id: '1.16', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Доступ к участку: дорога, сервитут, юридический проезд', gr: 'Πρόσβαση, δουλεία διόδου', issuer: 'ΥΔΟΜ / кадастр', blocking: 'yes', cond: null, period: null },
+      { id: '1.17', stage: 1, group: 'Правовой режим земли и застройки', ru: 'Наличие подключений: электричество, вода, канализация', gr: 'ΔΕΔΔΗΕ, ΔΕΥΑ', issuer: 'Коммунальные операторы', blocking: 'yes', cond: null, period: null },
+      { id: '1.18', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Разрешение на строительство + утвержденные чертежи', gr: 'Οικοδομική άδεια και εγκεκριμένα σχέδια', issuer: 'ΥΔΟΜ / архив', blocking: 'yes', cond: null, period: null },
+      { id: '1.19', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Справка инженера об отсутствии самостроя', gr: 'Βεβαίωση μηχανικού περί μη αυθαιρέτων (Ν.4495/2017)', issuer: 'Наш инженер', blocking: 'yes', cond: null, period: null },
+      { id: '1.20', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Легализация самостроя, если есть', gr: 'Δήλωση υπαγωγής αυθαιρέτου, βεβαίωση περαίωσης', issuer: 'Инженер', blocking: 'cond', cond: 'да, если есть', period: null },
+      { id: '1.21', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Электронное удостоверение здания', gr: 'Ηλεκτρονική Ταυτότητα Κτιρίου', issuer: 'Инженер', blocking: 'yes', cond: null, period: null },
+      { id: '1.22', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Энергетический сертификат', gr: 'Πιστοποιητικό Ενεργειακής Απόδοσης (ΠΕΑ)', issuer: 'Энергоаудитор', blocking: 'yes', cond: null, period: null },
+      { id: '1.23', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Технический отчет о состоянии конструкций', gr: 'Τεχνική έκθεση', issuer: 'Наш инженер', blocking: 'yes', cond: null, period: null },
+      { id: '1.24', stage: 1, group: 'Существующие строения (если объект с постройкой)', ru: 'Отчет о статике / несущей способности', gr: 'Στατική μελέτη / έλεγχος', issuer: 'Инженер-конструктор', blocking: 'cond', cond: 'по объекту', period: null },
+      { id: '1.25', stage: 1, group: 'Налоги и платежи продавца', ru: 'Справка об уплате налога на недвижимость за 5 лет', gr: 'Πιστοποιητικό ΕΝΦΙΑ', issuer: 'ΑΑΔΕ', blocking: 'yes', cond: null, period: null },
+      { id: '1.26', stage: 1, group: 'Налоги и платежи продавца', ru: 'Декларация Е9 продавца по объекту', gr: 'Δήλωση Ε9', issuer: 'ΑΑΔΕ', blocking: 'yes', cond: null, period: null },
+      { id: '1.27', stage: 1, group: 'Налоги и платежи продавца', ru: 'Справка муниципалитета об уплате ТАП', gr: 'Βεβαίωση ΤΑΠ', issuer: 'Δήμος', blocking: 'yes', cond: null, period: null },
+      { id: '1.28', stage: 1, group: 'Налоги и платежи продавца', ru: 'Налоговая и страховая чистота продавца', gr: 'Φορολογική και ασφαλιστική ενημερότητα', issuer: 'ΑΑΔΕ / ΕΦΚΑ', blocking: 'yes', cond: null, period: null },
+      { id: '1.29', stage: 1, group: 'Налоги и платежи продавца', ru: 'Отсутствие долгов за коммунальные услуги', gr: '-', issuer: 'Операторы', blocking: 'yes', cond: null, period: null },
+      { id: '1.30', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Греческий налоговый номер AFM на покупателя', gr: null, issuer: 'Адвокат / ΔΟΥ', blocking: 'yes', cond: null, period: null },
+      { id: '1.31', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Греческий банковский счет', gr: null, issuer: 'Банк', blocking: 'yes', cond: null, period: null },
+      { id: '1.32', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Доверенность на адвоката с апостилем и переводом', gr: null, issuer: 'Нотариус', blocking: 'yes', cond: null, period: null },
+      { id: '1.33', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Подтверждение происхождения средств (AML)', gr: null, issuer: 'Наш финотдел', blocking: 'yes', cond: null, period: null },
+      { id: '1.34', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Документ о ввозе средств в Грецию (для будущей репатриации)', gr: null, issuer: 'Банк', blocking: 'yes', cond: null, period: null },
+      { id: '1.35', stage: 1, group: 'Наша сторона (готовность покупателя)', ru: 'Решение о структуре владения: физлицо, греческая компания, польский холдинг', gr: null, issuer: 'ПЛ + налоговый консультант', blocking: 'yes', cond: null, period: null },
+      { id: '2.1', stage: 2, group: null, ru: 'Предварительный договор с условиями и сроками', gr: 'Προσύμφωνο / ιδιωτικό συμφωνητικό', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.2', stage: 2, group: null, ru: 'Документ о задатке с прописанным механизмом возврата', gr: 'Απόδειξη προκαταβολής', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.3', stage: 2, group: null, ru: 'Оценка объекта для налоговой', gr: 'Αντικειμενική αξία, φύλλο υπολογισμού', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.4', stage: 2, group: null, ru: 'Декларация и оплата налога на переход права', gr: 'Δήλωση φόρου μεταβίβασης (3%)', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.5', stage: 2, group: null, ru: 'Основной нотариальный договор', gr: 'Συμβόλαιο αγοραπωλησίας', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.6', stage: 2, group: null, ru: 'Регистрация в кадастре / ипотечном бюро', gr: 'Μεταγραφή στο Κτηματολόγιο', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.7', stage: 2, group: null, ru: 'Справка о регистрации на нового собственника', gr: 'Πιστοποιητικό μεταγραφής', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.8', stage: 2, group: null, ru: 'Платежные документы: все переводы только банком, наличные исключены', gr: '-', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.9', stage: 2, group: null, ru: 'Акт приема-передачи объекта с фотофиксацией', gr: 'Πρωτόκολλο παράδοσης-παραλαβής', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.10', stage: 2, group: null, ru: 'Передача ключей под подпись, смена замков', gr: '-', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.11', stage: 2, group: null, ru: 'Внесение объекта в Е9 нового собственника', gr: 'Δήλωση Ε9', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '2.12', stage: 2, group: null, ru: 'Переоформление коммунальных договоров на нас', gr: 'ΔΕΔΔΗΕ, ΔΕΥΑ', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '3.1', stage: 3, group: null, ru: 'Задание на проектирование от заказчика', gr: '-', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '3.2', stage: 3, group: null, ru: 'Договор с архитектором и инженерами (фикс цена, сроки, авторские права наши)', gr: 'Ιδιωτικό συμφωνητικό', issuer: 'ПЛ / юрист', blocking: 'yes', cond: null, period: null },
+      { id: '3.3', stage: 3, group: null, ru: 'Эскизный проект и планировки', gr: 'Προμελέτη', issuer: 'Архитектор', blocking: 'yes', cond: null, period: null },
+      { id: '3.4', stage: 3, group: null, ru: 'Согласование эскиза с заказчиком (подписанное)', gr: '-', issuer: 'ПЛ', blocking: 'yes', cond: null, period: null },
+      { id: '3.5', stage: 3, group: null, ru: 'Архитектурный проект', gr: 'Αρχιτεκτονική μελέτη', issuer: 'Архитектор', blocking: 'yes', cond: null, period: null },
+      { id: '3.6', stage: 3, group: null, ru: 'Конструктив', gr: 'Στατική μελέτη', issuer: 'Инженер-конструктор', blocking: 'yes', cond: null, period: null },
+      { id: '3.7', stage: 3, group: null, ru: 'Инженерные сети: электрика, вода, канализация, отопление', gr: 'Ηλεκτρομηχανολογικές μελέτες (Η/Μ)', issuer: 'Инженер', blocking: 'yes', cond: null, period: null },
+      { id: '3.8', stage: 3, group: null, ru: 'Энергетическое исследование', gr: 'Μελέτη ενεργειακής απόδοσης (ΚΕΝΑΚ)', issuer: 'Инженер', blocking: 'yes', cond: null, period: null },
+      { id: '3.9', stage: 3, group: null, ru: 'Проект пожарной безопасности', gr: 'Μελέτη πυροπροστασίας', issuer: 'Инженер', blocking: 'cond', cond: 'по объекту', period: null },
+      { id: '3.10', stage: 3, group: null, ru: 'Согласование археологии на проект', gr: 'Έγκριση Αρχαιολογίας', issuer: 'Εφορεία Αρχαιοτήτων', blocking: 'yes', cond: null, period: null },
+      { id: '3.11', stage: 3, group: null, ru: 'Согласование архитектурного совета (для зон с регламентом)', gr: 'Έγκριση ΣΥΠΟΘΑ / Αρχιτεκτονικής Επιτροπής', issuer: 'Комиссия', blocking: 'cond', cond: 'по зоне', period: null },
+      { id: '3.12', stage: 3, group: null, ru: 'Разрешение на застройку', gr: 'Έγκριση δόμησης', issuer: 'ΥΔΟΜ', blocking: 'yes', cond: null, period: null },
+      { id: '3.13', stage: 3, group: null, ru: 'Разрешение на строительство', gr: 'Άδεια δόμησης', issuer: 'ΥΔΟΜ', blocking: 'yes', cond: null, period: null },
+      { id: '3.14', stage: 3, group: null, ru: 'План безопасности и охраны труда', gr: 'ΣΑΥ - ΦΑΥ', issuer: 'Инженер', blocking: 'yes', cond: null, period: null },
+      { id: '3.15', stage: 3, group: null, ru: 'Регистрация стройки в фонде соцстрахования', gr: 'ΑΜΟΕ / ΕΦΚΑ οικοδομοτεχνικό έργο', issuer: 'Бухгалтерия', blocking: 'yes', cond: null, period: null },
+      { id: '3.16', stage: 3, group: null, ru: 'Смета по проекту (детальная, по разделам)', gr: 'Προϋπολογισμός έργου', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '3.17', stage: 3, group: null, ru: 'График реализации с вехами', gr: 'Χρονοδιάγραμμα', issuer: 'Наша команда', blocking: 'yes', cond: null, period: null },
+      { id: '3.18', stage: 3, group: null, ru: 'Разрешение на изменение назначения (для Таверны)', gr: 'Άδεια αλλαγής χρήσης', issuer: 'ΥΔΟΜ', blocking: 'cond', cond: 'да, для конверсии', period: null },
+      { id: '4.1', stage: 4, group: null, ru: 'Тендерный лист: минимум 3 предложения по каждому крупному пакету работ', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.2', stage: 4, group: null, ru: 'Проверка подрядчика: регистрация, AFM, налоговая чистота, страховки, портфолио', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.3', stage: 4, group: null, ru: 'Договор подряда: объем, цена, сроки, штрафы за просрочку, гарантия', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.4', stage: 4, group: null, ru: 'Приложение: техзадание и спецификация материалов с брендами', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.5', stage: 4, group: null, ru: 'Приложение: график платежей строго по факту выполненных этапов', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.6', stage: 4, group: null, ru: 'Приложение: форма акта выполненных работ', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.7', stage: 4, group: null, ru: 'Удержание гарантийной суммы 5-10% до подписания финального акта', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.8', stage: 4, group: null, ru: 'Страхование строительно-монтажных рисков', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.9', stage: 4, group: null, ru: 'Страхование ответственности подрядчика', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.10', stage: 4, group: null, ru: 'Доверенности: кто и что имеет право подписывать на месте, с лимитами сумм', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '4.11', stage: 4, group: null, ru: 'Реестр всех договоров по объекту с датами и суммами', gr: null, issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '5.1', stage: 5, group: null, ru: 'Журнал работ', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежедневно / еженедельно' },
+      { id: '5.2', stage: 5, group: null, ru: 'Фотоотчет с фиксированных точек съемки', gr: null, issuer: null, blocking: 'no', cond: null, period: 'еженедельно' },
+      { id: '5.3', stage: 5, group: null, ru: 'Отчет технадзора', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: '5.4', stage: 5, group: null, ru: 'Акты скрытых работ (арматура, гидроизоляция, подземные сети)', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по факту' },
+      { id: '5.5', stage: 5, group: null, ru: 'Протоколы испытаний бетона', gr: null, issuer: null, blocking: 'no', cond: null, period: 'каждая заливка' },
+      { id: '5.6', stage: 5, group: null, ru: 'Сертификаты и накладные на материалы', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по поставке' },
+      { id: '5.7', stage: 5, group: null, ru: 'Акты выполненных работ с процентом готовности', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: '5.8', stage: 5, group: null, ru: 'Реестр платежей подрядчикам: счет, акт, платежка', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: '5.9', stage: 5, group: null, ru: 'Отчет об отклонениях от бюджета и графика', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: '5.10', stage: 5, group: null, ru: 'Реестр изменений проекта с подписью заказчика', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по факту' },
+      { id: '5.11', stage: 5, group: null, ru: 'Протоколы совещаний по объекту с решениями и сроками', gr: null, issuer: null, blocking: 'no', cond: null, period: 'еженедельно' },
+      { id: '5.12', stage: 5, group: null, ru: 'Обновление инспекций разрешения (промежуточные проверки ΥΔΟΜ)', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по этапам' },
+      { id: '6.1', stage: 6, group: null, ru: 'Финальный акт приема работ с перечнем недоделок', gr: 'Πρωτόκολλο παραλαβής', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.2', stage: 6, group: null, ru: 'Исполнительная документация as-built', gr: 'Σχέδια ως κατασκευάσθη', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.3', stage: 6, group: null, ru: 'Отметка о завершении строительства в разрешении', gr: 'Θεώρηση περαίωσης άδειας', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.4', stage: 6, group: null, ru: 'Обновленное электронное удостоверение здания', gr: 'Ηλεκτρονική Ταυτότητα Κτιρίου (ενημέρωση)', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.5', stage: 6, group: null, ru: 'Новый энергосертификат по факту', gr: 'ΠΕΑ', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.6', stage: 6, group: null, ru: 'Подключение электричества постоянное', gr: 'Ηλεκτροδότηση ΔΕΔΔΗΕ', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.7', stage: 6, group: null, ru: 'Подключение воды и канализации / септик', gr: 'ΔΕΥΑ, βόθρος / βιολογικός', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.8', stage: 6, group: null, ru: 'Акт о вводе объекта в реестр Е9 с новой площадью', gr: 'Δήλωση Ε9', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.9', stage: 6, group: null, ru: 'Гарантийные документы на оборудование и работы', gr: 'Εγγυήσεις', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.10', stage: 6, group: null, ru: 'Инструкция по эксплуатации и обслуживанию объекта', gr: '-', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '6.11', stage: 6, group: null, ru: 'Финальная себестоимость объекта: свод всех затрат', gr: '-', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.12', stage: 6, group: null, ru: 'Для конверсии Таверны: подтверждение завершенной смены назначения', gr: 'Βεβαίωση ολοκλήρωσης αλλαγής χρήσης', issuer: null, blocking: 'yes', cond: null, period: null },
+      { id: '6.13', stage: 6, group: null, ru: 'Для отеля: лицензия на эксплуатацию и регистрация', gr: 'Ειδικό Σήμα Λειτουργίας, ΜΗΤΕ / АМА', issuer: null, blocking: 'cond', cond: 'да, для отеля', period: null },
+      { id: '7.1', stage: 7, group: null, ru: 'Бизнес-план объекта (по единому оглавлению)', gr: null, issuer: 'Проектная команда', blocking: 'no', cond: null, period: null },
+      { id: '7.2', stage: 7, group: null, ru: 'Финансовая модель: вход, capex, продажа, доходность, сценарии', gr: null, issuer: 'Проектная команда', blocking: 'no', cond: null, period: null },
+      { id: '7.3', stage: 7, group: null, ru: 'Прайс-лист по лотам с шагом цены и условиями', gr: null, issuer: 'ПЛ утверждает', blocking: 'no', cond: null, period: null },
+      { id: '7.4', stage: 7, group: null, ru: 'Планировки с площадями по каждому лоту', gr: null, issuer: 'Архитектор', blocking: 'no', cond: null, period: null },
+      { id: '7.5', stage: 7, group: null, ru: '3D визуализации экстерьера и интерьера', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.6', stage: 7, group: null, ru: 'Видео с дрона и облет территории', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.7', stage: 7, group: null, ru: 'Фото готовых элементов и стройплощадки', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.8', stage: 7, group: null, ru: 'Спецификация отделки: что входит в цену, что нет', gr: null, issuer: 'Проектная команда', blocking: 'no', cond: null, period: null },
+      { id: '7.9', stage: 7, group: null, ru: 'Брошюра PDF: польский, английский, украинский', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.10', stage: 7, group: null, ru: 'Карточка объекта на сайте с полями из общей схемы', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.11', stage: 7, group: null, ru: 'Локационный пакет: расстояния до моря, аэропорта, школ, инфраструктуры', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.12', stage: 7, group: null, ru: 'Аргументы УТП: обособленность, энергонезависимость, безопасность, укрытие', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '7.13', stage: 7, group: null, ru: 'Расчет доходности от аренды с обоснованием ставок', gr: null, issuer: 'Проектная команда', blocking: 'no', cond: null, period: null },
+      { id: '7.14', stage: 7, group: null, ru: 'Пакетные предложения (авто в комплекте и подобное) с расчетом', gr: null, issuer: 'ПЛ', blocking: 'no', cond: null, period: null },
+      { id: '7.15', stage: 7, group: null, ru: 'График строительства для покупателя, публичная версия', gr: null, issuer: 'Проектная команда', blocking: 'no', cond: null, period: null },
+      { id: '7.16', stage: 7, group: null, ru: 'FAQ по объекту для отдела продаж', gr: null, issuer: 'Маркетинг', blocking: 'no', cond: null, period: null },
+      { id: '8.1', stage: 8, group: null, ru: 'Титул на нашу компанию, зарегистрированный', gr: 'Τίτλος, μεταγραφή', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.2', stage: 8, group: null, ru: 'Свежая справка об обременениях (не старше 30 дней на момент сделки)', gr: 'Πιστοποιητικό βαρών', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.3', stage: 8, group: null, ru: 'Актуальная топосъемка', gr: 'Τοπογραφικό διάγραμμα', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.4', stage: 8, group: null, ru: 'Справка об отсутствии самостроя', gr: 'Βεβαίωση μηχανικού', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.5', stage: 8, group: null, ru: 'Электронное удостоверение здания', gr: 'Ηλεκτρονική Ταυτότητα Κτιρίου', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.6', stage: 8, group: null, ru: 'Энергосертификат', gr: 'ΠΕΑ', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.7', stage: 8, group: null, ru: 'Справка ЕНФИА за 5 лет на нашу компанию', gr: 'Πιστοποιητικό ΕΝΦΙΑ', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.8', stage: 8, group: null, ru: 'Справка ТАП муниципалитета', gr: 'Βεβαίωση ΤΑΠ', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.9', stage: 8, group: null, ru: 'Налоговая и страховая чистота нашей компании', gr: 'Ενημερότητες', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.10', stage: 8, group: null, ru: 'Разрешение на строительство и акт завершения', gr: 'Άδεια δόμησης, περαίωση', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.11', stage: 8, group: null, ru: 'Правила совместного владения (для комплексов)', gr: 'Κανονισμός πολυκατοικίας, σύσταση οριζοντίου ιδιοκτησίας', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '8.12', stage: 8, group: null, ru: 'Раздел на горизонтальные и вертикальные доли (для нескольких вилл на участке)', gr: 'Σύσταση οριζοντίου / καθέτου ιδιοκτησίας', issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.1', stage: 9, group: null, ru: 'Форма брони с суммой резервации и сроком', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.2', stage: 9, group: null, ru: 'Проверка покупателя: KYC, происхождение средств', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.3', stage: 9, group: null, ru: 'Предварительный договор с графиком платежей', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.4', stage: 9, group: null, ru: 'Договор рассрочки, если применяется: первый взнос, срок, ставка', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.5', stage: 9, group: null, ru: 'Механизм обеспечения по рассрочке: сохранение права собственности до полной оплаты или ипотека в нашу пользу', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.6', stage: 9, group: null, ru: 'Спецификация отделки как приложение к договору', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.7', stage: 9, group: null, ru: 'Срок передачи и штрафы за просрочку с обеих сторон', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.8', stage: 9, group: null, ru: 'Нотариальный договор купли-продажи', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.9', stage: 9, group: null, ru: 'Регистрация в кадастре на покупателя', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.10', stage: 9, group: null, ru: 'Акт передачи с фотофиксацией и передачей ключей', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.11', stage: 9, group: null, ru: 'Гарантийный лист покупателю', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.12', stage: 9, group: null, ru: 'Пакет для покупателя: все техдокументы, гарантии, инструкции', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '9.13', stage: 9, group: null, ru: 'Оформление коммунальных договоров на покупателя', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.1', stage: 10, group: null, ru: 'Юридическое заключение о соответствии объекта порогу и категории', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.2', stage: 10, group: null, ru: 'Подтверждение завершенной смены назначения до даты подачи', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.3', stage: 10, group: null, ru: 'Нотариальный договор с указанием суммы не ниже порога', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.4', stage: 10, group: null, ru: 'Подтверждение оплаты банковским переводом со счета инвестора', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.5', stage: 10, group: null, ru: 'Регистрация титула', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.6', stage: 10, group: null, ru: 'Комплект на заявителя: паспорта, справки о несудимости с апостилем, медстраховка, фото, биометрия', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.7', stage: 10, group: null, ru: 'Документы на членов семьи: свидетельства о браке и рождении с апостилем и переводом', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.8', stage: 10, group: null, ru: 'Доверенность на адвоката по миграционному делу', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.9', stage: 10, group: null, ru: 'Расписка о подаче (blue receipt) и трекинг статуса', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '10.10', stage: 10, group: null, ru: 'Памятка инвестору: запрет краткосрочной аренды, условия продления, сроки', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.1', stage: 11, group: null, ru: 'Регистрационный номер объекта краткосрочной аренды (при легальной сдаче, вне Golden Visa)', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.2', stage: 11, group: null, ru: 'Договор управления объектом', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.3', stage: 11, group: null, ru: 'Договор аренды, шаблон', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.4', stage: 11, group: null, ru: 'Страховка объекта', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.5', stage: 11, group: null, ru: 'График технического обслуживания', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.6', stage: 11, group: null, ru: 'Ежемесячный отчет по загрузке и доходу', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: '11.7', stage: 11, group: null, ru: 'Налоговая отчетность по доходу от аренды', gr: null, issuer: null, blocking: 'no', cond: null, period: null },
+      { id: 'S.1', stage: 'S', group: null, ru: 'Паспорт объекта: сводная карточка со всеми ключевыми полями', gr: null, issuer: null, blocking: 'no', cond: null, period: 'обновляется' },
+      { id: 'S.2', stage: 'S', group: null, ru: 'Реестр документов объекта со статусами и датами истечения', gr: null, issuer: null, blocking: 'no', cond: null, period: 'еженедельно' },
+      { id: 'S.3', stage: 'S', group: null, ru: 'Реестр всех платежей по объекту: дата, сумма, получатель, основание, подтверждение', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по факту' },
+      { id: 'S.4', stage: 'S', group: null, ru: 'Бухгалтерский учет объекта у нас, не у партнера', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: 'S.5', stage: 'S', group: null, ru: 'Реестр контактов: адвокат, нотариус, инженер, подрядчик, с ролями и лимитами полномочий', gr: null, issuer: null, blocking: 'no', cond: null, period: 'обновляется' },
+      { id: 'S.6', stage: 'S', group: null, ru: 'Реестр рисков по объекту со степенью и планом реакции', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+      { id: 'S.7', stage: 'S', group: null, ru: 'Архив: скан каждого документа в облаке, доступ у нас, оригиналы в одном сейфе с описью', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по факту' },
+      { id: 'S.8', stage: 'S', group: null, ru: 'Протоколы всех встреч с партнерами с фиксацией договоренностей', gr: null, issuer: null, blocking: 'no', cond: null, period: 'по факту' },
+      { id: 'S.9', stage: 'S', group: null, ru: 'Отчет по отклонениям бюджета объекта', gr: null, issuer: null, blocking: 'no', cond: null, period: 'ежемесячно' },
+    ]
   };
 })();
 
@@ -2188,6 +2512,14 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Портал отображает данные реестра. Изменения вносятся в реестр — портал обновляется следом.',
       'intro.upd': 'Обновлено:',
       'raci.title': 'Как читать таблицу',
+      'nav.docs': 'Документы',
+      'docs.title': 'Документы по объекту',
+      'docs.lead': 'Стадийная модель: объект не переходит на следующую стадию, пока не закрыты все блокирующие документы предыдущей.',
+      'docs.total': 'позиций', 'docs.blocking': 'блокирующих', 'docs.cond': 'условных',
+      'docs.stages': 'стадий', 'docs.stage': 'Стадия', 'docs.cross': 'Сквозные',
+      'docs.docsN': 'док.', 'docs.blockShort': 'блок', 'docs.condShort': 'условно',
+      'docs.noFlag': 'признак не задан',
+      'docs.thId': '№', 'docs.thDoc': 'Документ', 'docs.thIssuer': 'Кто выдаёт', 'docs.thBlock': 'Блокирует',
       'def.condT': 'Состояние объекта', 'def.condD': 'Физическое состояние стен: его видно при осмотре. Не означает, что объект можно выставлять.',
       'def.pubT': 'Готов к публикации', 'def.pubD': 'Закрыты все четыре условия: документы, цена, стадия процесса и ответственный. Считается автоматически.',
       'def.blkT': 'С блокерами', 'def.blkD': 'Хотя бы одно из четырёх условий не закрыто. Именно поэтому технически готовый объект может быть не готов к продаже.',
@@ -2329,6 +2661,14 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'Portal pokazuje dane z rejestru. Zmiany wprowadza się w rejestrze — portal aktualizuje się w ślad za nim.',
       'intro.upd': 'Aktualizacja:',
       'raci.title': 'Jak czytać tabelę',
+      'nav.docs': 'Dokumenty',
+      'docs.title': 'Dokumenty obiektu',
+      'docs.lead': 'Model etapowy: obiekt nie przechodzi do kolejnego etapu, dopóki nie zamknięto wszystkich dokumentów blokujących z poprzedniego.',
+      'docs.total': 'pozycji', 'docs.blocking': 'blokujących', 'docs.cond': 'warunkowych',
+      'docs.stages': 'etapów', 'docs.stage': 'Etap', 'docs.cross': 'Przekrojowe',
+      'docs.docsN': 'dok.', 'docs.blockShort': 'blok', 'docs.condShort': 'warunkowo',
+      'docs.noFlag': 'brak oznaczenia',
+      'docs.thId': 'Nr', 'docs.thDoc': 'Dokument', 'docs.thIssuer': 'Wydaje', 'docs.thBlock': 'Blokuje',
       'def.condT': 'Stan obiektu', 'def.condD': 'Stan fizyczny budynku, widoczny podczas oględzin. Nie oznacza, że obiekt można wystawić.',
       'def.pubT': 'Gotowy do publikacji', 'def.pubD': 'Spełnione wszystkie cztery warunki: dokumenty, cena, etap procesu i osoba odpowiedzialna. Liczone automatycznie.',
       'def.blkT': 'Z blokerami', 'def.blkD': 'Co najmniej jeden z czterech warunków nie jest spełniony. Dlatego obiekt gotowy technicznie może nie być gotowy do sprzedaży.',
@@ -2470,6 +2810,14 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       'intro.src': 'This portal displays the registry. Changes are made in the registry and appear here afterwards.',
       'intro.upd': 'Updated:',
       'raci.title': 'How to read this table',
+      'nav.docs': 'Documents',
+      'docs.title': 'Property documents',
+      'docs.lead': 'A staged model: a property does not advance until every blocking document of the previous stage is closed.',
+      'docs.total': 'items', 'docs.blocking': 'blocking', 'docs.cond': 'conditional',
+      'docs.stages': 'stages', 'docs.stage': 'Stage', 'docs.cross': 'Ongoing',
+      'docs.docsN': 'docs', 'docs.blockShort': 'blocks', 'docs.condShort': 'conditional',
+      'docs.noFlag': 'not flagged',
+      'docs.thId': 'No', 'docs.thDoc': 'Document', 'docs.thIssuer': 'Issued by', 'docs.thBlock': 'Blocks',
       'def.condT': 'Property condition', 'def.condD': 'The physical state of the building, visible on inspection. It does not mean the property can be listed.',
       'def.pubT': 'Ready to publish', 'def.pubD': 'All four conditions are met: documents, price, process stage and an assigned owner. Derived automatically.',
       'def.blkT': 'With blockers', 'def.blkD': 'At least one of the four is missing. This is why a structurally ready property may still not be ready to sell.',
@@ -3450,8 +3798,10 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
     if (plate) plate.hidden = m !== 'map';
     if (objects) objects.hidden = m !== 'objects';
     if (sum) sum.hidden = m !== 'objects';
-    if (intro) intro.hidden = m === 'team';
+    if (intro) intro.hidden = m === 'team' || m === 'docs';
     if (team) team.hidden = m !== 'team';
+    const docs = $('#docs-sec');
+    if (docs) docs.hidden = m !== 'docs';
     document.querySelectorAll('.nav__t').forEach((b) =>
       b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
     if (m === 'map' && window.IronPlate) window.IronPlate.render();
@@ -3834,9 +4184,97 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
   new MutationObserver(syncInert).observe(document.body,
     { subtree: true, attributes: true, attributeFilter: ['data-open'] });
 
+  /* ══ ДОКУМЕНТЫ ПО ОБЪЕКТУ ═══════════════════════════════════════════════
+     Стадийная модель из чеклиста ПЛ. Раньше портал знал про «стадию» только
+     то, что её нет; теперь стадия — это позиция в понятной лестнице, а
+     готовность — закрытые блокирующие документы, а не ощущение.
+     177 позиций рендерятся по требованию: разворачиваем стадию — строим её.
+     ══════════════════════════════════════════════════════════════════════ */
+  const DOCS = window.IronDocs || { stages: [], items: [] };
+  const docsOfStage = (n) => DOCS.items.filter((d) => String(d.stage) === String(n));
+
+  function renderDocs() {
+    const box = $('#stages'); if (!box) return;
+
+    const key = $('#docsKey');
+    if (key) {
+      const total = DOCS.items.length;
+      const blk = DOCS.items.filter((d) => d.blocking === 'yes').length;
+      const cnd = DOCS.items.filter((d) => d.blocking === 'cond').length;
+      key.innerHTML = `<div class="cov__legend">
+        <span class="cov__lg">${esc(t('docs.total'))} <b>${total}</b></span>
+        <span class="cov__lg"><i class="cov__sw cov__sw--fixed" aria-hidden="true"></i>
+          ${esc(t('docs.blocking'))} <b>${blk}</b></span>
+        <span class="cov__lg"><i class="cov__sw cov__sw--tentative" aria-hidden="true"></i>
+          ${esc(t('docs.cond'))} <b>${cnd}</b></span>
+        <span class="cov__lg">${esc(t('docs.stages'))} <b>${DOCS.stages.length}</b></span>
+      </div>`;
+    }
+
+    box.innerHTML = DOCS.stages.map((st) => {
+      const list = docsOfStage(st.n);
+      const blk = list.filter((d) => d.blocking === 'yes').length;
+      const cnd = list.filter((d) => d.blocking === 'cond').length;
+      const label = st.n === 'S' ? t('docs.cross') : t('docs.stage') + ' ' + st.n;
+      return `<div class="stg">
+        <button class="stg__b" type="button" aria-expanded="false" data-stage="${esc(String(st.n))}"
+            aria-controls="sg-${esc(String(st.n))}">
+          <span class="stg__n">${esc(label)}</span>
+          <span class="stg__t">${esc(st.title)}
+            ${st.goal ? `<em>${esc(st.goal)}</em>` : ''}</span>
+          <span class="stg__m">
+            <b>${list.length}</b> ${esc(t('docs.docsN'))}
+            ${st.hasBlockFlag
+              ? `<i>${blk} ${esc(t('docs.blockShort'))}${cnd ? ' · ' + cnd + ' ' + esc(t('docs.condShort')) : ''}</i>`
+              : `<i class="tbd">${esc(t('docs.noFlag'))}</i>`}
+          </span>
+          <span class="team__chev" aria-hidden="true"></span>
+        </button>
+        <div class="fpanel" data-open="false" id="sg-${esc(String(st.n))}">
+          <div class="fpanel__clip"><div class="fpanel__in stg__in"
+            data-fill="${esc(String(st.n))}"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    box.querySelectorAll('[data-stage]').forEach((b) => b.addEventListener('click', () => {
+      const panel = document.getElementById('sg-' + b.dataset.stage);
+      const open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(open));
+      if (!panel) return;
+      const host = panel.querySelector('[data-fill]');
+      if (open && !host.dataset.done) { host.innerHTML = stageTable(b.dataset.stage); host.dataset.done = '1'; }
+      panel.dataset.open = String(open);
+      syncInert();
+    }));
+  }
+
+  function stageTable(n) {
+    const list = docsOfStage(n);
+    let lastGroup = null;
+    const head = `<div class="dl__row dl__row--head">
+      <span>${esc(t('docs.thId'))}</span><span>${esc(t('docs.thDoc'))}</span>
+      <span>${esc(t('docs.thIssuer'))}</span><span>${esc(t('docs.thBlock'))}</span></div>`;
+    return head + list.map((d) => {
+      const g = d.group && d.group !== lastGroup
+        ? `<div class="dl__grp">${esc(d.group)}</div>` : '';
+      lastGroup = d.group || lastGroup;
+      const mark = d.blocking === 'yes'
+        ? `<i class="team__st2 team__st2--fixed" aria-hidden="true"></i>${esc(t('docs.blockShort'))}`
+        : (d.blocking === 'cond'
+          ? `<i class="team__st2 team__st2--tentative" aria-hidden="true"></i>${esc(d.cond || t('docs.condShort'))}`
+          : `<span class="tbd">${dash}</span>`);
+      return g + `<div class="dl__row">
+        <span class="dl__id">${esc(d.id)}</span>
+        <span class="dl__d">${esc(d.ru)}${d.gr ? `<em lang="el">${esc(d.gr)}</em>` : ''}</span>
+        <span class="dl__i" title="${esc(d.issuer || d.period || dash)}">${esc(d.issuer || d.period || dash)}</span>
+        <span class="dl__b">${mark}</span></div>`;
+    }).join('');
+  }
+
   function renderAll() {
     renderSummary(); renderPlaces(); renderFilters(); renderColl();
-    renderTeamNav(); renderTeam();
+    renderTeamNav(); renderTeam(); renderDocs();
     syncInert();
     if (state.selected) { const o = Iron.get(state.selected); if (o) renderDossier(o); }
   }

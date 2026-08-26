@@ -121,13 +121,17 @@
         floors: 2,
         condition: 'shell',
         stage: 0,
+        // обложка — проектный рендер, не текущее состояние: объект в стадии
+        // реконструкции, и рендер показывает, чем он должен стать
         media: {
-          cover: 'photos/plaka-2/01.jpg',
-          photos: ['photos/plaka-2/01.jpg','photos/plaka-2/02.jpg','photos/plaka-2/03.jpg',
+          cover: 'photos/plaka-2/00-render.jpg',
+          photos: ['photos/plaka-2/00-render.jpg',
+                   'photos/plaka-2/plan-f1.jpg','photos/plaka-2/plan-f2.jpg',
+                   'photos/plaka-2/01.jpg','photos/plaka-2/02.jpg','photos/plaka-2/03.jpg',
                    'photos/plaka-2/04.jpg','photos/plaka-2/05.jpg','photos/plaka-2/06.jpg',
                    'photos/plaka-2/07.jpg','photos/plaka-2/plan-topo.jpg',
                    'photos/plaka-2/plan-base.jpg','photos/plaka-2/plan-floor1.jpg'],
-          plan: 'photos/plaka-2/plan-floor1.jpg'
+          plan: 'photos/plaka-2/plan-f1.jpg'
         },
         tags: ['t.fullrenov', 't.potential']
         // shown publicly as a shell-condition property awaiting full renovation

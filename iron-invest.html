@@ -457,7 +457,7 @@ img{ max-width:100%; display:block; }
 /* ENTRY — no card chrome: photo/plate + type beneath. */
 .ent{ display:flex; flex-direction:column; height:100%; width:100%; text-align:left;
   background:none; border:none; padding:0; color:inherit; }
-.ent__plate{ position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--bg-sunken);
+.ent__plate{ position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--bg-sunken);
   border:1px solid var(--hairline); border-radius:var(--r-sm); }
 .ent__plate img{ width:100%; height:100%; object-fit:cover;
   filter:contrast(1.03) saturate(.95); transition:transform var(--t-3) var(--ease), opacity var(--t-2) var(--ease); }
@@ -1747,13 +1747,17 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
         floors: 2,
         condition: 'shell',
         stage: 0,
+        // обложка — проектный рендер, не текущее состояние: объект в стадии
+        // реконструкции, и рендер показывает, чем он должен стать
         media: {
-          cover: 'photos/plaka-2/01.jpg',
-          photos: ['photos/plaka-2/01.jpg','photos/plaka-2/02.jpg','photos/plaka-2/03.jpg',
+          cover: 'photos/plaka-2/00-render.jpg',
+          photos: ['photos/plaka-2/00-render.jpg',
+                   'photos/plaka-2/plan-f1.jpg','photos/plaka-2/plan-f2.jpg',
+                   'photos/plaka-2/01.jpg','photos/plaka-2/02.jpg','photos/plaka-2/03.jpg',
                    'photos/plaka-2/04.jpg','photos/plaka-2/05.jpg','photos/plaka-2/06.jpg',
                    'photos/plaka-2/07.jpg','photos/plaka-2/plan-topo.jpg',
                    'photos/plaka-2/plan-base.jpg','photos/plaka-2/plan-floor1.jpg'],
-          plan: 'photos/plaka-2/plan-floor1.jpg'
+          plan: 'photos/plaka-2/plan-f1.jpg'
         },
         tags: ['t.fullrenov', 't.potential']
         // shown publicly as a shell-condition property awaiting full renovation
@@ -2372,7 +2376,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       '0.4':  D('received', '2026-08-04', 'Топоплан с границами участка и контуром дома'),
       '0.5':  D('received', '2026-08-04', 'Видеофиксация объекта, два ролика'),
       '1.9':  D('received', '2026-08-04', 'Тот же топоплан'),
-      '1.18': D('requested', '2026-08-04', 'Есть планы цоколя и первого этажа; разрешения на строительство нет')
+      '1.18': D('requested', '2026-08-04', 'Есть планы цоколя и первого этажа; разрешения на строительство нет'),
+      '3.3':  D('received', '2026-08-26', 'Планировки первого и второго этажа с площадями, стадия ДП, и проектный рендер')
     },
     'plaka-3-taverna': {},
     'plaka-4': {}

@@ -135,7 +135,7 @@
         // реконструкции, и рендер показывает, чем он должен стать
         media: {
           cover: 'photos/plaka-2/00-render.jpg',
-          photos: ['photos/plaka-2/00-render.jpg',
+          photos: ['photos/plaka-2/00-render.jpg','photos/plaka-2/00b-render.jpg',
                    'photos/plaka-2/plan-f1.jpg','photos/plaka-2/plan-f2.jpg',
                    'photos/plaka-2/01.jpg','photos/plaka-2/02.jpg','photos/plaka-2/03.jpg',
                    'photos/plaka-2/04.jpg','photos/plaka-2/05.jpg','photos/plaka-2/06.jpg',

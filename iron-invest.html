@@ -1711,6 +1711,9 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
         floors: 2,
         area_m2: 119,          // две готовые квартиры: 73 + 46
         land_m2: 1000,
+        rooms: { bed: 3, bath: 3 },   // 2+1 спальни и 2+1 санузла по двум квартирам
+        listing: { code: 'KH371', agency: 'Euroland Property Group',
+                   url: 'https://www.euroland-crete.com/property/prime-development-opportunity-in-plaka-kh371/' },
         condition: 'renovation',
         price: { purchase: 580000, upgrade: null, sale: null, rentMonthly: null, currency: 'EUR' },
         facilities: ['am.garden', 'am.parking', 'am.veranda', 'am.solar', 'am.ac', 'am.kitchen', 'am.wardrobe', 'am.shutters', 'am.mosquito'],
@@ -1722,18 +1725,25 @@ button.sum__n[aria-pressed="true"] b, button.sum__n[aria-pressed="true"] span{ c
         marketKey: 'm.plscan',
         _energy: 'D',
         media: {
-          cover: 'photos/plaka-1/10.jpg',
-          photos: ['photos/plaka-1/01.jpg','photos/plaka-1/02.jpg','photos/plaka-1/03.jpg',
+          // 00-* — снимки из листинга агентства Euroland (KH371). Права
+          // на них у агентства; на портале они по решению владельца.
+          cover: 'photos/plaka-1/00-aerial.jpg',
+          photos: ['photos/plaka-1/00-aerial.jpg','photos/plaka-1/00b-facade.jpg',
+                   'photos/plaka-1/10.jpg',
+                   'photos/plaka-1/01.jpg','photos/plaka-1/02.jpg','photos/plaka-1/03.jpg',
                    'photos/plaka-1/04.jpg','photos/plaka-1/05.jpg','photos/plaka-1/06.jpg',
                    'photos/plaka-1/07.jpg','photos/plaka-1/08.jpg','photos/plaka-1/09.jpg',
-                   'photos/plaka-1/10.jpg','photos/plaka-1/plan-topo.jpg','photos/plaka-1/plan-floor.jpg'],
+                   'photos/plaka-1/plan-topo.jpg','photos/plaka-1/plan-floor.jpg'],
           plan: 'photos/plaka-1/plan-floor.jpg'
         },
         _parts: [
-          { key: 'p.flat1', m2: 73, note: 'st.rented' },
-          { key: 'p.flat2', m2: 46, note: 'st.rented' },
+          { key: 'p.flat1', m2: 73, note: 'st.flat1' },
+          { key: 'p.flat2', m2: 46, note: 'st.flat2' },
           { key: 'p.store', m2: 50, note: null },
           { key: 'p.unfinished', m2: 158, note: 'st.shellbox' }
+        ],
+        links: [
+          { k: 'listing', url: 'https://www.euroland-crete.com/property/prime-development-opportunity-in-plaka-kh371/' }
         ]
       }),
       /* По топоплану и поэтажным планам (цоколь + 1 этаж): двухуровневый дом
@@ -2751,7 +2761,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       't.rented': 'Сдаётся', 't.unfinished': 'Есть недострой',
       'p.flat1': 'Квартира 1, первый этаж', 'p.flat2': 'Квартира 2, первый этаж',
       'p.store': 'Склад', 'p.unfinished': 'Недострой, верхний этаж',
-      'st.rented': 'готова, сдаётся', 'st.shellbox': 'коробка без отделки',
+      'st.rented': 'готова, сдаётся', 'st.flat1': '2 спальни, 2 санузла, кухня, гостиная-столовая', 'st.flat2': '1 спальня, санузел, кухня-гостиная', 'f.listing': 'Листинг', 'st.shellbox': 'коробка без отделки',
       'f.parts': 'Состав объекта', 'f.energy': 'Энергокласс',
       'nav.docs': 'Документы',
       'docs.title': 'Документы по объекту',
@@ -2932,7 +2942,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       't.rented': 'Wynajmowane', 't.unfinished': 'Część w stanie surowym',
       'p.flat1': 'Mieszkanie 1, parter', 'p.flat2': 'Mieszkanie 2, parter',
       'p.store': 'Magazyn', 'p.unfinished': 'Stan surowy, górna kondygnacja',
-      'st.rented': 'gotowe, wynajmowane', 'st.shellbox': 'stan surowy',
+      'st.rented': 'gotowe, wynajmowane', 'st.flat1': '2 sypialnie, 2 łazienki, kuchnia, salon z jadalnią', 'st.flat2': '1 sypialnia, łazienka, kuchnia z salonem', 'f.listing': 'Ogłoszenie', 'st.shellbox': 'stan surowy',
       'f.parts': 'Skład obiektu', 'f.energy': 'Klasa energetyczna',
       'nav.docs': 'Dokumenty',
       'docs.title': 'Dokumenty obiektu',
@@ -3113,7 +3123,7 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
       't.rented': 'Let', 't.unfinished': 'Unfinished part',
       'p.flat1': 'Flat 1, ground floor', 'p.flat2': 'Flat 2, ground floor',
       'p.store': 'Storage', 'p.unfinished': 'Unfinished upper floor',
-      'st.rented': 'ready, let', 'st.shellbox': 'shell, unfinished',
+      'st.rented': 'ready, let', 'st.flat1': '2 bedrooms, 2 bathrooms, kitchen, open living and dining', 'st.flat2': '1 bedroom, bathroom, open kitchen and living', 'f.listing': 'Listing', 'st.shellbox': 'shell, unfinished',
       'f.parts': 'Property breakdown', 'f.energy': 'Energy class',
       'nav.docs': 'Documents',
       'docs.title': 'Property documents',
@@ -3875,7 +3885,8 @@ window.IronGeo = {"west":[[23.51448,35.30588],[23.52416,35.29402],[23.51625,35.2
      опубликовал о себе сам — телефон и почта висят на его странице
      в Booking и Facebook. Внутренних контактов тут нет и быть не может. */
   const LINK_LABEL = { booking: 'Booking', tripadvisor: 'TripAdvisor',
-    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site' };
+    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site',
+    listing: 'Euroland KH371' };
 
   function viewContacts(o) {
     const addr = o.address ? (o.address[lang()] || o.address.ru || o.address.en) : null;

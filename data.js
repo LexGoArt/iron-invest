@@ -85,6 +85,9 @@
         floors: 2,
         area_m2: 119,          // две готовые квартиры: 73 + 46
         land_m2: 1000,
+        rooms: { bed: 3, bath: 3 },   // 2+1 спальни и 2+1 санузла по двум квартирам
+        listing: { code: 'KH371', agency: 'Euroland Property Group',
+                   url: 'https://www.euroland-crete.com/property/prime-development-opportunity-in-plaka-kh371/' },
         condition: 'renovation',
         price: { purchase: 580000, upgrade: null, sale: null, rentMonthly: null, currency: 'EUR' },
         facilities: ['am.garden', 'am.parking', 'am.veranda', 'am.solar', 'am.ac', 'am.kitchen', 'am.wardrobe', 'am.shutters', 'am.mosquito'],
@@ -96,18 +99,25 @@
         marketKey: 'm.plscan',
         _energy: 'D',
         media: {
-          cover: 'photos/plaka-1/10.jpg',
-          photos: ['photos/plaka-1/01.jpg','photos/plaka-1/02.jpg','photos/plaka-1/03.jpg',
+          // 00-* — снимки из листинга агентства Euroland (KH371). Права
+          // на них у агентства; на портале они по решению владельца.
+          cover: 'photos/plaka-1/00-aerial.jpg',
+          photos: ['photos/plaka-1/00-aerial.jpg','photos/plaka-1/00b-facade.jpg',
+                   'photos/plaka-1/10.jpg',
+                   'photos/plaka-1/01.jpg','photos/plaka-1/02.jpg','photos/plaka-1/03.jpg',
                    'photos/plaka-1/04.jpg','photos/plaka-1/05.jpg','photos/plaka-1/06.jpg',
                    'photos/plaka-1/07.jpg','photos/plaka-1/08.jpg','photos/plaka-1/09.jpg',
-                   'photos/plaka-1/10.jpg','photos/plaka-1/plan-topo.jpg','photos/plaka-1/plan-floor.jpg'],
+                   'photos/plaka-1/plan-topo.jpg','photos/plaka-1/plan-floor.jpg'],
           plan: 'photos/plaka-1/plan-floor.jpg'
         },
         _parts: [
-          { key: 'p.flat1', m2: 73, note: 'st.rented' },
-          { key: 'p.flat2', m2: 46, note: 'st.rented' },
+          { key: 'p.flat1', m2: 73, note: 'st.flat1' },
+          { key: 'p.flat2', m2: 46, note: 'st.flat2' },
           { key: 'p.store', m2: 50, note: null },
           { key: 'p.unfinished', m2: 158, note: 'st.shellbox' }
+        ],
+        links: [
+          { k: 'listing', url: 'https://www.euroland-crete.com/property/prime-development-opportunity-in-plaka-kh371/' }
         ]
       }),
       /* По топоплану и поэтажным планам (цоколь + 1 этаж): двухуровневый дом

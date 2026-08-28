@@ -604,7 +604,8 @@
      опубликовал о себе сам — телефон и почта висят на его странице
      в Booking и Facebook. Внутренних контактов тут нет и быть не может. */
   const LINK_LABEL = { booking: 'Booking', tripadvisor: 'TripAdvisor',
-    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site' };
+    facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', site: 'Site',
+    listing: 'Euroland KH371' };
 
   function viewContacts(o) {
     const addr = o.address ? (o.address[lang()] || o.address.ru || o.address.en) : null;
